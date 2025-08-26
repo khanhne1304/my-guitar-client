@@ -25,7 +25,7 @@
 /* Menu chính */
 .home__menu {
   display: flex;
-  align-items: center;     /* 👈 đồng bộ theo trục dọc */
+  align-items: center; /* 👈 đồng bộ theo trục dọc */
   gap: 24px;
   margin: 0 20px;
   flex: 1;
@@ -45,10 +45,10 @@
   color: #000;
   font-weight: 700;
   font-size: 20px;
-  display: inline-flex;     /* 👈 */
-  align-items: center;      /* 👈 */
-  line-height: 1;           /* 👈 */
-  padding: 6px 0;           /* 👈 cùng padding cho tất cả */
+  display: inline-flex; /* 👈 */
+  align-items: center; /* 👈 */
+  line-height: 1; /* 👈 */
+  padding: 6px 0; /* 👈 cùng padding cho tất cả */
 }
 
 /* ===== Dropdown brand theo danh mục ===== */
@@ -61,7 +61,7 @@
   color: #111;
   border: 1px solid #e9e9e9;
   border-radius: 10px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@
   opacity: 0;
   pointer-events: none;
   transform: translateY(6px);
-  transition: opacity .15s ease, transform .15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
   z-index: 50;
 }
 
@@ -90,8 +90,14 @@
   white-space: nowrap;
   font-weight: 600;
 }
-.home__submenu a:hover { background: rgba(0,0,0,.06); }
-.home__submenuEmpty { padding: 8px 10px; opacity: .6; white-space: nowrap; }
+.home__submenu a:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.home__submenuEmpty {
+  padding: 8px 10px;
+  opacity: 0.6;
+  white-space: nowrap;
+}
 
 /* === Search === */
 .home__searchBox {
@@ -112,10 +118,15 @@
   border-radius: 0 4px 4px 0;
   cursor: pointer;
 }
-.home__searchBox button:hover { background: #333; }
+.home__searchBox button:hover {
+  background: #333;
+}
 
 /* === Auth buttons === */
-.home__authButtons { display: flex; gap: 8px; }
+.home__authButtons {
+  display: flex;
+  gap: 8px;
+}
 .home__btn {
   padding: 6px 12px;
   border: 1px solid #000;
@@ -124,9 +135,17 @@
   border-radius: 4px;
   color: #000;
 }
-.home__btn:hover { background: rgba(0,0,0,0.1); }
-.home__btn--primary { background: #000; color: #ffd700; border-color: #000; }
-.home__btn--primary:hover { background: #333; }
+.home__btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.home__btn--primary {
+  background: #000;
+  color: #ffd700;
+  border-color: #000;
+}
+.home__btn--primary:hover {
+  background: #333;
+}
 
 /* === CONTENT === */
 .home__content {
@@ -137,14 +156,18 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-.home__section { margin-bottom: 28px; }
+.home__section {
+  margin-bottom: 28px;
+}
 .home__sectionTitle {
   font-size: 24px;
   font-weight: 800;
   margin: 8px 0 16px;
   color: #111;
 }
-.home__sectionTitleSale { color: #b45309; }
+.home__sectionTitleSale {
+  color: #b45309;
+}
 
 /* Lưới sản phẩm: tối đa 3 cột */
 .home__grid {
@@ -156,10 +179,14 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .home__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 640px) {
-  .home__grid { grid-template-columns: 1fr; }
+  .home__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .home__empty {
@@ -169,4 +196,9 @@
   border-radius: 8px;
   text-align: center;
   color: #666;
+}
+.home__user {
+  font-weight: 600;
+  color: #333;
+  padding: 0 12px;
 }
