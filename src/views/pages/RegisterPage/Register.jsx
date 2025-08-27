@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './Register.module.css';
 
 const BASE_URL =
-  import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
+  import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 function FacebookIcon({ className }) {
   return (
@@ -70,30 +70,51 @@ export default function Register() {
   };
 
   const register = async ({ name, email, password }) => {
-    const res = await fetch(`${BASE_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      // backend có thể trả {message: "..."} hoặc object lỗi khác
-      throw new Error(data?.message || 'Đăng ký thất bại');
+    try {
+      const res = await fetch(`${BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data?.message || 'Đăng ký thất bại');
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Register error:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Không thể kết nối đến server. Vui lòng thử lại sau.');
+      }
+      throw error;
     }
-    return data;
   };
 
   const login = async ({ email, password }) => {
-    const res = await fetch(`${BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data?.message || 'Đăng nhập thất bại');
+    try {
+      const res = await fetch(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data?.message || 'Đăng nhập thất bại');
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Login error:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Không thể kết nối đến server. Vui lòng thử lại sau.');
+      }
+      throw error;
     }
-    return data;
   };
 
   const handleSubmit = async (e) => {

@@ -1,7 +1,7 @@
 // src/services/products.js
 const API_BASE =
   (import.meta?.env?.VITE_API_BASE_URL?.replace(/\/$/, '')) ||
-  'http://localhost:4000/api';
+  'http://localhost:5000/api';
 
 function toQueryString(params) {
   const usp = new URLSearchParams();
@@ -23,24 +23,47 @@ export async function fetchProducts(opts = {}) {
     limit: opts.limit,
   });
 
-  const res = await fetch(`${API_BASE}/products${query}`, {
-    method: 'GET',
-    signal: opts.signal,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  try {
+    const res = await fetch(`${API_BASE}/products${query}`, {
+      method: 'GET',
+      signal: opts.signal,
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data?.message || 'Không tải được danh sách sản phẩm');
-  return data;
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    if (error.name === 'AbortError') {
+      throw new Error('Request was cancelled');
+    }
+    throw new Error('Không tải được danh sách sản phẩm. Vui lòng thử lại sau.');
+  }
 }
 
 export async function fetchProductBySlug(slug, signal) {
-  const res = await fetch(`${API_BASE}/products/${encodeURIComponent(slug)}`, {
-    method: 'GET',
-    signal,
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data?.message || 'Không tìm thấy sản phẩm');
-  return data;
+  try {
+    const res = await fetch(`${API_BASE}/products/${encodeURIComponent(slug)}`, {
+      method: 'GET',
+      signal,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    if (error.name === 'AbortError') {
+      throw new Error('Request was cancelled');
+    }
+    throw new Error('Không tìm thấy sản phẩm. Vui lòng thử lại sau.');
+  }
 }
