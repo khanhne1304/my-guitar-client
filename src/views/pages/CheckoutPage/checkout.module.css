@@ -1,0 +1,112 @@
+.page { background:#fff; min-height:100vh; }
+.main { padding:24px 0; }
+.container { max-width:1200px; margin:0 auto; padding:0 16px; }
+.brand { font-size:18px; font-weight:800; margin-bottom:12px; }
+
+.grid { display:grid; grid-template-columns:1.15fr .85fr; gap:24px; }
+@media (max-width: 992px){ .grid{ grid-template-columns:1fr; } }
+
+.left {}
+.right { }
+
+.box{ background:#fff; border:1px solid #eee; border-radius:12px; padding:14px; margin-bottom:14px; }
+.boxHead{ display:flex; gap:8px; border-bottom:1px solid #f3f3f3; padding-bottom:10px; margin-bottom:10px; }
+.shipTab{ border:none; background:#f6f6f6; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; }
+.shipTab.active{ background:#111; color:#ffd700; }
+.truck{ margin-right:6px; }
+
+.form{ display:flex; flex-direction:column; gap:10px; }
+.input{ width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:10px; }
+.textarea{ width:100%; min-height:110px; border:1px solid #ddd; border-radius:10px; padding:10px; resize:vertical; }
+
+.boxTitle{ font-weight:800; margin-bottom:8px; }
+.shipPlaceholder{ border:1px dashed #ddd; border-radius:10px; padding:12px; color:#666; background:#fafafa; }
+
+.payRow{ display:flex; align-items:center; gap:8px; padding:10px 8px; border:1px solid #eee; border-radius:10px; margin-bottom:8px; background:#fff; }
+
+.right .cartBox, .couponBox, .summary{
+  background:#fff; border:1px solid #eee; border-radius:12px; padding:14px; margin-bottom:14px;
+}
+.cartTitle{ font-weight:800; margin-bottom:10px; }
+
+.cartRow{ display:grid; grid-template-columns:64px 1fr auto auto; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #f5f5f5; }
+.cartRow:last-child{ border-bottom:none; }
+.thumb{ width:64px; height:64px; border:1px solid #eee; border-radius:8px; overflow:hidden; }
+.thumb img{ width:100%; height:100%; object-fit:cover; }
+.cinfo{ display:flex; flex-direction:column; }
+.cname{ font-weight:700; }
+.csku{ color:#888; font-size:12px; }
+.cqty{ color:#555; }
+.cprice{ font-weight:800; color:#b45309; text-align:right; }
+
+.delivery{ margin-top:8px; font-size:14px; }
+
+.couponRow{ display:flex; gap:8px; }
+.grayBtn{ padding:10px 12px; border:none; border-radius:10px; background:#111; color:#ffd700; font-weight:700; cursor:pointer; }
+
+.summary{ }
+.sumRow{ display:flex; justify-content:space-between; margin:8px 0; }
+.sumTotal{ border-top:1px solid #f0f0f0; padding-top:8px; }
+.placeBtn{ width:100%; padding:12px 16px; border:none; background:#111; color:#ffd700; border-radius:10px; font-weight:800; cursor:pointer; }
+/* Tabs */
+.shipTab{ border:none; background:#f6f6f6; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; }
+.shipTab.active{ background:#111; color:#ffd700; }
+.truck{ margin-right:6px; }
+
+/* Store pickup */
+.storeList{ display:flex; flex-direction:column; gap:10px; }
+.storeItem{ display:flex; gap:10px; border:1px solid #eee; border-radius:10px; padding:10px; background:#fff; cursor:pointer; }
+.storeItem input{ margin-top:4px; }
+.storeContent{ display:flex; flex-direction:column; gap:2px; }
+.storeName{ font-weight:700; }
+.storeAddr{ color:#555; }
+.storePhone{ color:#666; font-size:13px; }
+.storeStock{ margin-top:4px; display:flex; flex-wrap:wrap; gap:6px; }
+.tag{ background:#f6f6f6; border:1px solid #eee; border-radius:999px; padding:2px 8px; font-size:12px; color:#333; }
+.storeEmpty{ padding:10px; border:1px dashed #ddd; border-radius:10px; color:#666; background:#fafafa; }
+/* Tabs */
+.shipTab{ border:none; background:#f6f6f6; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; }
+.shipTab.active{ background:#111; color:#ffd700; }
+.truck{ margin-right:6px; }
+
+/* Store pickup (đã đưa trước đó) */
+.storeList{ display:flex; flex-direction:column; gap:10px; }
+.storeItem{ display:flex; gap:10px; border:1px solid #eee; border-radius:10px; padding:10px; background:#fff; cursor:pointer; }
+.storeItem input{ margin-top:4px; }
+.storeContent{ display:flex; flex-direction:column; gap:2px; }
+.storeName{ font-weight:700; }
+.storeAddr{ color:#555; }
+.storePhone{ color:#666; font-size:13px; }
+.storeStock{ margin-top:4px; display:flex; flex-wrap:wrap; gap:6px; }
+.tag{ background:#f6f6f6; border:1px solid #eee; border-radius:999px; padding:2px 8px; font-size:12px; color:#333; }
+.storeEmpty{ padding:10px; border:1px dashed #ddd; border-radius:10px; color:#666; background:#fafafa; }
+
+/* Shipping methods */
+.shipMethods{ display:flex; flex-direction:column; gap:8px; }
+.shipMethod{ display:flex; gap:10px; align-items:flex-start; border:1px solid #eee; border-radius:10px; padding:10px; background:#fff; }
+.shipMeta{ display:flex; justify-content:space-between; width:100%; align-items:center; }
+.shipName{ font-weight:700; }
+.eta{ color:#666; font-weight:400; margin-left:6px; }
+.shipFee{ font-weight:800; color:#b45309; }
+.shipHint{ font-size:12px; color:#666; }
+/* Tabs & store (đã có ở bước trước)… */
+
+/* VNPay QR box */
+.qrBox{
+  margin-top:12px;
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:12px;
+}
+.qrTitle{ font-weight:800; margin-bottom:8px; }
+.qrMeta{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.qrImg{ width:140px; height:140px; border:1px solid #eee; border-radius:8px; background:#fafafa; }
+.qrNote{ font-size:12px; color:#666; margin-top:6px; }
+.qrActions{ display:flex; align-items:center; gap:10px; margin-top:8px; }
+.paidOk{ color:green; font-weight:700; }
+.grayBtn{
+  padding:8px 12px; border-radius:8px; background:#111; color:#ffd700; border:none; cursor:pointer; font-weight:700;
+}

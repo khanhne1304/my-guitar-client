@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./productCard.module.css";
 
 /**
@@ -30,7 +31,20 @@ export default function ProductCard({
       maximumFractionDigits: 0,
     }).format(v);
 
-  const displayPrice = typeof price === "number" ? formatVND(price) : price;
+  // Handle price object with base/sale properties
+  const getDisplayPrice = (price) => {
+    if (typeof price === "number") return formatVND(price);
+    if (typeof price === "string") return price;
+    if (price && typeof price === "object") {
+      // If price is an object with base/sale properties
+      if (price.sale && price.sale !== 0) return formatVND(price.sale);
+      if (price.base) return formatVND(price.base);
+      return "Liên hệ";
+    }
+    return "Liên hệ";
+  };
+
+  const displayPrice = getDisplayPrice(price);
 
   return (
     <article className={styles.productCard}>
@@ -39,12 +53,12 @@ export default function ProductCard({
         <img src={image} alt={name} loading="lazy" />
       </div>
 
-      {/* Thanh thông tin dưới */}
+      {/* Thông tin */}
       <div className={styles.productCard__footer}>
         <div className={styles.productCard__info}>
           {!!(brand || model) && (
             <div className={styles.productCard__title}>
-              {brand?.toUpperCase()} {model}
+              {brand?.name?.toUpperCase() || brand?.toUpperCase()} {model}
             </div>
           )}
 
@@ -58,15 +72,16 @@ export default function ProductCard({
           </div>
         </div>
 
+        {/* CTA */}
         {href ? (
-          <a
-            href={href}
+          <Link
+            to={href}
             className={styles.productCard__cta}
             onClick={onView}
             aria-label={`Xem thêm ${name}`}
           >
             Xem thêm
-          </a>
+          </Link>
         ) : (
           <button
             type="button"

@@ -1,0 +1,107 @@
+.categoryPage {
+  font-family: var(--font-sans);
+  background: #fff;
+}
+
+.categoryMain {
+  padding: 24px;
+  background: #fffbe8;
+}
+
+.categoryWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #6b7280;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #2563eb;
+}
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+.current {
+  font-weight: 600;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filterBtn {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.filterBtn:hover {
+  background: #f3f4f6;
+}
+
+.sort {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.sort select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 140px;
+  transition: border-color 0.15s ease;
+}
+
+.sort select:hover {
+  border-color: #9ca3af;
+}
+
+.sort select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  background: #fff;
+  border: 1px dashed #ddd;
+  border-radius: 10px;
+  color: #666;
+}
+.error {
+  color: red;
+}

@@ -1,0 +1,448 @@
+/* === NAVBAR === */
+.home__navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffd700;
+  padding: 20px 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+  min-height: 40px;
+}
+
+/* Logo */
+.home__logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Menu chính */
+.home__menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 0 20px;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Mỗi item đều có wrapper để không lệch với dropdown */
+.home__menuItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Style chung cho mọi link trên navbar */
+.home__menu a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  padding: 6px 0;
+  transition: color 0.15s ease;
+}
+
+.home__menu a:hover {
+  color: #333;
+}
+
+/* ===== Dropdown brand theo danh mục ===== */
+.home__submenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 180px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 50;
+}
+
+/* Hiện dropdown khi hover mục menu */
+.home__menuItem:hover .home__submenu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Link brand trong dropdown */
+.home__submenu a {
+  text-decoration: none;
+  color: #111;
+  padding: 8px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 14px;
+}
+.home__submenu a:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.home__submenuEmpty {
+  padding: 8px 10px;
+  opacity: 0.6;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+/* === Search === */
+.home__searchBox {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  gap: 4px;
+}
+.iconBtn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #000; /* icon màu đen */
+  position: relative;
+}
+
+.cartIcon {
+  font-size: 24px;
+}
+
+.cartBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+
+
+
+
+
+
+
+
+/* ================== ACCOUNT DROPDOWN ================== */
+
+/* Bọc cả icon và menu */
+.accountMenu {
+  position: relative;
+  display: inline-block;
+}
+
+/* Nút icon (giữ style chung .iconBtn của bạn) */
+.accountMenu .iconBtn {
+  position: relative;
+  line-height: 1;
+}
+
+/* Khung dropdown: đặt NGAY dưới icon, không tạo gap */
+.accountDropdown {
+  display: none;              /* ẩn mặc định */
+  position: absolute;
+  right: 0;
+  top: 100%;                  /* chạm mép dưới icon */
+  margin-top: 8px;            /* nếu muốn có khoảng cách, dùng margin */
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 10px;
+  z-index: 200;
+}
+
+/* Hiện menu khi hover container hoặc focus trong (keyboard) */
+.accountMenu:hover .accountDropdown,
+.accountMenu:focus-within .accountDropdown {
+  display: block;
+}
+
+/* “Cầu nối” 8px để không tụt hover khi rê từ icon xuống menu */
+.accountMenu::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 100%;
+  height: 8px;
+}
+
+/* Dòng tên + email */
+.home__userText {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #111;
+}
+
+/* Nút trong dropdown: đồng bộ màu với nút Đăng nhập/Đăng ký */
+.dropdownBtn {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #000;
+  background: transparent;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease;
+  text-align: left;
+  margin-top: 6px;
+}
+
+/* Biến thể chính (có thể dùng khi cần) */
+.dropdownBtn.primary {
+  background: #000;
+  color: #ffd700;
+  border-color: #000;
+}
+
+.dropdownBtn:hover {
+  background: rgba(0,0,0,.08);
+}
+
+.dropdownBtn.primary:hover {
+  background: #333;
+}
+
+/* Mobile: đảm bảo dropdown phủ trên nội dung khác */
+@media (max-width: 768px) {
+  .accountDropdown {
+    min-width: 200px;
+  }
+}
+
+
+/* ====== Áp dụng tương tự với submenu brand ====== */
+.home__menuItem {
+  position: relative;
+}
+
+/* Đặt ngay dưới mục menu, không tạo gap */
+.home__submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;          /* tạo khoảng cách bằng margin */
+  min-width: 180px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  padding: 8px;
+  display: none;
+  z-index: 90;
+}
+
+/* Giữ mở khi hover menuItem HOẶC hover chính submenu */
+.home__menuItem:hover .home__submenu,
+.home__menuItem:focus-within .home__submenu {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cầu nối tránh hụt hover khi rê từ item xuống submenu */
+.home__menuItem::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  height: 10px;             /* cầu nối 10px */
+  width: 100%;
+}
+
+
+
+.accountMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.accountDropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 120%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 8px;
+  z-index: 10;
+}
+
+.accountMenu:hover .accountDropdown {
+  display: block;
+}
+
+.accountDropdown button {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.home__searchBox input {
+  padding: 8px 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.home__searchBox select {
+  padding: 8px 12px;
+  border: 1px solid #aaa;
+  border-left: none;
+  background: #fff;
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.home__searchBox select:last-of-type {
+  border-radius: 0;
+}
+
+.home__searchBox button {
+  padding: 8px 16px;
+  border: none;
+  background: #000;
+  color: #ffd700;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.15s ease;
+}
+
+.home__searchBox button:hover {
+  background: #333;
+}
+
+/* === Auth buttons === */
+.home__authButtons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.home__btn {
+  padding: 8px 16px;
+  border: 1px solid #000;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #000;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.home__btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.home__btn--primary {
+  background: #000;
+  color: #ffd700;
+  border-color: #000;
+}
+
+.home__btn--primary:hover {
+  background: #333;
+}
+
+/* User info styles */
+.home__userWrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.home__userText {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home__navbar {
+    padding: 16px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .home__menu {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+  }
+  
+  .home__searchBox {
+    order: 2;
+    margin-right: 0;
+    flex: 1;
+  }
+  
+  .home__searchBox input {
+    min-width: 120px;
+  }
+  
+  .home__searchBox select {
+    min-width: 80px;
+  }
+  
+  .home__authButtons {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .home__navbar {
+    padding: 12px;
+  }
+  
+  .home__logo {
+    font-size: 18px;
+  }
+  
+  .home__menu a {
+    font-size: 16px;
+  }
+  
+  .home__searchBox {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .home__searchBox input,
+  .home__searchBox select {
+    border-radius: 4px;
+    border: 1px solid #aaa;
+  }
+  
+  .home__searchBox button {
+    border-radius: 4px;
+  }
+}

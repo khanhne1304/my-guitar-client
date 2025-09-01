@@ -1,0 +1,82 @@
+.page { background:#fffbe8; min-height:100vh; }
+.main { padding: 24px 0; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+.title { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+.caption { color:#555; margin-bottom: 12px; }
+
+.grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 24px; }
+@media (max-width: 960px){ .grid{ grid-template-columns: 1fr; } }
+
+.left { }
+.list { display: flex; flex-direction: column; gap: 12px; }
+
+.row {
+  display:flex; gap:14px; background:#fff; border:1px solid #eee; border-radius:12px;
+  padding:12px;
+}
+.picWrap { width:105px; height:105px; border-radius:8px; overflow:hidden; border:1px solid #eee; }
+.picWrap img{ width:100%; height:100%; object-fit:cover; }
+.info { flex:1; display:flex; flex-direction:column; gap:8px; }
+.name { font-weight:700; }
+.sku { color:#888; font-size:13px; }
+
+.priceRow { display:flex; align-items:center; gap:8px; }
+.price { color:#b45309; font-weight:800; }
+
+.qtyRow { display:flex; align-items:center; gap:8px; }
+.qtyBtn{
+  width:28px; height:28px; border-radius:6px; border:1px solid #ddd; background:#fff; cursor:pointer;
+}
+.qtyRow input{
+  width:60px; text-align:center; padding:6px; border:1px solid #ddd; border-radius:6px;
+}
+.removeBtn{
+  margin-left:auto; background:transparent; border:none; color:#c00; cursor:pointer; font-weight:600;
+}
+
+.noteBox{ margin-top:16px; }
+.noteTitle{ font-weight:700; margin-bottom:6px; }
+.noteBox textarea{
+  width:100%; min-height:110px; border:1px solid #ddd; border-radius:10px; padding:10px; resize:vertical;
+}
+.invoice{ display:flex; align-items:center; gap:8px; margin-top:10px; color:#333; }
+
+.right{
+  background:#fff; border:1px solid #eee; border-radius:12px; padding:16px; height:fit-content;
+}
+.boxTitle{ font-weight:800; margin-bottom:10px; }
+.shipTimeBox{ border:1px solid #f0f0f0; border-radius:10px; padding:10px; margin-bottom:12px; background:#fafafa; }
+.shipTitle{ font-weight:700; margin-bottom:6px; }
+.radio{ display:flex; align-items:center; gap:8px; margin:4px 0; }
+
+.totalRow{ display:flex; justify-content:space-between; align-items:center; margin:10px 0 6px; }
+.total{ font-size:20px; color:#d00; }
+
+.notes{ margin:8px 0 10px 18px; color:#666; }
+.paymentInfo{
+  background:#f6f6f6; border:1px dashed #ddd; border-radius:10px; padding:10px; font-size:14px; color:#444;
+}
+
+.agree{ display:flex; align-items:flex-start; gap:8px; margin:12px 0; }
+.btnCheckout{
+  width:100%; padding:12px 16px; border:none; background:#222; color:#ffd700; border-radius:10px; cursor:pointer;
+  font-weight:800;
+}
+.btnCheckout:disabled{ opacity:.5; cursor:not-allowed; }
+
+.empty{
+  background:#fff; border:1px dashed #ddd; padding:20px; border-radius:12px; display:flex; gap:12px; align-items:center;
+}
+.btnPrimary{
+  margin-left:auto; padding:10px 14px; border:none; border-radius:10px; background:#111; color:#ffd700; cursor:pointer;
+}
+.shipTimeBox { margin-top: 16px; padding: 12px; border: 1px solid #eee; border-radius: 8px; }
+.shipHeader { font-weight: 600; margin-bottom: 8px; }
+.timeRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+.col label { font-size: 13px; color: #555; margin-bottom: 4px; display: block; }
+.col select, .col input[type="date"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.inline { display: flex; gap: 8px; align-items: center; }
+.confirmBtn { width: 100%; margin-top: 12px; padding: 10px; border-radius: 6px; background: #111; color: #fff; border: none; font-weight: 600; }
+.confirmOk { margin-top: 6px; color: green; font-size: 13px; }
+.confirmWarn { margin-top: 6px; color: red; font-size: 13px; }
