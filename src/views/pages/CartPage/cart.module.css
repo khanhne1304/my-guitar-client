@@ -1,4 +1,10 @@
-.page { background:#fffbe8; min-height:100vh; }
+/* Cart.module.css */
+.page {
+  font-family: var(--font-sans);
+  background: #fffbe8;
+  min-height: 100vh;
+}
+
 .main { padding: 24px 0; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 

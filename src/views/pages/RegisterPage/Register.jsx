@@ -148,13 +148,27 @@ export default function Register() {
         password: form.password,
       });
 
-      // 3) Lưu token & điều hướng
+      // 3) Lưu token & ghép user đầy đủ vào localStorage
       if (loginData?.token) {
         localStorage.setItem('token', loginData.token);
       }
+
+      const backendUser = loginData?.user || {};
+      // GHÉP dữ liệu user từ backend với field bạn nhập ở form
+      const mergedUser = {
+        id: backendUser.id ?? backendUser._id,
+        name: backendUser.name ?? form.fullName?.trim() ?? '',
+        email: backendUser.email ?? form.email?.trim() ?? '',
+        username: backendUser.username ?? form.username?.trim() ?? '',
+        phone: backendUser.phone ?? form.phone?.trim() ?? '',
+        address: backendUser.address ?? form.address?.trim() ?? '',
+        createdAt: backendUser.createdAt ?? new Date().toISOString(),
+      };
+
+      localStorage.setItem('user', JSON.stringify(mergedUser));
+
       setOk('Đăng ký & đăng nhập thành công!');
-      // tuỳ UX: chờ 500ms rồi chuyển trang
-      setTimeout(() => navigate('/'), 500);
+      setTimeout(() => navigate('/login'), 500);
     } catch (error) {
       setErr(error.message);
     } finally {
@@ -256,9 +270,8 @@ export default function Register() {
 
               <button
                 type='submit'
-                className={`${styles.register__btn} ${
-                  !agree || loading ? styles['register__btn--disabled'] : ''
-                }`}
+                className={`${styles.register__btn} ${!agree || loading ? styles['register__btn--disabled'] : ''
+                  }`}
                 disabled={!agree || loading}
               >
                 {loading ? 'Đang xử lý...' : 'Đăng ký'}

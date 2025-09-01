@@ -7,7 +7,7 @@ import ViewCategory from "../../views/pages/CategoryPage/viewCategory";
 import Cart from "../../views/pages/CartPage/Cart";
 import Checkout from "../../views/pages/CheckoutPage/Checkout";
 import ProductsCategory from "../../views/pages/ProductsPage/Products"; // trang liệt kê Category
-
+import Account from "../../views/pages/AccountPage/Account";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -18,6 +18,7 @@ const publicRoutes = [
   { path: "/cart", element: <Cart /> },
   { path: "/checkout", element: <Checkout /> },
   { path: "/productsCategory", element: <ProductsCategory /> }, // ✅ list Category
+  { path: "/account", element: <Account /> },
 ];
 
 export default publicRoutes;
