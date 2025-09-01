@@ -1,5 +1,4 @@
-import styles from '../../../views/pages/CartPage/cart.module.css';
-
+import styles from '../../pages/CartPage/cart.module.css';
 export default function DeliveryTimeBox({
   shipMode,
   setShipMode,
