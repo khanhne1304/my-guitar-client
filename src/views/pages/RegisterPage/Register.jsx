@@ -11,8 +11,8 @@ import {
   register as apiRegister,
   login as apiLogin,
 } from '../../../services/authService';
-import { validateRegister } from '../../../untils/validators';
-import { saveSession } from '../../../untils/storage';
+import { validateRegister } from '../../../utils/validators';
+import { saveSession } from '../../../utils/storage';
 
 export default function Register() {
   const navigate = useNavigate();

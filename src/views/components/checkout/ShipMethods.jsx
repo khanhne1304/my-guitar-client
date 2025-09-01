@@ -1,5 +1,5 @@
 import styles from '../../pages/CheckoutPage/checkout.module.css';
-import { fmtVND } from '../../../untils/currency';
+import { fmtVND } from '../../../utils/currency';
 export default function ShipMethods({ visible, methods, shipMethod, setShipMethod }) {
 if (!visible) return <div className={styles.shipPlaceholder}>Bạn đã chọn <b>nhận tại cửa hàng</b>. Phí vận chuyển = 0đ.</div>;
 return (

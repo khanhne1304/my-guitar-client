@@ -1,5 +1,5 @@
 import styles from '../../pages/CartPage/cart.module.css';
-import { fmtVND } from '../../../untils/currency';
+import { fmtVND } from '../../../utils/currency';
 
 
 export default function SummaryBox({ subtotal, agree, setAgree, onCheckout }) {

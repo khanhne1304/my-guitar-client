@@ -1,5 +1,5 @@
 import styles from '../../pages/CheckoutPage/checkout.module.css';
-import { fmtVND } from '../../../untils/currency'; // hoặc '../../../utils/currency'
+import { fmtVND } from '../../../utils/currency'; // hoặc '../../../utils/currency'
 
 export default function VnpayQR({
   visible, showQR, setShowQR, paid, setPaid, orderId, total, orderInfo, qrUrl

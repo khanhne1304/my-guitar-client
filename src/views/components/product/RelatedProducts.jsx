@@ -1,5 +1,5 @@
 import styles from '../../pages/productDetails/productDetails.module.css';
-import { fmtVND } from '../../../untils/currency';
+import { fmtVND } from '../../../utils/currency';
 
 
 export default function RelatedProducts({ items = [], onGo }) {

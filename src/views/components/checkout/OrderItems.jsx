@@ -1,5 +1,5 @@
 import styles from '../../pages/CheckoutPage/checkout.module.css';
-import { fmtVND } from '../../../untils/currency';
+import { fmtVND } from '../../../utils/currency';
 export default function OrderItems({ items }) {
 return (
 <div className={styles.cartBox}>
