@@ -1,69 +1,43 @@
-import { useEffect, useState, useMemo } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
-import styles from "./Category.module.css";
-import ProductCard from "../../components/productCard/productCard";
-import Header from "../../components/HomePageItems/Header/Header";
-import Footer from "../../components/HomePageItems/Footer/HomePageFooter";
-import { MOCK_PRODUCTS } from "../../components/Data/dataProduct";
+// src/pages/Category.jsx
+import { useMemo, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import styles from './Category.module.css';
 
-export default function ViewCategory() {
-  const { slug } = useParams(); // ví dụ: piano, guitar (từ /category/:slug)
-  const [searchParams] = useSearchParams(); // để lấy category từ query params
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
-  const [sortBy, setSortBy] = useState("default"); // default, price-asc, price-desc, name-asc, name-desc
+import Header from '../../components/HomePageItems/Header/Header';
+import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
+import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
-  // Lấy category từ URL params hoặc query params
-  const categorySlug = slug || searchParams.get("category");
+import { useCategoryProducts } from '../../../hooks/useCategoryProducts';
+import Breadcrumb from '../../components/Category/Breadcrumb';
+import Toolbar from '../../components/Category/Toolbar';
+import CategoryGrid from '../../components/Category/CategoryGrid';
 
-  useEffect(() => {
-    if (!categorySlug) return;
-    
-    setLoading(true);
-    setErr("");
-    
-    // Sử dụng dữ liệu mẫu thay vì API
-    setTimeout(() => {
-      const filteredProducts = MOCK_PRODUCTS.filter(
-        (p) => p.category?.slug === categorySlug
-      );
-      setProducts(filteredProducts);
-      setLoading(false);
-    }, 500);
-  }, [categorySlug]);
+export default function Category() {
+  const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const [sortBy, setSortBy] = useState('default');
 
-  // Sắp xếp sản phẩm
+  const categorySlug = slug || searchParams.get('category');
+  const { products, loading, err } = useCategoryProducts(categorySlug);
+
   const sortedProducts = useMemo(() => {
-    if (!products.length) return [];
-    
-    const sorted = [...products];
-    
+    const list = [...(products || [])];
+    const getNow = (p) =>
+      p?.price?.sale && p.price.sale !== 0 ? p.price.sale : p?.price?.base || 0;
+
     switch (sortBy) {
-      case "price-asc":
-        return sorted.sort((a, b) => {
-          const priceA = a.price?.sale && a.price.sale !== 0 ? a.price.sale : a.price?.base || 0;
-          const priceB = b.price?.sale && b.price.sale !== 0 ? b.price.sale : b.price?.base || 0;
-          return priceA - priceB;
-        });
-      case "price-desc":
-        return sorted.sort((a, b) => {
-          const priceA = a.price?.sale && a.price.sale !== 0 ? a.price.sale : a.price?.base || 0;
-          const priceB = b.price?.sale && b.price.sale !== 0 ? b.price.sale : b.price?.base || 0;
-          return priceB - priceA;
-        });
-      case "name-asc":
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case "name-desc":
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case 'price-asc':
+        return list.sort((a, b) => getNow(a) - getNow(b));
+      case 'price-desc':
+        return list.sort((a, b) => getNow(b) - getNow(a));
+      case 'name-asc':
+        return list.sort((a, b) => a.name.localeCompare(b.name));
+      case 'name-desc':
+        return list.sort((a, b) => b.name.localeCompare(a.name));
       default:
-        return sorted;
+        return list;
     }
   }, [products, sortBy]);
-
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-  };
 
   return (
     <div className={styles.categoryPage}>
@@ -71,51 +45,17 @@ export default function ViewCategory() {
 
       <main className={styles.categoryMain}>
         <div className={styles.categoryWrap}>
-          {/* Breadcrumb */}
-          <div className={styles.breadcrumb}>
-            <Link to="/">Trang chủ</Link> <span>/</span>
-            <span className={styles.current}>{categorySlug?.toUpperCase()}</span>
-          </div>
+          <Breadcrumb categorySlug={categorySlug} />
 
-          {/* Tiêu đề */}
-          <h1 className={styles.title}>Danh mục: {categorySlug?.toUpperCase()}</h1>
+          <h1 className={styles.title}>
+            Danh mục: {categorySlug?.toUpperCase()}
+          </h1>
 
-          {/* Thanh lọc & sort */}
-          <div className={styles.filters}>
-            <button className={styles.filterBtn}>Giá</button>
-            <button className={styles.filterBtn}>Tính năng</button>
-            <button className={styles.filterBtn}>Thương hiệu</button>
-            <div className={styles.sort}>
-              <label>Sắp xếp theo:</label>
-              <select value={sortBy} onChange={handleSortChange}>
-                <option value="default">Mặc định</option>
-                <option value="price-asc">Giá tăng dần</option>
-                <option value="price-desc">Giá giảm dần</option>
-                <option value="name-asc">Tên A-Z</option>
-                <option value="name-desc">Tên Z-A</option>
-              </select>
-            </div>
-          </div>
+          <Toolbar sortBy={sortBy} onSortChange={setSortBy} />
 
-          {/* Grid sản phẩm */}
           {loading && <div>Đang tải...</div>}
           {err && <div className={styles.error}>{err}</div>}
-          {!loading && !err && (
-            <div className={styles.grid}>
-              {sortedProducts.length ? (
-                sortedProducts.map((p) => (
-                  <ProductCard
-                    key={p._id}
-                    {...p}
-                    href={`/products/${p.slug}`}
-                    onView={() => console.log('Xem sản phẩm:', p.name)}
-                  />
-                ))
-              ) : (
-                <div className={styles.empty}>Chưa có sản phẩm trong danh mục này</div>
-              )}
-            </div>
-          )}
+          {!loading && !err && <CategoryGrid items={sortedProducts} />}
         </div>
       </main>
 
