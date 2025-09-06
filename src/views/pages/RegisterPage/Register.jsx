@@ -44,30 +44,37 @@ export default function Register() {
 
     setLoading(true);
     try {
-      // 1) Đăng ký (dùng fullName làm name cho backend)
+      // 1) Đăng ký: gửi đủ 6 trường
       await apiRegister({
-        name: form.fullName.trim(),
+        username: form.username.trim(),
+        name: form.fullName.trim(), // map Họ & Tên -> name
         email: form.email.trim(),
+        address: form.address.trim(),
+        phone: form.phone.trim(),
         password: form.password,
       });
 
-      // 2) Đăng nhập tự động
+      // 2) Đăng nhập tự động bằng identifier (email hoặc username)
+      const identifier =
+        (form.email && form.email.trim()) ||
+        (form.username && form.username.trim());
+
       const loginData = await apiLogin({
-        email: form.email.trim(),
+        identifier,
         password: form.password,
       });
 
       const token = loginData?.token;
       const backendUser = loginData?.user || {};
 
-      // 3) Ghép user từ backend + form
+      // 3) Ghép user từ backend + form (fallback an toàn)
       const mergedUser = {
         id: backendUser.id ?? backendUser._id,
-        name: backendUser.name ?? form.fullName?.trim() ?? '',
-        email: backendUser.email ?? form.email?.trim() ?? '',
-        username: backendUser.username ?? form.username?.trim() ?? '',
-        phone: backendUser.phone ?? form.phone?.trim() ?? '',
-        address: backendUser.address ?? form.address?.trim() ?? '',
+        name: backendUser.name ?? form.fullName.trim(),
+        email: backendUser.email ?? form.email.trim(),
+        username: backendUser.username ?? form.username.trim(),
+        phone: backendUser.phone ?? form.phone.trim(),
+        address: backendUser.address ?? form.address.trim(),
         createdAt: backendUser.createdAt ?? new Date().toISOString(),
       };
 
@@ -75,14 +82,17 @@ export default function Register() {
       saveSession({ token, user: mergedUser });
 
       setOk('Đăng ký & đăng nhập thành công!');
-      // Điều hướng: đưa thẳng về trang chủ hoặc /login tuỳ flow
-      setTimeout(() => navigate('/login'), 500);
+      setTimeout(() => navigate('/'), 700);
     } catch (error) {
       const message =
         error?.name === 'TypeError' &&
         String(error?.message || '').includes('fetch')
           ? 'Không thể kết nối đến server. Vui lòng thử lại sau.'
-          : error?.message || 'Đã có lỗi xảy ra.';
+          : error?.data?.message ||
+            (Array.isArray(error?.data?.errors) &&
+              error.data.errors.map((e) => e?.msg || e).join('; ')) ||
+            error?.message ||
+            'Đã có lỗi xảy ra. Vui lòng thử lại.';
       setErr(message);
     } finally {
       setLoading(false);
@@ -104,14 +114,19 @@ export default function Register() {
           {ok && <div className={styles.register__alertSuccess}>{ok}</div>}
 
           <div className={styles.register__container}>
-            <form className={styles.register__form} onSubmit={handleSubmit}>
+            <form
+              className={styles.register__form}
+              onSubmit={handleSubmit}
+              noValidate
+            >
               <input
                 type='text'
                 name='username'
-                placeholder='Tên tài khoản (tuỳ chọn)'
+                placeholder='Tên tài khoản'
                 value={form.username}
                 onChange={onChange}
                 autoComplete='username'
+                required
               />
               <input
                 type='email'
@@ -133,23 +148,25 @@ export default function Register() {
               <input
                 type='text'
                 name='address'
-                placeholder='Địa chỉ (tuỳ chọn)'
+                placeholder='Địa chỉ'
                 value={form.address}
                 onChange={onChange}
                 autoComplete='street-address'
+                required
               />
               <input
-                type='text'
+                type='tel'
                 name='phone'
-                placeholder='Số điện thoại (tuỳ chọn)'
+                placeholder='Số điện thoại'
                 value={form.phone}
                 onChange={onChange}
                 autoComplete='tel'
+                required
               />
               <input
                 type='password'
                 name='password'
-                placeholder='Mật khẩu'
+                placeholder='Mật khẩu (≥ 6 ký tự)'
                 value={form.password}
                 onChange={onChange}
                 autoComplete='new-password'
@@ -171,6 +188,7 @@ export default function Register() {
                   type='checkbox'
                   checked={agree}
                   onChange={(e) => setAgree(e.target.checked)}
+                  required
                 />
                 <label htmlFor='agree'>
                   Đồng ý với <strong>Điều khoản</strong> và{' '}
