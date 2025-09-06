@@ -1,6 +1,6 @@
 // src/services/apiClient.js
 const BASE_URL =
-  import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:5000/api';
+  import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
 async function request(path, { method = 'GET', headers = {}, body } = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -13,7 +13,7 @@ async function request(path, { method = 'GET', headers = {}, body } = {}) {
   try {
     data = await res.json();
   } catch {
-    // no-op: có API trả về empty body
+    // Một số API có thể trả empty body
   }
 
   if (!res.ok) {

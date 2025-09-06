@@ -1,30 +1,40 @@
 // src/hooks/useProducts.js
-import { useEffect, useState } from 'react';
-import { MOCK_PRODUCTS } from '../../src/views/components/Data/dataProduct';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { productService } from '../services/productService';
 
+export function useProducts(initialParams = {}) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState('');
+  const paramsRef = useRef(initialParams);
 
-export function useProducts() {
-const [products, setProducts] = useState([]);
-const [loading, setLoading] = useState(false);
-const [err, setErr] = useState('');
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setErr('');
+    try {
+      const items = await productService.list(paramsRef.current);
+      setProducts(Array.isArray(items) ? items : []);
+    } catch (e) {
+      setErr(e?.message || 'Không thể tải sản phẩm');
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
-useEffect(() => {
-let t;
-setLoading(true);
-setErr('');
+  const refetch = useCallback(
+    (nextParams) => {
+      if (nextParams && typeof nextParams === 'object') {
+        paramsRef.current = { ...paramsRef.current, ...nextParams };
+      }
+      fetchProducts();
+    },
+    [fetchProducts],
+  );
 
-
-// giả lập fetch, sau này thay bằng API
-t = setTimeout(() => {
-setProducts(MOCK_PRODUCTS);
-setLoading(false);
-}, 500);
-
-
-return () => clearTimeout(t);
-}, []);
-
-
-return { products, loading, err };
+  return { products, loading, err, refetch };
 }

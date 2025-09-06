@@ -1,10 +1,26 @@
 // src/services/authService.js
 import { apiClient } from './apiClient';
 
-export async function register({ name, email, password }) {
-  return apiClient.post('/auth/register', { name, email, password });
+// Đăng ký vẫn gửi đủ trường
+export async function register({
+  username,
+  name,
+  email,
+  address,
+  phone,
+  password,
+}) {
+  return apiClient.post('/auth/register', {
+    username,
+    name,
+    email,
+    address,
+    phone,
+    password,
+  });
 }
 
-export async function login({ email, password }) {
-  return apiClient.post('/auth/login', { email, password });
+// Đăng nhập với identifier (có thể là email hoặc username)
+export async function login({ identifier, password }) {
+  return apiClient.post('/auth/login', { identifier, password });
 }

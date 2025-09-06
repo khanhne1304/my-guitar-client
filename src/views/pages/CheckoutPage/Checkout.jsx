@@ -1,5 +1,5 @@
 // src/views/pages/checkout/Checkout.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './checkout.module.css';
 
@@ -23,6 +23,9 @@ import Summary from '../../components/checkout/Summary';
 import { useDeliveryState } from '../../../hooks/useDeliveryState';
 import { useStoresEligibility } from '../../../hooks/useStoresEligibility';
 
+// 🆕 Lấy user đã lưu (localStorage)
+import { getUser } from '../../../utils/storage';
+
 const SHIP_METHODS = [
   { id: 'economy', name: 'Tiết kiệm', eta: '2–4 ngày', fee: 15000 },
   { id: 'standard', name: 'Nhanh', eta: '24–48 giờ', fee: 30000 },
@@ -34,7 +37,8 @@ export default function Checkout() {
   const { cartItems, subtotal, clearCart } = useCart();
 
   const [showSuccess, setShowSuccess] = useState(false);
-  const { mode, setMode, shipMethod, setShipMethod, delivery } = useDeliveryState();
+  const { mode, setMode, shipMethod, setShipMethod, delivery } =
+    useDeliveryState();
 
   const [form, setForm] = useState({
     name: '',
@@ -47,18 +51,47 @@ export default function Checkout() {
     note: '',
   });
 
+  // 🆕 Tự load thông tin cá nhân từ user lưu trong localStorage
+  useEffect(() => {
+    const u = getUser?.();
+    if (!u) return;
+
+    // Chuẩn hoá các field hay gặp trong dự án
+    const fullName = u.fullName || u.name || '';
+    const email = u.email || '';
+    const phone = u.phone || u.phoneNumber || '';
+    // address có thể là string hoặc object { address, district, country }
+    const addrObj =
+      typeof u.address === 'object' && u.address !== null
+        ? u.address
+        : { address: u.address || '' };
+
+    setForm((prev) => ({
+      ...prev,
+      name: prev.name || fullName,
+      email: prev.email || email,
+      phone: prev.phone || phone,
+      address: prev.address || addrObj.address || addrObj.street || '',
+      district: prev.district || addrObj.district || addrObj.ward || '',
+      country: prev.country || addrObj.country || 'Vietnam',
+    }));
+  }, []);
+
   // Cửa hàng đủ tồn kho khi nhận tại cửa hàng
   const { eligibleStores } = useStoresEligibility(cartItems, STORES);
   const [storeId, setStoreId] = useState('');
   const pickedStore = useMemo(
     () => eligibleStores.find((s) => s.id === storeId),
-    [eligibleStores, storeId]
+    [eligibleStores, storeId],
   );
 
   // Phí ship + tổng
   const shipFee = useMemo(
-    () => (mode === 'pickup' ? 0 : SHIP_METHODS.find((m) => m.id === shipMethod)?.fee || 0),
-    [mode, shipMethod]
+    () =>
+      mode === 'pickup'
+        ? 0
+        : SHIP_METHODS.find((m) => m.id === shipMethod)?.fee || 0,
+    [mode, shipMethod],
   );
   const total = useMemo(() => subtotal + shipFee, [subtotal, shipFee]);
 
@@ -68,7 +101,7 @@ export default function Checkout() {
   const orderInfo = `Thanh toan don ${orderId}`;
   const vnpayPayload = `VNPAY|ORDER=${orderId}|AMOUNT=${total}|INFO=${orderInfo}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
-    vnpayPayload
+    vnpayPayload,
   )}`;
   const [showQR, setShowQR] = useState(false);
   const [paid, setPaid] = useState(false);
@@ -161,7 +194,10 @@ export default function Checkout() {
                 />
               </div>
 
-              <NoteBox value={form.note} onChange={(v) => setForm({ ...form, note: v })} />
+              <NoteBox
+                value={form.note}
+                onChange={(v) => setForm({ ...form, note: v })}
+              />
             </section>
 
             {/* RIGHT */}
@@ -181,7 +217,11 @@ export default function Checkout() {
                 ) : (
                   <>
                     <span>Pickup at :</span>{' '}
-                    <b>{pickedStore ? `${pickedStore.name} – ${pickedStore.address}` : 'Chưa chọn cửa hàng'}</b>
+                    <b>
+                      {pickedStore
+                        ? `${pickedStore.name} – ${pickedStore.address}`
+                        : 'Chưa chọn cửa hàng'}
+                    </b>
                   </>
                 )}
               </div>
@@ -201,12 +241,20 @@ export default function Checkout() {
               <div className={styles.couponBox}>
                 <div className={styles.cartTitle}>Mã khuyến mãi</div>
                 <div className={styles.couponRow}>
-                  <input className={styles.input} placeholder="Nhập mã khuyến mãi" />
+                  <input
+                    className={styles.input}
+                    placeholder='Nhập mã khuyến mãi'
+                  />
                   <button className={styles.grayBtn}>Áp dụng</button>
                 </div>
               </div>
 
-              <Summary subtotal={subtotal} shipFee={shipFee} total={total} onPlace={placeOrder} />
+              <Summary
+                subtotal={subtotal}
+                shipFee={shipFee}
+                total={total}
+                onPlace={placeOrder}
+              />
             </aside>
           </div>
         </div>

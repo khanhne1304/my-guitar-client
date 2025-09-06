@@ -5,10 +5,10 @@ import styles from './productDetails.module.css';
 
 import Header from '../../components/HomePageItems/Header/Header';
 import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
-import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 import { useCart } from '../../../context/CartContext';
 
 import { useProductBySlug } from '../../../hooks/useProductBySlug';
+import { useProducts } from '../../../hooks/useProducts';
 import { usePrice } from '../../../hooks/usePrice';
 import { useRelatedProducts } from '../../../hooks/useRelatedProduct';
 
@@ -21,12 +21,30 @@ import MetaInfo from '../../components/product/MetaInfo';
 import Tabs from '../../components/product/Tabs';
 import RelatedProducts from '../../components/product/RelatedProducts';
 
+const FILE_BASE =
+  import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
+const ensureAbsolute = (u) =>
+  !u
+    ? ''
+    : /^https?:|^data:/.test(u)
+    ? u
+    : `${FILE_BASE}${u.startsWith('/') ? '' : '/'}${u}`;
+
 export default function ProductDetails() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
   const { prod, images } = useProductBySlug(slug);
+  const { products: headerProducts } = useProducts(); // để Header có data thật
+
+  const galleryImages = (images?.length ? images : prod?.images || []).map(
+    (i) => ({
+      url: ensureAbsolute(i?.url),
+      alt: i?.alt || prod?.name || 'Ảnh sản phẩm',
+    }),
+  );
+
   const { priceNow, oldPrice, discount } = usePrice(prod);
   const related = useRelatedProducts(prod?.category?.slug, prod?.slug);
 
@@ -56,7 +74,7 @@ export default function ProductDetails() {
         image: prod.images?.[0]?.url || '',
         stock: prod.stock,
       },
-      qty
+      qty,
     );
 
     if (goToCart) {
@@ -68,19 +86,19 @@ export default function ProductDetails() {
 
   return (
     <div className={styles.page}>
-      <Header products={MOCK_PRODUCTS} />
+      <Header products={headerProducts} />
 
       <main className={styles.main}>
         <div className={styles.wrap}>
           {/* breadcrumb */}
           <div className={styles.breadcrumb}>
-            <span onClick={() => navigate('/')} role="button" tabIndex={0}>
+            <span onClick={() => navigate('/')} role='button' tabIndex={0}>
               Trang chủ
             </span>
             <span>›</span>
             <span
               onClick={() => navigate(`/category/${prod?.category?.slug}`)}
-              role="button"
+              role='button'
               tabIndex={0}
             >
               {prod?.category?.name}
@@ -91,7 +109,7 @@ export default function ProductDetails() {
 
           <div className={styles.head}>
             {/* GALLERY */}
-            <Gallery images={images} discount={discount} />
+            <Gallery images={galleryImages} discount={discount} />
 
             {/* INFO */}
             <div className={styles.info}>
@@ -107,7 +125,11 @@ export default function ProductDetails() {
                 </span>
               </div>
 
-              <PriceBlock priceNow={priceNow} oldPrice={oldPrice} discount={discount} />
+              <PriceBlock
+                priceNow={priceNow}
+                oldPrice={oldPrice}
+                discount={discount}
+              />
 
               <FeatureList items={prod.highlights} />
               <GiftList items={prod.gifts} />
