@@ -7,7 +7,7 @@ import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import { useCategoriesFromProducts } from '../../../hooks/useCategoriesFromProducts';
-import CategoryGrid from '../../components/Catalog/CategoryGrid';
+import CategoryGrid from '../../components/catalog/CategoryGrid';
 
 export default function Products() {
   const navigate = useNavigate();

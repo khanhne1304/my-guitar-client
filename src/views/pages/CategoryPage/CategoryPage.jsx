@@ -1,7 +1,7 @@
 // src/pages/Category.jsx
 import { useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import styles from './PageCategoryPage.module.css';
+import styles from './CategoryPage.module.css';
 
 import Header from '../../components/HomePageItems/Header/Header';
 import Footer from '../../components/HomePageItems/Footer/HomePageFooter';

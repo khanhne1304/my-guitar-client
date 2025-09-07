@@ -1,4 +1,5 @@
 import styles from '../../pages/CartPage/CartPage.module.css';
+
 export default function DeliveryTimeBox({
   shipMode,
   setShipMode,
@@ -13,10 +14,10 @@ export default function DeliveryTimeBox({
   onConfirm,
 }) {
   return (
-    <div className={styles.shipTimeBox}>
-      <div className={styles.shipHeader}>THỜI GIAN GIAO HÀNG</div>
+    <div className={styles['cart__ship-time-box']}>
+      <div className={styles['cart__ship-header']}>THỜI GIAN GIAO HÀNG</div>
 
-      <label className={styles.radio}>
+      <label className={styles['cart__radio']}>
         <input
           type="radio"
           name="shipmode"
@@ -30,7 +31,7 @@ export default function DeliveryTimeBox({
         Giao khi có hàng
       </label>
 
-      <label className={styles.radio}>
+      <label className={styles['cart__radio']}>
         <input
           type="radio"
           name="shipmode"
@@ -45,10 +46,10 @@ export default function DeliveryTimeBox({
       </label>
 
       {shipMode === 'schedule' && (
-        <div className={styles.timeRow}>
-          <div className={styles.col}>
+        <div className={styles['cart__time-row']}>
+          <div className={styles['cart__col']}>
             <label>Ngày giao</label>
-            <div className={styles.inline}>
+            <div className={styles['cart__inline']}>
               <select
                 value={dayOption}
                 onChange={(e) => {
@@ -74,7 +75,7 @@ export default function DeliveryTimeBox({
             </div>
           </div>
 
-          <div className={styles.col}>
+          <div className={styles['cart__col']}>
             <label>Thời gian giao</label>
             <select
               value={timeSlot}
@@ -93,14 +94,16 @@ export default function DeliveryTimeBox({
         </div>
       )}
 
-      <button className={styles.confirmBtn} onClick={onConfirm}>
+      <button className={styles['cart__confirm-btn']} onClick={onConfirm}>
         XÁC NHẬN THỜI GIAN
       </button>
 
       {confirmed ? (
-        <div className={styles.confirmOk}>✓ Đã xác nhận thời gian giao</div>
+        <div className={styles['cart__confirm-ok']}>
+          ✓ Đã xác nhận thời gian giao
+        </div>
       ) : (
-        <div className={styles.confirmWarn}>
+        <div className={styles['cart__confirm-warn']}>
           Vui lòng xác nhận thời gian giao trước khi thanh toán
         </div>
       )}

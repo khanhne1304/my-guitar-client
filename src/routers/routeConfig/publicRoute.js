@@ -3,7 +3,7 @@ import Home from "../../views/pages/HomePage/HomePage";
 import Register from "../../views/pages/RegisterPage/RegisterPage";
 import Login from "../../views/pages/LoginPage/LoginPage";
 import ProductDetails from "../../views/pages/ProductDetailsPage/ProductDetailsPage";
-import ViewCategory from "../../views/pages/CategoryPage/PageCategoryPage";
+import ViewCategory from "../../views/pages/CategoryPage/CategoryPage";
 import Cart from "../../views/pages/CartPage/CartPage";
 import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
 import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê Category

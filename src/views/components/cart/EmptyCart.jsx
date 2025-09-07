@@ -1,11 +1,15 @@
 import styles from '../../pages/CartPage/CartPage.module.css';
+
 export default function EmptyCart({ onShop }) {
-return (
-<div className={styles.empty}>
-Giỏ hàng đang trống.
-<button className={styles.btnPrimary} onClick={onShop}>
-Mua sắm ngay
-</button>
-</div>
-);
+  return (
+    <div className={styles['cart__empty']}>
+      Giỏ hàng đang trống.
+      <button
+        className={styles['cart__btn--primary']}
+        onClick={onShop}
+      >
+        Mua sắm ngay
+      </button>
+    </div>
+  );
 }

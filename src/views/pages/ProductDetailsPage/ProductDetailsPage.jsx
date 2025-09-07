@@ -44,10 +44,7 @@ export default function ProductDetails() {
     return (
       <div className={styles['product-details__state']}>
         Không tìm thấy sản phẩm.
-        <button
-          className={styles['product-details__btn']}
-          onClick={() => navigate(-1)}
-        >
+        <button className={styles['product-details__btn']} onClick={() => navigate(-1)}>
           Quay lại
         </button>
       </div>
@@ -60,16 +57,9 @@ export default function ProductDetails() {
     if (prod.stock <= 0) return;
 
     addToCart(
-      {
-        _id: prod._id,
-        slug: prod.slug,
-        name: prod.name,
-        sku: prod.sku,
-        price: priceNow,
-        image: prod.images?.[0]?.url || '',
-        stock: prod.stock,
-      },
-      qty,
+      { _id: prod._id, slug: prod.slug, name: prod.name, sku: prod.sku, price: priceNow,
+        image: prod.images?.[0]?.url || '', stock: prod.stock },
+      qty
     );
 
     goToCart ? navigate('/cart') : alert('Đã thêm sản phẩm vào giỏ hàng!');
@@ -87,8 +77,7 @@ export default function ProductDetails() {
             <span>›</span>
             <span
               onClick={() => navigate(`/category/${prod?.category?.slug}`)}
-              role="button"
-              tabIndex={0}
+              role="button" tabIndex={0}
             >
               {prod?.category?.name}
             </span>
@@ -97,10 +86,10 @@ export default function ProductDetails() {
           </div>
 
           <div className={styles['product-details__head']}>
-            {/* Gallery */}
+            {/* GALLERY (có CSS riêng trong component Gallery) */}
             <Gallery images={galleryImages} discount={discount} />
 
-            {/* Info */}
+            {/* INFO */}
             <div className={styles['product-details__info']}>
               <h1 className={styles['product-details__title']}>{prod.name}</h1>
 
@@ -111,21 +100,47 @@ export default function ProductDetails() {
               </div>
 
               <PriceBlock priceNow={priceNow} oldPrice={oldPrice} discount={discount} />
-              <FeatureList items={prod.highlights} />
-              <GiftList items={prod.gifts} />
 
-              <QtyWithActions
-                stock={prod.stock}
-                onSubmit={handleAddToCart}
-                styles={styles}
+              <FeatureList
+                classNameBox={styles['product-details__box']}
+                classNameTitle={styles['product-details__box-title']}
+                classNameList={styles['product-details__list']}
+                classNameItem={styles['product-details__list-item']}
+                items={prod.highlights}
               />
 
-              <MetaInfo prod={prod} />
+              <GiftList
+                classNameBox={styles['product-details__box']}
+                classNameTitle={styles['product-details__box-title']}
+                classNameList={styles['product-details__list']}
+                classNameItem={styles['product-details__list-item']}
+                items={prod.gifts}
+              />
+
+              <QtyWithActions stock={prod.stock} onSubmit={handleAddToCart} />
+
+              <MetaInfo
+                classNameMeta={styles['product-details__meta']}
+                prod={prod}
+              />
             </div>
           </div>
 
-          <Tabs prod={prod} />
-          <RelatedProducts items={related} onGo={(href) => navigate(href)} />
+          <Tabs
+            classNameTabs={styles['product-details__tabs']}
+            classNameTab={styles['product-details__tab']}
+            classNameTabActive={styles['product-details__tab--active']}
+            classNamePanel={styles['product-details__tab-panel']}
+            prod={prod}
+          />
+
+          <RelatedProducts
+            classNameWrap={styles['product-details__related']}
+            classNameTitle={styles['product-details__related-title']}
+            classNameGrid={styles['product-details__related-grid']}
+            onGo={(href) => navigate(href)}
+            items={related}
+          />
         </div>
       </main>
 
@@ -134,11 +149,21 @@ export default function ProductDetails() {
   );
 }
 
-function QtyWithActions({ stock, onSubmit, styles }) {
+function QtyWithActions({ stock, onSubmit }) {
   const [qty, setQty] = useState(1);
   return (
     <div>
-      <QtySelector qty={qty} setQty={setQty} stock={stock} />
+      <QtySelector
+        classNameRow={styles['product-details__qty']}
+        classNameBox={styles['product-details__qty-box']}
+        classNameBtn={styles['product-details__qty-btn']}
+        classNameInput={styles['product-details__qty-input']}
+        stockNoteClass={styles['product-details__stock-note']}
+        qty={qty}
+        setQty={setQty}
+        stock={stock}
+      />
+
       <div className={styles['product-details__actions']}>
         {stock > 0 ? (
           <>

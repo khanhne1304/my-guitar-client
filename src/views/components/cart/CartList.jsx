@@ -22,7 +22,7 @@ export default function CartList({ items, onDec, onInc, onUpdate, onRemove }) {
   });
 
   return (
-    <div className={styles.list}>
+    <div className={styles['cart__list']}>
       {decorated.map((item) => (
         <CartItemRow
           key={item._key}
