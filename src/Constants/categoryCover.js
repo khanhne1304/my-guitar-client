@@ -6,6 +6,5 @@ piano:
 'https://images.unsplash.com/photo-1513883049090-d0b7439799bf?q=80&w=800&auto=format&fit=crop',
 };
 
-
 export const FALLBACK_COVER =
 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?q=80&w=1600&auto=format&fit=crop';
