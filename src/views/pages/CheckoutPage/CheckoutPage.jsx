@@ -2,11 +2,11 @@ import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './CheckoutPage.module.css';
 
-import Header from '../../components/HomePageItems/Header/Header';
-import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
+import Header from '../../components/homeItem/Header/Header';
+import Footer from '../../components/homeItem/Footer/HomePageFooter';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 import { STORES } from '../../components/Data/stores';
-import SuccessModal from '../../components/Modal/SuccessModal/SuccessModal';
+import SuccessModal from '../../components/modal/SuccessModal/SuccessModal';
 import { useCart } from '../../../context/CartContext';
 
 import ShipTabs from '../../components/checkout/ShipTabs';

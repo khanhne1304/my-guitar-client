@@ -3,14 +3,14 @@ import { useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import styles from './CategoryPage.module.css';
 
-import Header from '../../components/HomePageItems/Header/Header';
-import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
+import Header from '../../components/homeItem/Header/Header';
+import Footer from '../../components/homeItem/Footer/HomePageFooter';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import { useCategoryProducts } from '../../../hooks/useCategoryProducts';
-import Breadcrumb from '../../components/Category/Breadcrumb';
-import Toolbar from '../../components/Category/Toolbar';
-import CategoryGrid from '../../components/Category/CategoryGrid';
+import Breadcrumb from '../../components/category/Breadcrumb';
+import Toolbar from '../../components/category/Toolbar';
+import CategoryGrid from '../../components/category/CategoryGrid';
 
 export default function Category() {
   const { slug } = useParams();

@@ -2,8 +2,8 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './ProductsPage.module.css';
 
-import Header from '../../components/HomePageItems/Header/Header';
-import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
+import Header from '../../components/homeItem/Header/Header';
+import Footer from '../../components/homeItem/Footer/HomePageFooter';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import { useCategoriesFromProducts } from '../../../hooks/useCategoriesFromProducts';
