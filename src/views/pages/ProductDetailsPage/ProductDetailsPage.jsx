@@ -1,16 +1,9 @@
+// ProductDetailsView.jsx
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ProductDetailsPage.module.css';
 
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/HomePageFooter';
-import { useCart } from '../../../context/CartContext';
-
-import { useProductBySlug } from '../../../hooks/useProductBySlug';
-import { useProducts } from '../../../hooks/useProducts';
-import { usePrice } from '../../../hooks/usePrice';
-import { useRelatedProducts } from '../../../hooks/useRelatedProduct';
-
 import Gallery from '../../components/product/Gallery';
 import PriceBlock from '../../components/product/PriceBlock';
 import FeatureList from '../../components/product/FeatureList';
@@ -19,26 +12,21 @@ import QtySelector from '../../components/product/QtySelector';
 import MetaInfo from '../../components/product/MetaInfo';
 import Tabs from '../../components/product/Tabs';
 import RelatedProducts from '../../components/product/RelatedProducts';
-
-const FILE_BASE = import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
-const ensureAbsolute = (u) =>
-  !u ? '' : /^https?:|^data:/.test(u) ? u : `${FILE_BASE}${u.startsWith('/') ? '' : '/'}${u}`;
-
-export default function ProductDetails() {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-  const { addToCart } = useCart();
-
-  const { prod, images } = useProductBySlug(slug);
-  const { products: headerProducts } = useProducts();
-
-  const galleryImages = (images?.length ? images : prod?.images || []).map((i) => ({
-    url: ensureAbsolute(i?.url),
-    alt: i?.alt || prod?.name || 'Ảnh sản phẩm',
-  }));
-
-  const { priceNow, oldPrice, discount } = usePrice(prod);
-  const related = useRelatedProducts(prod?.category?.slug, prod?.slug);
+import { useProductDetailsViewModel } from '../../../viewmodels/ProductDetailsViewModel';
+import { MOCK_PRODUCTS, getProductBySlug } from '../../components/Data/dataProduct';
+import { useParams, useNavigate } from 'react-router-dom';
+export default function ProductDetailsPage() {
+  const {
+    prod,
+    headerProducts,
+    galleryImages,
+    priceNow,
+    oldPrice,
+    discount,
+    related,
+    handleAddToCart,
+    navigate,
+  } = useProductDetailsViewModel();
 
   if (!prod) {
     return (
@@ -51,26 +39,13 @@ export default function ProductDetails() {
     );
   }
 
-  const handleAddToCart = (qty, goToCart = false) => {
-    const user = localStorage.getItem('user');
-    if (!user) return navigate('/login');
-    if (prod.stock <= 0) return;
-
-    addToCart(
-      { _id: prod._id, slug: prod.slug, name: prod.name, sku: prod.sku, price: priceNow,
-        image: prod.images?.[0]?.url || '', stock: prod.stock },
-      qty
-    );
-
-    goToCart ? navigate('/cart') : alert('Đã thêm sản phẩm vào giỏ hàng!');
-  };
-
   return (
     <div className={styles['product-details']}>
       <Header products={headerProducts} />
 
       <main className={styles['product-details__main']}>
         <div className={styles['product-details__wrap']}>
+
           {/* breadcrumb */}
           <div className={styles['product-details__breadcrumb']}>
             <span onClick={() => navigate('/')} role="button" tabIndex={0}>Trang chủ</span>
@@ -86,10 +61,8 @@ export default function ProductDetails() {
           </div>
 
           <div className={styles['product-details__head']}>
-            {/* GALLERY (có CSS riêng trong component Gallery) */}
             <Gallery images={galleryImages} discount={discount} />
 
-            {/* INFO */}
             <div className={styles['product-details__info']}>
               <h1 className={styles['product-details__title']}>{prod.name}</h1>
 

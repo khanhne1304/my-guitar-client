@@ -1,37 +1,18 @@
-// src/pages/Category.jsx
-import { useMemo, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+// CategoryView.jsx
 import styles from './CategoryPage.module.css';
-
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/HomePageFooter';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
-import { useCategoryProducts } from '../../../hooks/useCategoryProducts';
 import Breadcrumb from '../../components/category/Breadcrumb';
 import Toolbar from '../../components/category/Toolbar';
 import CategoryGrid from '../../components/category/CategoryGrid';
 
-export default function Category() {
-  const { slug } = useParams();
-  const [searchParams] = useSearchParams();
-  const [sortBy, setSortBy] = useState('default');
+import { useCategoryViewModel } from '../../../viewmodels/CategoryViewModel';
 
-  const categorySlug = slug || searchParams.get('category');
-  const { products, loading, err } = useCategoryProducts(categorySlug);
-
-  const sortedProducts = useMemo(() => {
-    const list = [...(products || [])];
-    const getNow = (p) => (p?.price?.sale && p.price.sale !== 0 ? p.price.sale : p?.price?.base || 0);
-
-    switch (sortBy) {
-      case 'price-asc':  return list.sort((a, b) => getNow(a) - getNow(b));
-      case 'price-desc': return list.sort((a, b) => getNow(b) - getNow(a));
-      case 'name-asc':   return list.sort((a, b) => a.name.localeCompare(b.name));
-      case 'name-desc':  return list.sort((a, b) => b.name.localeCompare(a.name));
-      default:           return list;
-    }
-  }, [products, sortBy]);
+export default function CategoryView() {
+  const { categorySlug, sortBy, setSortBy, sortedProducts, loading, err } =
+    useCategoryViewModel();
 
   return (
     <div className={styles.category}>
@@ -39,8 +20,6 @@ export default function Category() {
 
       <main className={styles['category__main']}>
         <div className={styles['category__wrap']}>
-          {/* breadcrumb của page (nếu tự render). 
-              Nếu bạn dùng component Breadcrumb riêng thì có thể bỏ đoạn dưới và giữ component */}
           <Breadcrumb
             categorySlug={categorySlug}
             className={styles['category__breadcrumb']}
@@ -51,7 +30,6 @@ export default function Category() {
             Danh mục: {categorySlug?.toUpperCase()}
           </h1>
 
-          {/* Toolbar có thể nhận className nếu bạn hỗ trợ trong component */}
           <Toolbar
             sortBy={sortBy}
             onSortChange={setSortBy}

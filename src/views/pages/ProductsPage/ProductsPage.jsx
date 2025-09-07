@@ -1,31 +1,20 @@
-// src/pages/Products.jsx
-import { useNavigate } from 'react-router-dom';
+// ProductsView.jsx
 import styles from './ProductsPage.module.css';
-
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/HomePageFooter';
-import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
-
-import { useCategoriesFromProducts } from '../../../hooks/useCategoriesFromProducts';
 import CategoryGrid from '../../components/catalog/CategoryGrid';
+import { useProductsViewModel } from '../../../viewmodels/ProductsViewModel';
 
-export default function Products() {
-  const navigate = useNavigate();
-  const categories = useCategoriesFromProducts(MOCK_PRODUCTS);
-
-  const handleSelect = (slug) => {
-    navigate(`/products?category=${encodeURIComponent(slug)}`);
-  };
+export default function ProductsPage() {
+  const { products, categories, handleSelect } = useProductsViewModel();
 
   return (
     <div className={styles['products-page']}>
-      <Header products={MOCK_PRODUCTS} />
+      <Header products={products} />
 
       <main className={styles['products-page__main']}>
         <div className={styles['products-page__container']}>
-          <h1 className={styles['products-page__title']}>
-            Danh mục sản phẩm
-          </h1>
+          <h1 className={styles['products-page__title']}>Danh mục sản phẩm</h1>
           <CategoryGrid
             categories={categories}
             onSelect={handleSelect}

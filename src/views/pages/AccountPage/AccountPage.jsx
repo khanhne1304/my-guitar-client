@@ -1,46 +1,13 @@
-// Account.jsx
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// AccountView.jsx
 import styles from "./AccountPage.module.css";
-
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/HomePageFooter";
 import { MOCK_PRODUCTS } from "../../components/Data/dataProduct";
 
-export default function Account() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+import { useAccountViewModel } from "../../../viewmodels/AccountViewModel";
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("user");
-      setUser(raw ? JSON.parse(raw) : null);
-    } catch {
-      setUser(null);
-    }
-  }, []);
-
-  const fmtDate = (iso) => {
-    if (!iso) return "—";
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "—";
-    return d.toLocaleString("vi-VN", {
-      hour12: false,
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const val = (v) => (v && String(v).trim() ? v : "—");
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
+export default function AccountPage() {
+  const { user, navigate, fmtDate, val, handleLogout } = useAccountViewModel();
 
   return (
     <div className={styles.account}>
@@ -64,7 +31,9 @@ export default function Account() {
             <div className={styles["account__card"]}>
               <div className={styles["account__row"]}>
                 <span className={styles["account__label"]}>Họ và tên</span>
-                <span className={styles["account__value"]}>{val(user?.name || user?.fullName)}</span>
+                <span className={styles["account__value"]}>
+                  {val(user?.name || user?.fullName)}
+                </span>
               </div>
 
               <div className={styles["account__row"]}>
@@ -79,7 +48,9 @@ export default function Account() {
 
               <div className={styles["account__row"]}>
                 <span className={styles["account__label"]}>Số điện thoại</span>
-                <span className={styles["account__value"]}>{val(user?.phone || user?.phoneNumber)}</span>
+                <span className={styles["account__value"]}>
+                  {val(user?.phone || user?.phoneNumber)}
+                </span>
               </div>
 
               <div className={styles["account__row"]}>
@@ -98,7 +69,7 @@ export default function Account() {
               <div className={styles["account__row"]}>
                 <span className={styles["account__label"]}>Ngày tạo</span>
                 <span className={styles["account__value"]}>
-                  {fmtDate(user?.createdAt || user?.created_at)}
+                  {fmtDate(user?.createdAt)}
                 </span>
               </div>
 

@@ -1,7 +1,7 @@
 // src/hooks/useCategoriesFromProducts.js
 import { useMemo } from 'react';
 import { buildCategoriesFromProducts } from '../utils/catalog';
-import { CATEGORY_COVERS, FALLBACK_COVER } from '../../src/Constants/categoryCover';
+import { CATEGORY_COVERS, FALLBACK_COVER } from '../constants/categoryCover';
 
 
 export function useCategoriesFromProducts(products, overrides) {

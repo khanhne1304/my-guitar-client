@@ -8,6 +8,66 @@
 .product-details__main {
   padding: 24px 0 8px;
 }
+/* Gallery container */
+.product-details__gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Ảnh chính */
+.product-details__gallery-main {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f8f8f8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.product-details__gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.product-details__gallery-sale {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+/* Thumbnail list */
+.product-details__gallery-thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.product-details__gallery-thumb {
+  width: 64px;
+  height: 64px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+.product-details__gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.product-details__gallery-thumb--active {
+  border-color: #000;
+}
+
 .product-details__wrap {
   max-width: 1200px;
   margin: 0 auto;

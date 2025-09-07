@@ -1,11 +1,3 @@
-.productCard {
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  box-sizing: border-box;
-  font-family: var(--font-sans);
-}
 
 /* Ảnh */
 .productCard__media {
@@ -36,16 +28,33 @@
   white-space: nowrap;
 }
 
-/* Thanh dưới */
+.productCard {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+
+  /* Thêm vào */
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;  /* chiều cao tối thiểu */
+  max-height: 420px;  /* chiều cao tối đa (nếu cần) */
+}
+
+/* Để phần footer luôn đẩy xuống cuối */
 .productCard__footer {
+  margin-top: auto;
   display: grid;
-  grid-template-columns: minmax(0,1fr) max-content;  /* CTA gọn sát phải */
+  grid-template-columns: minmax(0,1fr) max-content;
   align-items: center;
-  gap: 12px;                                        /* ↓ nhỏ gap cho rộng chỗ */
+  gap: 12px;
   background: #3a3a3a;
   color: #fff;
-  padding: 12px 14px;                               /* ↓ padding nhẹ hơn */
+  padding: 12px 14px;
 }
+
 
 .productCard__info { min-width: 0; }
 
