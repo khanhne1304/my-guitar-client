@@ -2,7 +2,7 @@
 import styles from './ProductsPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/HomePageFooter';
-import CategoryGrid from '../../components/catalog/CategoryGrid';
+import CategoryGrid from '../../components/Catalog/CategoryGrid';
 import { useProductsViewModel } from '../../../viewmodels/ProductsViewModel';
 
 export default function ProductsPage() {

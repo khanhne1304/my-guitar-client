@@ -13,8 +13,6 @@ import MetaInfo from '../../components/product/MetaInfo';
 import Tabs from '../../components/product/Tabs';
 import RelatedProducts from '../../components/product/RelatedProducts';
 import { useProductDetailsViewModel } from '../../../viewmodels/ProductDetailsViewModel';
-import { MOCK_PRODUCTS, getProductBySlug } from '../../components/Data/dataProduct';
-import { useParams, useNavigate } from 'react-router-dom';
 export default function ProductDetailsPage() {
   const {
     prod,

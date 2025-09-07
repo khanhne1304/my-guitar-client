@@ -13,7 +13,7 @@ import NoteBox from '../../components/checkout/NoteBox';
 import OrderItems from '../../components/checkout/OrderItems';
 import VnpayQR from '../../components/checkout/VnpayQR';
 import Summary from '../../components/checkout/Summary';
-import SuccessModal from '../../components/modal/SuccessModal/SuccessModal';
+import SuccessModal from '../../components/Modal/SuccessModal/SuccessModal';
 
 import { useCheckoutViewModel } from '../../../viewmodels/CheckoutViewModel';
 

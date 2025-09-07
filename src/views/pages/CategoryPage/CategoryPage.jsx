@@ -4,9 +4,9 @@ import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/HomePageFooter';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
-import Breadcrumb from '../../components/category/Breadcrumb';
-import Toolbar from '../../components/category/Toolbar';
-import CategoryGrid from '../../components/category/CategoryGrid';
+import Breadcrumb from '../../components/Category/Breadcrumb';
+import Toolbar from '../../components/Category/Toolbar';
+import CategoryGrid from '../../components/Category/CategoryGrid';
 
 import { useCategoryViewModel } from '../../../viewmodels/CategoryViewModel';
 
