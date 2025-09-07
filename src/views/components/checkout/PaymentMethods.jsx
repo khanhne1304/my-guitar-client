@@ -1,4 +1,4 @@
-import styles from '../../pages/CheckoutPage/checkout.module.css';
+import styles from '../../pages/CheckoutPage/CheckoutPage.module.css';
 
 export default function PaymentMethods({ method, setMethod, onSwitch }) {
 const opt = [

@@ -1,7 +1,6 @@
-// src/pages/ProductDetails.jsx
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from './productDetails.module.css';
+import styles from './ProductDetailsPage.module.css';
 
 import Header from '../../components/HomePageItems/Header/Header';
 import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
@@ -21,14 +20,9 @@ import MetaInfo from '../../components/product/MetaInfo';
 import Tabs from '../../components/product/Tabs';
 import RelatedProducts from '../../components/product/RelatedProducts';
 
-const FILE_BASE =
-  import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
+const FILE_BASE = import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
 const ensureAbsolute = (u) =>
-  !u
-    ? ''
-    : /^https?:|^data:/.test(u)
-    ? u
-    : `${FILE_BASE}${u.startsWith('/') ? '' : '/'}${u}`;
+  !u ? '' : /^https?:|^data:/.test(u) ? u : `${FILE_BASE}${u.startsWith('/') ? '' : '/'}${u}`;
 
 export default function ProductDetails() {
   const { slug } = useParams();
@@ -36,23 +30,24 @@ export default function ProductDetails() {
   const { addToCart } = useCart();
 
   const { prod, images } = useProductBySlug(slug);
-  const { products: headerProducts } = useProducts(); // để Header có data thật
+  const { products: headerProducts } = useProducts();
 
-  const galleryImages = (images?.length ? images : prod?.images || []).map(
-    (i) => ({
-      url: ensureAbsolute(i?.url),
-      alt: i?.alt || prod?.name || 'Ảnh sản phẩm',
-    }),
-  );
+  const galleryImages = (images?.length ? images : prod?.images || []).map((i) => ({
+    url: ensureAbsolute(i?.url),
+    alt: i?.alt || prod?.name || 'Ảnh sản phẩm',
+  }));
 
   const { priceNow, oldPrice, discount } = usePrice(prod);
   const related = useRelatedProducts(prod?.category?.slug, prod?.slug);
 
   if (!prod) {
     return (
-      <div className={styles.state}>
+      <div className={styles['product-details__state']}>
         Không tìm thấy sản phẩm.
-        <button className={styles.btn} onClick={() => navigate(-1)}>
+        <button
+          className={styles['product-details__btn']}
+          onClick={() => navigate(-1)}
+        >
           Quay lại
         </button>
       </div>
@@ -77,28 +72,22 @@ export default function ProductDetails() {
       qty,
     );
 
-    if (goToCart) {
-      navigate('/cart');
-    } else {
-      alert('Đã thêm sản phẩm vào giỏ hàng!');
-    }
+    goToCart ? navigate('/cart') : alert('Đã thêm sản phẩm vào giỏ hàng!');
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles['product-details']}>
       <Header products={headerProducts} />
 
-      <main className={styles.main}>
-        <div className={styles.wrap}>
+      <main className={styles['product-details__main']}>
+        <div className={styles['product-details__wrap']}>
           {/* breadcrumb */}
-          <div className={styles.breadcrumb}>
-            <span onClick={() => navigate('/')} role='button' tabIndex={0}>
-              Trang chủ
-            </span>
+          <div className={styles['product-details__breadcrumb']}>
+            <span onClick={() => navigate('/')} role="button" tabIndex={0}>Trang chủ</span>
             <span>›</span>
             <span
               onClick={() => navigate(`/category/${prod?.category?.slug}`)}
-              role='button'
+              role="button"
               tabIndex={0}
             >
               {prod?.category?.name}
@@ -107,44 +96,35 @@ export default function ProductDetails() {
             <strong>{prod.name}</strong>
           </div>
 
-          <div className={styles.head}>
-            {/* GALLERY */}
+          <div className={styles['product-details__head']}>
+            {/* Gallery */}
             <Gallery images={galleryImages} discount={discount} />
 
-            {/* INFO */}
-            <div className={styles.info}>
-              <h1 className={styles.title}>{prod.name}</h1>
+            {/* Info */}
+            <div className={styles['product-details__info']}>
+              <h1 className={styles['product-details__title']}>{prod.name}</h1>
 
-              <div className={styles.sub}>
-                <span>
-                  <b>Thương hiệu:</b> {prod?.brand?.name}
-                </span>
-                <span className={styles.sep}>•</span>
-                <span>
-                  <b>Model/SKU:</b> {prod.sku}
-                </span>
+              <div className={styles['product-details__sub']}>
+                <span><b>Thương hiệu:</b> {prod?.brand?.name}</span>
+                <span className={styles['product-details__sep']}>•</span>
+                <span><b>Model/SKU:</b> {prod.sku}</span>
               </div>
 
-              <PriceBlock
-                priceNow={priceNow}
-                oldPrice={oldPrice}
-                discount={discount}
-              />
-
+              <PriceBlock priceNow={priceNow} oldPrice={oldPrice} discount={discount} />
               <FeatureList items={prod.highlights} />
               <GiftList items={prod.gifts} />
 
-              {/* Qty + Actions */}
-              <QtyWithActions stock={prod.stock} onSubmit={handleAddToCart} />
+              <QtyWithActions
+                stock={prod.stock}
+                onSubmit={handleAddToCart}
+                styles={styles}
+              />
 
               <MetaInfo prod={prod} />
             </div>
           </div>
 
-          {/* TABS */}
           <Tabs prod={prod} />
-
-          {/* Related products */}
           <RelatedProducts items={related} onGo={(href) => navigate(href)} />
         </div>
       </main>
@@ -154,26 +134,29 @@ export default function ProductDetails() {
   );
 }
 
-function QtyWithActions({ stock, onSubmit }) {
+function QtyWithActions({ stock, onSubmit, styles }) {
   const [qty, setQty] = useState(1);
   return (
     <div>
       <QtySelector qty={qty} setQty={setQty} stock={stock} />
-      <div className={styles.actions}>
+      <div className={styles['product-details__actions']}>
         {stock > 0 ? (
           <>
             <button
-              className={`${styles.btn} ${styles.primary}`}
+              className={`${styles['product-details__btn']} ${styles['product-details__btn--primary']}`}
               onClick={() => onSubmit(qty, true)}
             >
               Mua ngay
             </button>
-            <button className={styles.btn} onClick={() => onSubmit(qty, false)}>
+            <button
+              className={styles['product-details__btn']}
+              onClick={() => onSubmit(qty, false)}
+            >
               Thêm vào giỏ
             </button>
           </>
         ) : (
-          <button className={styles.btn} disabled>
+          <button className={styles['product-details__btn']} disabled>
             Hết hàng
           </button>
         )}

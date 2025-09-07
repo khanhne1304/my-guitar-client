@@ -1,4 +1,4 @@
-import styles from '../../pages/CheckoutPage/checkout.module.css';
+import styles from '../../pages/CheckoutPage/CheckoutPage.module.css';
 export default function PickupStoreList({ stores, cartItems, storeId, setStoreId }) {
 if (!stores.length) {
 return <div className={styles.storeEmpty}>Không có cửa hàng nào còn đủ hàng cho đơn của bạn.</div>;

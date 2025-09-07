@@ -1,5 +1,5 @@
 // src/components/catalog/CategoryGrid.jsx
-import styles from '../../pages/ProductsPage/products.module.css';
+import styles from '../../pages/ProductsPage/ProductsPage.module.css';
 import CategoryCard from './CategoryCard';
 
 

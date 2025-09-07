@@ -1,7 +1,4 @@
-// src/components/category/Toolbar.jsx
-import styles from '../../pages/CategoryPage/Category.module.css';
-
-
+import styles from '../../pages/CategoryPage/PageCategoryPage.module.css';
 export default function Toolbar({ sortBy, onSortChange }) {
 return (
 <div className={styles.filters}>

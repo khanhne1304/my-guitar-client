@@ -1,4 +1,4 @@
-import styles from '../../pages/CartPage/cart.module.css';
+import styles from '../../pages/CartPage/CartPage.module.css';
 import { fmtVND } from '../../../utils/currency';
 
 

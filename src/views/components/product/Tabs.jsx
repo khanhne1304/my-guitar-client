@@ -1,6 +1,6 @@
 // src/components/product/Tabs.jsx
 import { useState } from 'react';
-import styles from '../../pages/productDetails/productDetails.module.css';
+import styles from '../../pages/ProductDetailsPage/ProductDetailsPage.module.css';
 
 
 export default function Tabs({ prod }) {

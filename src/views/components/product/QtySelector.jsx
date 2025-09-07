@@ -1,4 +1,4 @@
-import styles from '../../pages/productDetails/productDetails.module.css';
+import styles from '../../pages/ProductDetailsPage/ProductDetailsPage.module.css';
 
 
 export default function QtySelector({ qty, setQty, stock = 1 }) {

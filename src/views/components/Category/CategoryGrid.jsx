@@ -1,4 +1,4 @@
-import styles from '../../pages/CategoryPage/Category.module.css';
+import styles from '../../pages/CategoryPage/PageCategoryPage.module.css';
 import ProductCard from '../productCard/productCard';
 
 

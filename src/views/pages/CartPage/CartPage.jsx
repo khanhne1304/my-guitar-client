@@ -1,7 +1,7 @@
 // src/views/pages/CartPage/Cart.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './cart.module.css';
+import styles from './CartPage.module.css';
 
 import Header from '../../components/HomePageItems/Header/Header';
 import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
@@ -21,14 +21,7 @@ import { useDeliveryTime } from '../../../hooks/useDeliveryTime';
 
 export default function Cart() {
   const {
-    cartItems,
-    subtotal,
-    inc,
-    dec,
-    updateQty,
-    removeItem,
-    loadMyCart,
-    loading,
+    cartItems, subtotal, inc, dec, updateQty, removeItem, loadMyCart, loading,
   } = useCart();
 
   const navigate = useNavigate();
@@ -38,26 +31,13 @@ export default function Cart() {
   const [agree, setAgree] = useState(false);
 
   const {
-    shipMode,
-    setShipMode,
-    dayOption,
-    setDayOption,
-    customDate,
-    setCustomDate,
-    timeSlot,
-    setTimeSlot,
-    confirmed,
-    setConfirmed,
-    confirm,
-    payload,
+    shipMode, setShipMode, dayOption, setDayOption, customDate, setCustomDate,
+    timeSlot, setTimeSlot, confirmed, setConfirmed, confirm, payload,
   } = useDeliveryTime();
 
-  // 🔁 Load giỏ hàng theo user
   useEffect(() => {
     const u = getUser();
-    if (u?.id || u?._id) {
-      loadMyCart?.(); // an toàn nếu context cũ chưa có hàm này
-    }
+    if (u?.id || u?._id) { loadMyCart?.(); }
   }, [loadMyCart]);
 
   const isEmpty = useMemo(
@@ -65,23 +45,16 @@ export default function Cart() {
     [loading, cartItems],
   );
 
-  // ===== Helpers để nhận diện id và qty hiện tại =====
   const getItemId = (it) =>
     it?.productId || it?._id || it?.id || it?.product?._id || it?.slug;
 
   const getItemQty = (it) => Number(it?.qty ?? it?.quantity ?? 0) || 0;
 
-  // ===== Handlers tăng/giảm/cập nhật/xoá =====
   const handleInc = (item) => {
     const id = getItemId(item);
     if (!id) return;
-    // ưu tiên dùng inc từ context, nếu không có thì dùng updateQty
-    if (typeof inc === 'function') {
-      inc(id);
-    } else if (typeof updateQty === 'function') {
-      const next = getItemQty(item) + 1;
-      updateQty(id, next);
-    }
+    if (typeof inc === 'function') inc(id);
+    else if (typeof updateQty === 'function') updateQty(id, getItemQty(item) + 1);
   };
 
   const handleDec = (item) => {
@@ -89,23 +62,18 @@ export default function Cart() {
     if (!id) return;
     const current = getItemQty(item);
     if (current <= 1) {
-      // xác nhận xoá khi về 0/1
       if (window.confirm('Xoá sản phẩm này khỏi giỏ hàng?')) {
         if (typeof removeItem === 'function') removeItem(id);
       }
       return;
     }
-    if (typeof dec === 'function') {
-      dec(id);
-    } else if (typeof updateQty === 'function') {
-      updateQty(id, current - 1);
-    }
+    if (typeof dec === 'function') dec(id);
+    else if (typeof updateQty === 'function') updateQty(id, current - 1);
   };
 
   const handleUpdateQty = (item, nextQty) => {
     const id = getItemId(item);
     const q = Math.max(0, Number(nextQty) || 0);
-
     if (!id) return;
 
     if (q === 0) {
@@ -114,19 +82,13 @@ export default function Cart() {
       }
       return;
     }
-
-    if (typeof updateQty === 'function') {
-      updateQty(id, q);
-    } else if (typeof inc === 'function' || typeof dec === 'function') {
-      // fallback: gọi inc/dec tới khi đạt q (ít dùng)
+    if (typeof updateQty === 'function') updateQty(id, q);
+    else if (typeof inc === 'function' || typeof dec === 'function') {
       const current = cartItems?.find((x) => getItemId(x) === id);
       const cur = getItemQty(current);
       const diff = q - cur;
-      if (diff > 0 && typeof inc === 'function') {
-        for (let i = 0; i < diff; i++) inc(id);
-      } else if (diff < 0 && typeof dec === 'function') {
-        for (let i = 0; i < -diff; i++) dec(id);
-      }
+      if (diff > 0 && typeof inc === 'function') for (let i = 0; i < diff; i++) inc(id);
+      else if (diff < 0 && typeof dec === 'function') for (let i = 0; i < -diff; i++) dec(id);
     }
   };
 
@@ -139,10 +101,7 @@ export default function Cart() {
   };
 
   const confirmTime = () => {
-    if (!confirm()) {
-      alert('Vui lòng chọn ngày/giờ hợp lệ.');
-      return;
-    }
+    if (!confirm()) { alert('Vui lòng chọn ngày/giờ hợp lệ.'); return; }
   };
 
   const handleCheckout = () => {
@@ -157,33 +116,44 @@ export default function Cart() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.cart}>
       <Header products={MOCK_PRODUCTS} />
 
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>Giỏ hàng của bạn</h2>
+      <main className={styles['cart__main']}>
+        <div className={styles['cart__container']}>
+          <h2 className={styles['cart__title']}>Giỏ hàng của bạn</h2>
 
           {loading ? (
-            <p className={styles.caption}>Đang tải giỏ hàng…</p>
+            <p className={styles['cart__caption']}>Đang tải giỏ hàng…</p>
           ) : isEmpty ? (
             <EmptyCart onShop={() => navigate('/products')} />
           ) : (
-            <div className={styles.grid}>
-              <section className={styles.left}>
-                <p className={styles.caption}>
-                  Bạn đang có <b>{cartItems?.length || 0}</b> sản phẩm trong giỏ
-                  hàng
+            <div className={styles['cart__grid']}>
+              <section className={styles['cart__left']}>
+                <p className={styles['cart__caption']}>
+                  Bạn đang có <b>{cartItems?.length || 0}</b> sản phẩm trong giỏ hàng
                 </p>
 
+                {/* CartList nên render các item dùng class riêng (block của nó).
+                    Nếu bạn muốn style trực tiếp từ trang, truyền className bên dưới */}
                 <CartList
                   items={cartItems}
-                  // props "chuẩn" hiện tại
+                  classNameList={styles['cart__list']}
+                  classNameRow={styles['cart__row']}
+                  classNamePic={styles['cart__pic']}
+                  classNameInfo={styles['cart__info']}
+                  classNameName={styles['cart__name']}
+                  classNameSku={styles['cart__sku']}
+                  classNamePriceRow={styles['cart__price-row']}
+                  classNamePrice={styles['cart__price']}
+                  classNameQtyRow={styles['cart__qty-row']}
+                  classNameQtyBtn={styles['cart__qty-btn']}
+                  classNameQtyInput={styles['cart__qty-input']}
+                  classNameRemoveBtn={styles['cart__remove-btn']}
                   onInc={handleInc}
                   onDec={handleDec}
                   onUpdate={handleUpdateQty}
                   onRemove={handleRemove}
-                  // thêm alias để tương thích nhiều phiên bản CartList khác nhau
                   onIncreaseQty={handleInc}
                   onDecreaseQty={handleDec}
                   onChangeQty={handleUpdateQty}
@@ -191,12 +161,23 @@ export default function Cart() {
                   onDelete={handleRemove}
                 />
 
-                <NoteBox note={note} onChange={setNote} />
-                <InvoiceCheck checked={invoice} onChange={setInvoice} />
+                <NoteBox
+                  note={note}
+                  onChange={setNote}
+                  className={styles['cart__note']}
+                  titleClassName={styles['cart__note-title']}
+                  textareaClassName={styles['cart__note-textarea']}
+                />
+
+                <InvoiceCheck
+                  checked={invoice}
+                  onChange={setInvoice}
+                  className={styles['cart__invoice']}
+                />
               </section>
 
-              <aside className={styles.right}>
-                <h3 className={styles.boxTitle}>Thông tin đơn hàng</h3>
+              <aside className={styles['cart__right']}>
+                <h3 className={styles['cart__box-title']}>Thông tin đơn hàng</h3>
 
                 <DeliveryTimeBox
                   shipMode={shipMode}
@@ -210,6 +191,15 @@ export default function Cart() {
                   confirmed={confirmed}
                   setConfirmed={setConfirmed}
                   onConfirm={confirmTime}
+                  /* truyền thêm class để khớp style BEM của trang nếu component hỗ trợ */
+                  rootClassName={styles['cart__ship-time-box']}
+                  headerClassName={styles['cart__ship-header']}
+                  timeRowClassName={styles['cart__time-row']}
+                  colClassName={styles['cart__col']}
+                  inlineClassName={styles['cart__inline']}
+                  confirmBtnClassName={styles['cart__confirm-btn']}
+                  okClassName={styles['cart__confirm-ok']}
+                  warnClassName={styles['cart__confirm-warn']}
                 />
 
                 <SummaryBox
@@ -217,6 +207,12 @@ export default function Cart() {
                   agree={agree}
                   setAgree={setAgree}
                   onCheckout={handleCheckout}
+                  notesClassName={styles['cart__notes']}
+                  paymentInfoClassName={styles['cart__payment-info']}
+                  agreeClassName={styles['cart__agree']}
+                  checkoutBtnClassName={styles['cart__checkout-btn']}
+                  totalRowClassName={styles['cart__total-row']}
+                  totalClassName={styles['cart__total']}
                 />
               </aside>
             </div>

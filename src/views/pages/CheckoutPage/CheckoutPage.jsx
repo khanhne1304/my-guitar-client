@@ -1,7 +1,6 @@
-// src/views/pages/checkout/Checkout.jsx
 import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './checkout.module.css';
+import styles from './CheckoutPage.module.css';
 
 import Header from '../../components/HomePageItems/Header/Header';
 import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
@@ -22,8 +21,6 @@ import Summary from '../../components/checkout/Summary';
 
 import { useDeliveryState } from '../../../hooks/useDeliveryState';
 import { useStoresEligibility } from '../../../hooks/useStoresEligibility';
-
-// 🆕 Lấy user đã lưu (localStorage)
 import { getUser } from '../../../utils/storage';
 
 const SHIP_METHODS = [
@@ -37,30 +34,19 @@ export default function Checkout() {
   const { cartItems, subtotal, clearCart } = useCart();
 
   const [showSuccess, setShowSuccess] = useState(false);
-  const { mode, setMode, shipMethod, setShipMethod, delivery } =
-    useDeliveryState();
+  const { mode, setMode, shipMethod, setShipMethod, delivery } = useDeliveryState();
 
   const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    country: 'Vietnam',
-    address: '',
-    district: '',
-    method: 'cod', // cod | onpay-atm | onpay-visa | onpay-installment
-    note: '',
+    name: '', phone: '', email: '', country: 'Vietnam',
+    address: '', district: '', method: 'cod', note: '',
   });
 
-  // 🆕 Tự load thông tin cá nhân từ user lưu trong localStorage
   useEffect(() => {
     const u = getUser?.();
     if (!u) return;
-
-    // Chuẩn hoá các field hay gặp trong dự án
     const fullName = u.fullName || u.name || '';
     const email = u.email || '';
     const phone = u.phone || u.phoneNumber || '';
-    // address có thể là string hoặc object { address, district, country }
     const addrObj =
       typeof u.address === 'object' && u.address !== null
         ? u.address
@@ -77,7 +63,6 @@ export default function Checkout() {
     }));
   }, []);
 
-  // Cửa hàng đủ tồn kho khi nhận tại cửa hàng
   const { eligibleStores } = useStoresEligibility(cartItems, STORES);
   const [storeId, setStoreId] = useState('');
   const pickedStore = useMemo(
@@ -85,80 +70,50 @@ export default function Checkout() {
     [eligibleStores, storeId],
   );
 
-  // Phí ship + tổng
   const shipFee = useMemo(
-    () =>
-      mode === 'pickup'
-        ? 0
-        : SHIP_METHODS.find((m) => m.id === shipMethod)?.fee || 0,
+    () => (mode === 'pickup' ? 0 : SHIP_METHODS.find((m) => m.id === shipMethod)?.fee || 0),
     [mode, shipMethod],
   );
   const total = useMemo(() => subtotal + shipFee, [subtotal, shipFee]);
 
-  // VNPay demo
   const payIsOnline = ['onpay-atm', 'onpay-visa'].includes(form.method);
   const [orderId] = useState(() => `MM${Date.now()}`);
   const orderInfo = `Thanh toan don ${orderId}`;
-  const vnpayPayload = `VNPAY|ORDER=${orderId}|AMOUNT=${total}|INFO=${orderInfo}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
-    vnpayPayload,
+    `VNPAY|ORDER=${orderId}|AMOUNT=${total}|INFO=${orderInfo}`,
   )}`;
   const [showQR, setShowQR] = useState(false);
   const [paid, setPaid] = useState(false);
 
-  // Đặt hàng
   const placeOrder = () => {
-    if (cartItems.length === 0) {
-      alert('Giỏ hàng trống.');
-      navigate('/cart');
-      return;
-    }
-
+    if (cartItems.length === 0) { alert('Giỏ hàng trống.'); navigate('/cart'); return; }
     if (mode === 'delivery') {
       if (!form.name || !form.phone || !form.address || !form.district) {
-        alert('Vui lòng nhập đầy đủ thông tin giao hàng!');
-        return;
+        alert('Vui lòng nhập đầy đủ thông tin giao hàng!'); return;
       }
-    } else {
-      if (!storeId) {
-        alert('Vui lòng chọn cửa hàng để nhận!');
-        return;
-      }
-    }
+    } else if (!storeId) { alert('Vui lòng chọn cửa hàng để nhận!'); return; }
 
-    // Thanh toán online: lần 1 hiển thị QR, lần 2 yêu cầu đã thanh toán
     if (payIsOnline) {
-      if (!showQR) {
-        setShowQR(true);
-        return;
-      }
-      if (!paid) {
-        alert("Vui lòng quét QR VNPay và bấm 'Tôi đã thanh toán' để tiếp tục.");
-        return;
-      }
+      if (!showQR) { setShowQR(true); return; }
+      if (!paid) { alert("Vui lòng quét QR VNPay và bấm 'Tôi đã thanh toán'."); return; }
     }
-
-    // Hoàn tất đơn (demo)
     clearCart();
     setShowSuccess(true);
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.checkout}>
       <Header products={MOCK_PRODUCTS} />
 
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <h2 className={styles.brand}>
-            My Music <span>Shop</span>
-          </h2>
+      <main className={styles['checkout__main']}>
+        <div className={styles['checkout__container']}>
+          <h2 className={styles['checkout__brand']}>My Music <span>Shop</span></h2>
 
-          <div className={styles.grid}>
+          <div className={styles['checkout__grid']}>
             {/* LEFT */}
-            <section className={styles.left}>
-              <div className={styles.box}>
+            <section className={styles['checkout__left']}>
+              <div className={styles['checkout__box']}>
                 <ShipTabs mode={mode} onChange={setMode} />
-
                 {mode === 'delivery' ? (
                   <AddressForm form={form} setForm={setForm} />
                 ) : (
@@ -171,8 +126,8 @@ export default function Checkout() {
                 )}
               </div>
 
-              <div className={styles.box}>
-                <div className={styles.boxTitle}>Phương thức giao hàng</div>
+              <div className={styles['checkout__box']}>
+                <div className={styles['checkout__box-title']}>Phương thức giao hàng</div>
                 <ShipMethods
                   visible={mode === 'delivery'}
                   methods={SHIP_METHODS}
@@ -181,47 +136,32 @@ export default function Checkout() {
                 />
               </div>
 
-              <div className={styles.box}>
-                <div className={styles.boxTitle}>Phương thức thanh toán</div>
+              <div className={styles['checkout__box']}>
+                <div className={styles['checkout__box-title']}>Phương thức thanh toán</div>
                 <PaymentMethods
                   method={form.method}
                   setMethod={(m) => setForm({ ...form, method: m })}
-                  onSwitch={() => {
-                    // reset khi đổi phương thức thanh toán
-                    setPaid(false);
-                    setShowQR(false);
-                  }}
+                  onSwitch={() => { setPaid(false); setShowQR(false); }}
                 />
               </div>
 
-              <NoteBox
-                value={form.note}
-                onChange={(v) => setForm({ ...form, note: v })}
-              />
+              <NoteBox value={form.note} onChange={(v) => setForm({ ...form, note: v })} />
             </section>
 
             {/* RIGHT */}
-            <aside className={styles.right}>
+            <aside className={styles['checkout__right']}>
               <OrderItems items={cartItems} />
 
-              <div className={styles.delivery}>
+              <div className={styles['checkout__delivery']}>
                 {mode === 'delivery' ? (
                   <>
                     <span>Delivery Time :</span>{' '}
-                    <b>
-                      {delivery
-                        ? `${delivery.dateLabel} ${delivery.timeSlot}`
-                        : 'Chưa chọn (hãy xác nhận ở Giỏ hàng)'}
-                    </b>
+                    <b>{delivery ? `${delivery.dateLabel} ${delivery.timeSlot}` : 'Chưa chọn (hãy xác nhận ở Giỏ hàng)'}</b>
                   </>
                 ) : (
                   <>
                     <span>Pickup at :</span>{' '}
-                    <b>
-                      {pickedStore
-                        ? `${pickedStore.name} – ${pickedStore.address}`
-                        : 'Chưa chọn cửa hàng'}
-                    </b>
+                    <b>{pickedStore ? `${pickedStore.name} – ${pickedStore.address}` : 'Chưa chọn cửa hàng'}</b>
                   </>
                 )}
               </div>
@@ -238,22 +178,24 @@ export default function Checkout() {
                 qrUrl={qrUrl}
               />
 
-              <div className={styles.couponBox}>
-                <div className={styles.cartTitle}>Mã khuyến mãi</div>
-                <div className={styles.couponRow}>
+              <div className={styles['checkout__coupon-box']}>
+                <div className={styles['checkout__cart-title']}>Mã khuyến mãi</div>
+                <div className={styles['checkout__coupon-row']}>
                   <input
-                    className={styles.input}
-                    placeholder='Nhập mã khuyến mãi'
+                    className={styles['checkout__input']}
+                    placeholder="Nhập mã khuyến mãi"
                   />
-                  <button className={styles.grayBtn}>Áp dụng</button>
+                  <button className={styles['checkout__btn--dark']}>Áp dụng</button>
                 </div>
               </div>
 
+              {/* Nếu Summary cho phép truyền class cho nút Đặt hàng */}
               <Summary
                 subtotal={subtotal}
                 shipFee={shipFee}
                 total={total}
                 onPlace={placeOrder}
+                placeBtnClass={styles['checkout__place-btn']}
               />
             </aside>
           </div>
@@ -262,17 +204,10 @@ export default function Checkout() {
 
       <Footer />
 
-      {/* Modal thành công */}
       <SuccessModal
         open={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          navigate('/');
-        }}
-        onContinue={() => {
-          setShowSuccess(false);
-          navigate('/productsCategory');
-        }}
+        onClose={() => { setShowSuccess(false); navigate('/'); }}
+        onContinue={() => { setShowSuccess(false); navigate('/productsCategory'); }}
       />
     </div>
   );

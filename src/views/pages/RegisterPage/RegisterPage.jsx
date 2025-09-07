@@ -1,11 +1,11 @@
 // src/pages/Register.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from './Register.module.css';
+import styles from './RegisterPage.module.css';
 
-import BackIcon from './../../components/icons/BackIcon';
-import FacebookIcon from './../../components/icons/FacebookIcon';
-import GoogleIcon from './../../components/icons/GoogleIcon';
+import BackIcon from '../../components/icons/BackIcon';
+import FacebookIcon from '../../components/icons/FacebookIcon';
+import GoogleIcon from '../../components/icons/GoogleIcon';
 
 import {
   register as apiRegister,

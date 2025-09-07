@@ -1,13 +1,13 @@
 // routeConfig/publicRoute.jsx
-import Home from "../../views/pages/HomePage/Home";
-import Register from "../../views/pages/RegisterPage/Register";
-import Login from "../../views/pages/LoginPage/Login";
-import ProductDetails from "../../views/pages/productDetails/productDetails";
-import ViewCategory from "../../views/pages/CategoryPage/viewCategory";
-import Cart from "../../views/pages/CartPage/Cart";
-import Checkout from "../../views/pages/CheckoutPage/Checkout";
-import ProductsCategory from "../../views/pages/ProductsPage/Products"; // trang liệt kê Category
-import Account from "../../views/pages/AccountPage/Account";
+import Home from "../../views/pages/HomePage/HomePage";
+import Register from "../../views/pages/RegisterPage/RegisterPage";
+import Login from "../../views/pages/LoginPage/LoginPage";
+import ProductDetails from "../../views/pages/ProductDetailsPage/ProductDetailsPage";
+import ViewCategory from "../../views/pages/CategoryPage/PageCategoryPage";
+import Cart from "../../views/pages/CartPage/CartPage";
+import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
+import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê Category
+import Account from "../../views/pages/AccountPage/AccountPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },

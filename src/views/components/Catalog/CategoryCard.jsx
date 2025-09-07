@@ -1,5 +1,5 @@
 // src/components/catalog/CategoryCard.jsx
-import styles from '../../pages/ProductsPage/products.module.css';
+import styles from '../../pages/ProductsPage/ProductsPage.module.css';
 
 
 export default function CategoryCard({ item, onClick }) {

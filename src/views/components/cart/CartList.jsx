@@ -1,5 +1,5 @@
 // src/components/cart/CartList.jsx
-import styles from '../../pages/CartPage/cart.module.css';
+import styles from '../../pages/CartPage/CartPage.module.css';
 import { fmtVND } from '../../../utils/currency';
 import CartItemRow from './CartItemRow';
 

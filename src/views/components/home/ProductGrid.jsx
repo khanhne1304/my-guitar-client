@@ -1,5 +1,5 @@
 // src/components/home/ProductGrid.jsx
-import styles from '../../pages/HomePage/Home.module.css';
+import styles from '../../pages/HomePage/HomePage.module.css';
 import ProductCard from '../productCard/productCard';
 
 export default function ProductGrid({

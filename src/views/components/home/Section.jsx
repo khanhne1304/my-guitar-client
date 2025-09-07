@@ -1,5 +1,5 @@
 // src/components/home/Section.jsx
-import styles from '../../pages/HomePage/Home.module.css';
+import styles from '../../pages/HomePage/HomePage.module.css';
 
 
 export default function Section({ title, titleClassName, children }) {

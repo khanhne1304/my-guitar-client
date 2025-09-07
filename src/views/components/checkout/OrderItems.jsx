@@ -1,4 +1,4 @@
-import styles from '../../pages/CheckoutPage/checkout.module.css';
+import styles from '../../pages/CheckoutPage/CheckoutPage.module.css';
 import { fmtVND } from '../../../utils/currency';
 export default function OrderItems({ items }) {
 return (

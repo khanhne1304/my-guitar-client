@@ -1,5 +1,5 @@
 // src/pages/Home.jsx
-import styles from './Home.module.css';
+import styles from './HomePage.module.css';
 import Header from '../../components/HomePageItems/Header/Header';
 import Footer from '../../components/HomePageItems/Footer/HomePageFooter';
 

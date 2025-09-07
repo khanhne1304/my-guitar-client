@@ -1,7 +1,7 @@
 // src/pages/Auth/Login.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from './Login.module.css';
+import styles from './LoginPage.module.css';
 
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';

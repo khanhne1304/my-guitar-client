@@ -1,0 +1,110 @@
+/* Block */
+.account {
+  font-family: var(--font-sans);
+  background: #fffbe8;
+  min-height: 100vh;
+}
+
+.account__main {
+  padding: 24px 0;
+}
+
+.account__container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.account__title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+/* States */
+.account__state {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.account__error {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+/* Card */
+.account__card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account__row {
+  display: flex;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.account__row:last-child {
+  border-bottom: none;
+}
+
+.account__label {
+  width: 180px;
+  color: #555;
+  font-weight: 600;
+}
+
+.account__value {
+  flex: 1;
+  font-weight: 700;
+  color: #111;
+}
+
+/* Actions */
+.account__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f1f1;
+}
+
+.account__btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+}
+
+.account__btn--primary {
+  background: #000;
+  color: #ffd700;
+}
+
+.account__btn--primary:hover {
+  background: #333;
+}
+
+.account__btn--ghost {
+  background: #f6f6f6;
+  color: #111;
+  border: 1px solid #e5e5e5;
+}
+
+.account__btn--ghost:hover {
+  background: #eaeaea;
+}
