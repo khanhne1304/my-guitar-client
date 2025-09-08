@@ -6,7 +6,7 @@ import Hero from '../../components/home/Hero';
 import Section from '../../components/home/Section';
 import ProductGrid from '../../components/home/ProductGrid';
 import { useHomeViewModel } from '../../../viewmodels/HomeViewModel';
-import { MOCK_PRODUCTS } from '../../components//Data/dataProduct';
+import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 export default function HomePage() {
     //Lấy dữ liệu từ ViewModel

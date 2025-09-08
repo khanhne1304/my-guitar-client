@@ -122,6 +122,9 @@ export default function Header({ products = [] }) {
                         <Link to="/tools/tuner">CHỈNH DÂY ĐÀN GUITAR</Link>
                     </div>
                 </div>
+                <div className={styles.home__menuItem}>
+                    <Link to="/songs">Bài hát</Link>
+                </div>
             </nav>
 
             {/* SEARCH */}

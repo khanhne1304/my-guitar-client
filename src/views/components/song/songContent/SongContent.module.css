@@ -1,0 +1,24 @@
+.songs-content {
+    padding: 20px 16px 40px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+    
+}
+
+.songs-content__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.songs-content__stateHint {
+    color: var(--color-muted);
+    margin-top: 12px;
+}
+
+.songs-content__stateError {
+    color: #c62828;
+    font-weight: 700;
+    margin-top: 12px;
+}
