@@ -1,0 +1,168 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.metronome {
+  flex: 1; /* 👈 chiếm hết không gian trống, đẩy footer xuống */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  background: #fffbe8;
+}
+
+/* Giữ lại phần metronome__container, __title, ... bạn đã làm */
+
+
+.metronome__container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+.metronome__slider {
+  width: 100%;
+  margin: 12px 0;
+}
+
+.metronome__slider input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+.metronome__slider input[type="range"]:focus {
+  outline: none;
+}
+
+/* Track */
+.metronome__slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: linear-gradient(90deg, #0f0, #ffd700);
+  border-radius: 3px;
+}
+.metronome__slider input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: linear-gradient(90deg, #0f0, #ffd700);
+  border-radius: 3px;
+}
+
+/* Thumb */
+.metronome__slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #000;
+  border: 2px solid #ffd700;
+  cursor: pointer;
+  margin-top: -6px; /* căn giữa */
+}
+.metronome__slider input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #000;
+  border: 2px solid #ffd700;
+  cursor: pointer;
+}
+
+.metronome__title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+.metronome__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metronome__label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.metronome__label input,
+.metronome__label select {
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.metronome__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.metronome__btn {
+  padding: 10px 20px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid #000;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.metronome__btn--start {
+  background: #000;
+  color: #ffd700;
+}
+
+.metronome__btn--start:hover {
+  background: #333;
+}
+
+.metronome__btn--stop {
+  background: transparent;
+  color: #000;
+}
+
+.metronome__btn--stop:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.metronome__status {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #b45309; /* cam đậm */
+}
+
+/* Hiệu ứng vòng tròn nhấp nháy theo nhịp */
+.metronome__beatCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 24px auto 0;
+  background: #ddd;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.metronome__beatCircle--accent {
+  background: #ff5252;
+  transform: scale(1.1);
+}
+
+.metronome__beatCircle--normal {
+  background: #999;
+  transform: scale(1.05);
+}

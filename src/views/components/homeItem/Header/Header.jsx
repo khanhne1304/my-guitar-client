@@ -1,7 +1,7 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import styles from "./Header.module.css";
-import { useCart } from "../../../../context/CartContext"; // 👈 Hook giỏ hàng
+import { useCart } from "../../../../context/CartContext";
 
 export default function Header({ products = [] }) {
     const navigate = useNavigate();
@@ -116,6 +116,11 @@ export default function Header({ products = [] }) {
                 </div>
                 <div className={styles.home__menuItem}>
                     <Link to="/">Công cụ</Link>
+                    <div className={styles.home__submenu}>
+                        <Link to="/tools/metronome">MÁY ĐẾM NHỊP</Link>
+                        <Link to="/tools/chords">TRA CỨU HỢP ÂM</Link>
+                        <Link to="/tools/tuner">CHỈNH DÂY ĐÀN GUITAR</Link>
+                    </div>
                 </div>
             </nav>
 

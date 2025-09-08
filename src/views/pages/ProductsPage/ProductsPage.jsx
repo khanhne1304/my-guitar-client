@@ -1,7 +1,7 @@
 // ProductsView.jsx
 import styles from './ProductsPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
-import Footer from '../../components/homeItem/Footer/HomePageFooter';
+import Footer from '../../components/homeItem/Footer/Footer';
 import CategoryGrid from '../../components/Catalog/CategoryGrid';
 import { useProductsViewModel } from '../../../viewmodels/ProductsViewModel';
 

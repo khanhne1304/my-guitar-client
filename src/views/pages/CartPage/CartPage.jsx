@@ -1,7 +1,7 @@
 // CartView.jsx
 import styles from './CartPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
-import Footer from '../../components/homeItem/Footer/HomePageFooter';
+import Footer from '../../components/homeItem/Footer/Footer';
 import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import EmptyCart from '../../components/cart/EmptyCart';
