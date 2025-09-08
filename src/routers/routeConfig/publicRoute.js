@@ -8,6 +8,8 @@ import Cart from "../../views/pages/CartPage/CartPage";
 import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
 import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê Category
 import Account from "../../views/pages/AccountPage/AccountPage";
+import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
+import ChordsPage from "../../views/pages/ToolsPage/ChordsPage/ChordsPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -19,6 +21,8 @@ const publicRoutes = [
   { path: "/checkout", element: <Checkout /> },
   { path: "/productsCategory", element: <ProductsCategory /> }, // ✅ list Category
   { path: "/account", element: <Account /> },
+  { path: "/tools/metronome", element: <Metronome /> },
+  { path: "/tools/chords", element: <ChordsPage/> }
 ];
 
 export default publicRoutes;

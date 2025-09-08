@@ -1,7 +1,7 @@
 // HomeView.jsx
 import styles from './HomePage.module.css';
 import Header from '../../components/homeItem/Header/Header';
-import Footer from '../../components/homeItem/Footer/HomePageFooter';
+import Footer from '../../components/homeItem/Footer/Footer';
 import Hero from '../../components/home/Hero';
 import Section from '../../components/home/Section';
 import ProductGrid from '../../components/home/ProductGrid';

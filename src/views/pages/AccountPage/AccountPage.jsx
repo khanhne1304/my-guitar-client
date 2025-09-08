@@ -1,7 +1,7 @@
 // AccountView.jsx
 import styles from "./AccountPage.module.css";
 import Header from "../../components/homeItem/Header/Header";
-import Footer from "../../components/homeItem/Footer/HomePageFooter";
+import Footer from "../../components/homeItem/Footer/Footer";
 import { MOCK_PRODUCTS } from "../../components/Data/dataProduct";
 
 import { useAccountViewModel } from "../../../viewmodels/AccountViewModel";

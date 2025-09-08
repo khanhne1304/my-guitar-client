@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styles from './ProductDetailsPage.module.css';
 
 import Header from '../../components/homeItem/Header/Header';
-import Footer from '../../components/homeItem/Footer/HomePageFooter';
+import Footer from '../../components/homeItem/Footer/Footer';
 import Gallery from '../../components/product/Gallery';
 import PriceBlock from '../../components/product/PriceBlock';
 import FeatureList from '../../components/product/FeatureList';
