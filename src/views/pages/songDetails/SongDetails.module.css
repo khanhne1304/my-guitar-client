@@ -175,6 +175,9 @@
   margin-bottom: 12px;        /* khoảng cách giữa các khung */
   background: #fffef8;        /* nền nhẹ */
 }
+html, body {
+  overflow-x: hidden;  /* ✅ Ẩn thanh kéo ngang */
+}
 
 .song-details__list li strong {
   display: block;
