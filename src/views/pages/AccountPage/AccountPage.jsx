@@ -2,7 +2,6 @@
 import styles from "./AccountPage.module.css";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
-import { MOCK_PRODUCTS } from "../../components/Data/dataProduct";
 
 import { useAccountViewModel } from "../../../viewmodels/AccountViewModel";
 
@@ -11,7 +10,7 @@ export default function AccountPage() {
 
   return (
     <div className={styles.account}>
-      <Header products={MOCK_PRODUCTS} />
+      <Header />
 
       <main className={styles["account__main"]}>
         <div className={styles["account__container"]}>

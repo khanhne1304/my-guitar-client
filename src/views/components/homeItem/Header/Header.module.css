@@ -65,22 +65,7 @@
   border-radius: 10px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   padding: 8px;
-  display: flex;
-  flex-direction: column;
   gap: 4px;
-
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(6px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 50;
-}
-
-/* Hiện dropdown khi hover mục menu */
-.home__menuItem:hover .home__submenu {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
 }
 
 /* Link brand trong dropdown */

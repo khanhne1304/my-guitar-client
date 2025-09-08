@@ -12,7 +12,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.home}>
-      <Header products={products} />
+      <Header />
 
       <main className={styles.home__content}>
         <div className={styles.home__container}>

@@ -2,7 +2,6 @@
 import styles from './CheckoutPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
-import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import ShipTabs from '../../components/checkout/ShipTabs';
 import AddressForm from '../../components/checkout/AddressForm';
@@ -22,7 +21,7 @@ export default function CheckoutPage() {
 
   return (
     <div className={styles.checkout}>
-      <Header products={MOCK_PRODUCTS} />
+      <Header />
 
       <main className={styles['checkout__main']}>
         <div className={styles['checkout__container']}>

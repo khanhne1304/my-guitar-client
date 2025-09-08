@@ -59,7 +59,11 @@ Hoàng [Am7] hôn chờ em chưa [D7] buông nắng
 [G] Ngày thay [D/F#] đêm, vội [G] trôi giấc [D/F#] mơ êm [Em7] đêm
 [C] Tôi lệnh đênh trên [G/B] biển vắng
 Hoàng [Am7] hôn chờ em chưa [D7] buông nắng
-...`
+...`,
+    ratings: [
+      { user: "An", stars: 5, comment: "Bài này rất hay và dễ đàn!" },
+      { user: "Lan", stars: 4, comment: "Giai điệu cuốn nhưng hợp âm hơi khó." }
+    ]
   },
   {
     title: "Phép Màu (OST Đàn Cá Gỗ)",
@@ -106,7 +110,11 @@ Hoàng [Am7] hôn chờ em chưa [D7] buông nắng
 [G] Ngày thay [D/F#] đêm, vội [G] trôi giấc [D/F#] mơ êm [Em7] đêm
 [C] Tôi lệnh đênh trên [G/B] biển vắng
 Hoàng [Am7] hôn chờ em chưa [D7] buông nắng
-...`
+...`,
+    ratings: [
+      { user: "An", stars: 5, comment: "Bài này rất hay và dễ đàn!" },
+      { user: "Lan", stars: 4, comment: "Giai điệu cuốn nhưng hợp âm hơi khó." }
+    ]
   },
   {
     title: "Đêm Trăng Bên Em",

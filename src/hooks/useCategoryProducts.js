@@ -1,6 +1,6 @@
 // src/hooks/useCategoryProducts.js
 import { useEffect, useState } from 'react';
-import { MOCK_PRODUCTS } from '../../src/views/components/Data/dataProduct';
+import { productService } from '../services/productService';
 
 
 export function useCategoryProducts(categorySlug) {
@@ -8,32 +8,27 @@ export function useCategoryProducts(categorySlug) {
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState('');
 
-
     useEffect(() => {
         if (!categorySlug) return;
-
 
         let t;
         setLoading(true);
         setErr('');
 
 
-        // giả lập fetch
-        t = setTimeout(() => {
+        (async () => {
             try {
-                const filtered = (MOCK_PRODUCTS || []).filter(
-                    (p) => p?.category?.slug === categorySlug
-                );
-                setProducts(filtered);
+                const items = await productService.list({ categorySlug });
+                setProducts(items);
             } catch (e) {
                 setErr('Không tải được sản phẩm');
             } finally {
                 setLoading(false);
             }
-        }, 500);
+        })();
 
 
-        return () => clearTimeout(t);
+        return () => {};
     }, [categorySlug]);
 
 
