@@ -1,12 +1,22 @@
 // ProductsViewModel.js
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 
 export function useProductsViewModel() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  // Lấy danh mục từ API sản phẩm (tuỳ bạn có API categories riêng thì dùng thẳng)
-  const { products } = useProducts();
+  // Đọc params tìm kiếm và filter từ URL
+  const q = searchParams.get('q') || '';
+  const categorySlug = searchParams.get('category') || '';
+  const brandSlug = searchParams.get('brand') || '';
+  const sortBy = searchParams.get('sortBy') || '';
+
+  // Gọi API sản phẩm với params hiện tại
+  const { products, loading, err } = useProducts({ q, categorySlug, brandSlug, sortBy });
+
+  // Xác định khi nào đang ở chế độ tìm kiếm/lọc
+  const isFiltered = Boolean(q || categorySlug || brandSlug);
 
   // Suy danh mục từ products (name/slug trong product.category)
   const categories = Array.from(
@@ -24,7 +34,13 @@ export function useProductsViewModel() {
 
   return {
     products,
+    loading,
+    err,
     categories,
+    isFiltered,
+    q,
+    categorySlug,
+    brandSlug,
     handleSelect,
   };
 }
