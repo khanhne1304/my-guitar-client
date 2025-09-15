@@ -8,6 +8,7 @@ export const guitarChords = {
     Eb: { frets: ["x", "x", 1, 3, 4, 3] }, // alias
     E: { frets: [0, 2, 2, 1, 0, 0] },
     Em: { frets: [0, 2, 2, 0, 0, 0] },
+    Em7: { frets: [0, 2, 2, 0, 3, 0] },
     F: { frets: [1, 3, 3, 2, 1, 1], barre: { fromString: 6, toString: 1, fret: 1 } },
     Fm: { frets: [1, 3, 3, 1, 1, 1], barre: { fromString: 6, toString: 1, fret: 1 } },
     "F#": { frets: [2, 4, 4, 3, 2, 2], barre: { fromString: 6, toString: 1, fret: 2 } }, // Gb
@@ -15,7 +16,9 @@ export const guitarChords = {
     G: { frets: [3, 2, 0, 0, 0, 3] },
     Gm: { frets: [3, 5, 5, 3, 3, 3], barre: { fromString: 6, toString: 1, fret: 3 } },
     A: { frets: ["x", 0, 2, 2, 2, 0] },
+    A7: { frets: ["x", 0, 2, 0, 2, 0] },
     Am: { frets: ["x", 0, 2, 2, 1, 0] },
+    Am7: { frets: ["x", 0, 2, 0, 1, 0] },
     "A#": { frets: ["x", 1, 3, 3, 3, 1], barre: { fromString: 5, toString: 1, fret: 1 } }, // Bb
     Bb: { frets: ["x", 1, 3, 3, 3, 1], barre: { fromString: 5, toString: 1, fret: 1 } },
     "A#m": { frets: ["x", 1, 3, 3, 2, 1], barre: { fromString: 5, toString: 1, fret: 1 } }, // Bbm
