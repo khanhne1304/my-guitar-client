@@ -8,13 +8,16 @@ export function useSongsPageViewModel(items) {
   const [q, setQ] = useState("");
 
   useEffect(() => {
-    if (items) return; // nếu có sẵn data từ SSR thì không fetch lại
+    if (items) return;
     let alive = true;
     (async () => {
       try {
         setLoading(true);
         const data = await songService.list();
-        if (alive) setSongs(data);
+        if (alive) {
+          // 🔑 Lọc chỉ lấy isActive = true
+          setSongs(Array.isArray(data) ? data.filter((s) => s.isActive) : []);
+        }
       } catch (e) {
         if (alive) setError(e.message || "Không tải được danh sách bài hát");
       } finally {
