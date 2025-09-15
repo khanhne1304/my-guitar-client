@@ -1,10 +1,27 @@
 // HomeViewModel.js
+import { useMemo } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { topDiscounts } from '../utils/pricing';
 import { HomeState } from '../models/homeModel';
+import { useCategory } from '../context/CategoryContext';
 
 export function useHomeViewModel() {
-  const { products, loading, err } = useProducts();
+  const { selectedCategory, selectedBrand } = useCategory();
+  
+  // Memoize params để tránh tạo object mới mỗi lần render
+  const apiParams = useMemo(() => {
+    const params = {};
+    if (selectedCategory) {
+      params.categorySlug = selectedCategory;
+    }
+    if (selectedBrand) {
+      params.brandSlug = selectedBrand;
+    }
+    console.log('🏠 HomeViewModel - API Params:', params);
+    return params;
+  }, [selectedCategory, selectedBrand]);
+
+  const { products, loading, err } = useProducts(apiParams);
 
   const state = new HomeState({ products, loading, err });
 
@@ -16,5 +33,7 @@ export function useHomeViewModel() {
     loading: state.loading,
     err: state.err,
     discountedTop3,
+    selectedCategory,
+    selectedBrand,
   };
 }

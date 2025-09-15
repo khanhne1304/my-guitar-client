@@ -1,17 +1,30 @@
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
+import { useCategory } from "../../../../context/CategoryContext";
 
 export default function Menu({ brands, loading, loadBrandsFor }) {
+  const { selectCategory, selectBrand } = useCategory();
+
+  const handleCategoryClick = (categorySlug) => {
+    selectCategory(categorySlug);
+  };
+
+  const handleBrandClick = (categorySlug, brandSlug) => {
+    selectCategory(categorySlug);
+    selectBrand(brandSlug);
+  };
+
   const renderSubmenu = (slug, list, isLoading) => (
     <div className={styles.home__submenu}>
       {list?.length ? (
         list.map((b) => (
-          <Link
+          <button
             key={`${slug}-${b.slug}`}
-            to={`/products?category=${slug}&brand=${encodeURIComponent(b.slug)}`}
+            className={styles.home__submenuItem}
+            onClick={() => handleBrandClick(slug, b.slug)}
           >
             {b.name}
-          </Link>
+          </button>
         ))
       ) : isLoading ? (
         <span className={styles.home__submenuEmpty}>Đang tải…</span>
@@ -27,14 +40,24 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         className={styles.home__menuItem}
         onMouseEnter={() => loadBrandsFor("guitar")}
       >
-        <Link to="/products?category=guitar">Guitar</Link>
+        <button 
+          className={styles.home__menuLink}
+          onClick={() => handleCategoryClick("guitar")}
+        >
+          Guitar
+        </button>
         {renderSubmenu("guitar", brands.guitar, loading.guitar)}
       </div>
       <div
         className={styles.home__menuItem}
         onMouseEnter={() => loadBrandsFor("piano")}
       >
-        <Link to="/products?category=piano">Piano</Link>
+        <button 
+          className={styles.home__menuLink}
+          onClick={() => handleCategoryClick("piano")}
+        >
+          Piano
+        </button>
         {renderSubmenu("piano", brands.piano, loading.piano)}
       </div>
       <div className={styles.home__menuItem}>
