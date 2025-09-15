@@ -30,12 +30,14 @@ export default function ProductsPage() {
             </>
           ) : (
             <>
-              <h1 className={styles['products-page__title']}>Danh mục sản phẩm</h1>
-              <CategoryGrid
-                categories={categories}
-                onSelect={handleSelect}
-                className={styles['products-page__grid']}
-              />
+              <h1 className={styles['products-page__title']}>Tất cả sản phẩm</h1>
+              {loading ? (
+                <div>Đang tải...</div>
+              ) : err ? (
+                <div>{err}</div>
+              ) : (
+                <ProductGrid items={products} emptyText="Hiện chưa có sản phẩm." />
+              )}
             </>
           )}
         </div>

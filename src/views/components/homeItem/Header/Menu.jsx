@@ -1,17 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 import { useCategory } from "../../../../context/CategoryContext";
 
 export default function Menu({ brands, loading, loadBrandsFor }) {
   const { selectCategory, selectBrand } = useCategory();
+  const navigate = useNavigate();
 
   const handleCategoryClick = (categorySlug) => {
     selectCategory(categorySlug);
+    navigate(`/products?category=${encodeURIComponent(categorySlug)}`);
   };
 
   const handleBrandClick = (categorySlug, brandSlug) => {
     selectCategory(categorySlug);
     selectBrand(brandSlug);
+    const params = new URLSearchParams({
+      category: categorySlug,
+      brand: brandSlug,
+    });
+    navigate(`/products?${params.toString()}`);
   };
 
   const renderSubmenu = (slug, list, isLoading) => (
