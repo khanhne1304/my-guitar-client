@@ -40,4 +40,22 @@ export const productService = {
     const data = await apiClient.get(`/products/${slug}`);
     return normalizeProduct(data);
   },
+
+  // Gợi ý tìm kiếm theo keyword từ database (tên sản phẩm, slug, từ khóa)
+  async suggest(keyword, { limit = 8 } = {}) {
+    const q = String(keyword || '').trim();
+    if (!q) return [];
+    const qs = new URLSearchParams();
+    qs.set('q', q);
+    if (limit) qs.set('limit', String(limit));
+    const data = await apiClient.get(`/products/suggest?${qs.toString()}`);
+    const items = Array.isArray(data) ? data : data?.items ?? [];
+    // Chuẩn hoá tối thiểu cho item suggestion
+    return items.map((p) => ({
+      name: p?.name || '',
+      slug: p?.slug || '',
+      image: makeAbs(p?.image || p?.thumbnail || ''),
+      category: p?.category?.name || '',
+    }));
+  },
 };
