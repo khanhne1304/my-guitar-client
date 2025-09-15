@@ -145,7 +145,7 @@ export default function CheckoutPage() {
         }}
         onContinue={() => {
           vm.setShowSuccess(false);
-          vm.navigate('/productsCategory');
+          vm.navigate('/');
         }}
       />
     </div>
