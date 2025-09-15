@@ -2,15 +2,23 @@
 /* Ảnh */
 .productCard__media {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   background: #f3f3f3;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
 }
 
 .productCard__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+.productCard__media:hover img {
+  transform: scale(1.05);
 }
 
 .productCard__label {
@@ -39,8 +47,8 @@
   /* Thêm vào */
   display: flex;
   flex-direction: column;
-  min-height: 360px;  /* chiều cao tối thiểu */
-  max-height: 420px;  /* chiều cao tối đa (nếu cần) */
+  min-height: 320px;  /* chiều cao tối thiểu */
+  max-height: 400px;  /* chiều cao tối đa (nếu cần) */
 }
 
 /* Để phần footer luôn đẩy xuống cuối */

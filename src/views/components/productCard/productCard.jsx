@@ -83,6 +83,14 @@ export default function ProductCard({
         e.currentTarget.onerror = null;
         e.currentTarget.src = 'https://placehold.co/600x400?text=No+Image';
       }}
+      onLoad={(e) => {
+        // Thêm class để hiển thị ảnh mượt mà
+        e.currentTarget.style.opacity = '1';
+      }}
+      style={{
+        opacity: 0,
+        transition: 'opacity 0.3s ease'
+      }}
     />
   );
 

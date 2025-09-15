@@ -10,7 +10,17 @@ export default function Gallery({ images = [], discount = 0 }) {
         {discount ? (
           <div className={styles['product-details__gallery-sale']}>-{discount}%</div>
         ) : null}
-        <img src={images[active]?.url} alt={images[active]?.alt} />
+        <img 
+          src={images[active]?.url} 
+          alt={images[active]?.alt}
+          onLoad={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
+          style={{
+            opacity: 0,
+            transition: 'opacity 0.3s ease'
+          }}
+        />
       </div>
 
       <div className={styles['product-details__gallery-thumbs']}>
@@ -23,7 +33,17 @@ export default function Gallery({ images = [], discount = 0 }) {
             onClick={() => setActive(i)}
             aria-label={`Ảnh ${i + 1}`}
           >
-            <img src={img.url} alt={img.alt || `thumb-${i}`} />
+            <img 
+              src={img.url} 
+              alt={img.alt || `thumb-${i}`}
+              onLoad={(e) => {
+                e.currentTarget.style.opacity = '1';
+              }}
+              style={{
+                opacity: 0,
+                transition: 'opacity 0.2s ease'
+              }}
+            />
           </button>
         ))}
       </div>
