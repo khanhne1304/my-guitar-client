@@ -1,4 +1,5 @@
 // src/views/pages/HomePage/HomeView.jsx  (giữ nguyên đường dẫn file của bạn)
+import { useEffect, useRef } from 'react';
 import styles from './HomePage.module.css';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
@@ -11,6 +12,15 @@ import { useCategory } from '../../../context/CategoryContext';
 export default function HomePage() {
   const { products, loading, err, discountedTop3, selectedCategory, selectedBrand } = useHomeViewModel();
   const { clearFilters } = useCategory();
+  const hasClearedFilters = useRef(false);
+
+  // Clear filters chỉ một lần khi component mount để đảm bảo trang chủ hiển thị tất cả sản phẩm
+  useEffect(() => {
+    if (!hasClearedFilters.current) {
+      clearFilters();
+      hasClearedFilters.current = true;
+    }
+  }, [clearFilters]);
 
   return (
     <div className={styles.home}>
