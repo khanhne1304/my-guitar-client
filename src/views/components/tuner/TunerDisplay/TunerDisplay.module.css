@@ -1,0 +1,181 @@
+.card {
+  background-color: #1e293b;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  width: 400px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+.modeToggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background: #334155;
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+
+.modeBtn {
+  flex: 1;
+  background: transparent;
+  color: #cbd5e1;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.modeBtn:hover {
+  background: #475569;
+}
+
+.modeBtn.active {
+  background: #22c55e;
+  color: white;
+}
+
+.note {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.target {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 0.5rem;
+}
+
+.statusInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.stableIndicator {
+  color: #22c55e;
+  font-weight: bold;
+  margin: 0;
+}
+
+.toleranceNote {
+  margin: 0.25rem 0 0.75rem 0;
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.barWrapper {
+  margin: 1rem 0;
+}
+
+.bar {
+  position: relative;
+  background: #334155;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.indicator {
+  position: absolute;
+  top: -6px;
+  width: 2px;
+  height: 18px;
+  background-color: #22c55e;
+  transition: left 0.15s ease-out;
+}
+
+.statusNeutral {
+  color: #cbd5e1;
+}
+
+.statusGood {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.statusSharp {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.statusFlat {
+  color: #facc15;
+  font-weight: bold;
+}
+
+.statusDetecting {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.startBtn, .stopBtn {
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.startBtn {
+  background-color: #22c55e;
+  color: white;
+}
+
+.stopBtn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.recording {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #f87171;
+  font-weight: bold;
+}
+
+.stringSelector {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5rem;
+  gap: 0.75rem;
+}
+
+.selectorLabel {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin: 0;
+  font-weight: 500;
+}
+
+.stringButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.stringBtn {
+  background: #334155;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  flex: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.stringBtn:hover {
+  background: #475569;
+}
+
+.active {
+  background: #22c55e;
+}
