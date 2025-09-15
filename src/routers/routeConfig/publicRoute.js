@@ -6,7 +6,7 @@ import ProductDetails from "../../views/pages/ProductDetailsPage/ProductDetailsP
 import ViewCategory from "../../views/pages/CategoryPage/CategoryPage";
 import Cart from "../../views/pages/CartPage/CartPage";
 import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
-import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê Category
+import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê/tìm kiếm sản phẩm
 import Account from "../../views/pages/AccountPage/AccountPage";
 import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
 import Songs from "../../views/pages/SongsPage/SongsPage";
@@ -18,11 +18,11 @@ const publicRoutes = [
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
   { path: "/products/:slug", element: <ProductDetails /> }, // chi tiết sản phẩm
-  { path: "/products", element: <ViewCategory /> },         // list sản phẩm theo ?category=...
+  { path: "/products", element: <ProductsCategory /> },     // tìm kiếm/lọc sản phẩm theo ?q=&category=&brand=
   { path: "/category/:slug", element: <ViewCategory /> },   // list sản phẩm theo :slug
   { path: "/cart", element: <Cart /> },
   { path: "/checkout", element: <Checkout /> },
-  { path: "/productsCategory", element: <ProductsCategory /> }, // ✅ list Category
+  // { path: "/productsCategory", element: <ProductsCategory /> }, // (tuỳ chọn) alias cũ, có thể bỏ
   { path: "/account", element: <Account /> },
   { path: "/tools/metronome", element: <Metronome /> },
   { path: "/tools/chords", element: <ChordsPage/> },
