@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { DEMO_SONGS } from "../views/components/Data/demoSongs";
+import { songService } from "../services/songService";
 
 export function useSongsPageViewModel(items) {
   const [songs, setSongs] = useState(items || []);
@@ -8,20 +8,22 @@ export function useSongsPageViewModel(items) {
   const [q, setQ] = useState("");
 
   useEffect(() => {
-    if (items) return;
+    if (items) return; // nếu có sẵn data từ SSR thì không fetch lại
     let alive = true;
     (async () => {
       try {
         setLoading(true);
-        await new Promise((r) => setTimeout(r, 200)); // demo latency
-        if (alive) setSongs(DEMO_SONGS);
+        const data = await songService.list();
+        if (alive) setSongs(data);
       } catch (e) {
-        if (alive) setError("Không tải được danh sách bài hát");
+        if (alive) setError(e.message || "Không tải được danh sách bài hát");
       } finally {
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [items]);
 
   const filtered = useMemo(() => {
