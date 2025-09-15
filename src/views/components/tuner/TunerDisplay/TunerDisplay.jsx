@@ -11,7 +11,7 @@ export default function TunerDisplay({
   setSelectedString
 }) {
   const strings = ["E2", "A2", "D3", "G3", "B3", "E4"];
-  const IN_TUNE_TOLERANCE_CENTS = 10; // khoảng cho phép ±5 cents
+  const IN_TUNE_TOLERANCE_CENTS = 159; // khoảng cho phép ±5 cents
 
   let deviation = noteData?.cents || 0;
   let statusText = isRunning ? "Đang nghe..." : "Chưa bắt đầu";
@@ -35,6 +35,10 @@ export default function TunerDisplay({
       statusClass = styles.statusDetecting;
     }
   }
+
+  // Tính vị trí kim chỉ, giới hạn trong [0%, 100%]
+  const rawLeft = 50 + deviation / 5; // map cents → %
+  const indicatorLeft = Math.max(0, Math.min(100, rawLeft));
 
   return (
     <div className={styles.card}>
@@ -79,7 +83,7 @@ export default function TunerDisplay({
         <div className={styles.bar}>
           <div
             className={styles.indicator}
-            style={{ left: `${50 + deviation / 5}%` }}
+            style={{ left: `${indicatorLeft}%` }}
           ></div>
         </div>
       </div>
