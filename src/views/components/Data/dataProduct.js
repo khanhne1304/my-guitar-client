@@ -12,7 +12,7 @@ export const MOCK_PRODUCTS = [
     stock: 12, // tồn kho
     rating: 4.7,
     images: [
-      { url: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop', alt: 'Yamaha F310 Acoustic Guitar - Góc nhìn chính' },
+      { url: 'https://www.taylorguitars.com/sites/default/files/styles/guitar_desktop/public/images/2024-03/Taylor-214ce-2209073120-FrontLeft-2023.png?itok=2PzyI75S', alt: 'Yamaha F310 Acoustic Guitar - Góc nhìn chính' },
       { url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=800&auto=format&fit=crop', alt: 'Yamaha F310 - Chi tiết thân đàn và soundhole' },
       { url: 'https://images.unsplash.com/photo-1525201548942-d8732f6617a0?q=80&w=800&auto=format&fit=crop', alt: 'Yamaha F310 - Cần đàn và phím đàn' },
       { url: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=800&auto=format&fit=crop', alt: 'Yamaha F310 - Đầu đàn và máy lên dây' },

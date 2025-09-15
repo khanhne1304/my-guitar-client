@@ -2,7 +2,6 @@
 import styles from './CategoryPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
-import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import Breadcrumb from '../../components/Category/Breadcrumb';
 import Toolbar from '../../components/Category/Toolbar';
@@ -16,7 +15,7 @@ export default function CategoryView() {
 
   return (
     <div className={styles.category}>
-      <Header products={MOCK_PRODUCTS} />
+      <Header />
 
       <main className={styles['category__main']}>
         <div className={styles['category__wrap']}>

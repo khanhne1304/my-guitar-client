@@ -34,4 +34,14 @@ export const apiClient = {
   patch: (path, body, opts) =>
     request(path, { ...opts, method: 'PATCH', body }),
   delete: (path, opts) => request(path, { ...opts, method: 'DELETE' }),
+  ensureAbsolute: (url) => {
+    if (!url) return '';
+    try {
+      const u = new URL(url);
+      return u.href;
+    } catch {
+      if (url.startsWith('/')) return `${BASE_URL.replace(/\/api$/, '')}${url}`;
+      return url;
+    }
+  },
 };

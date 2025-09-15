@@ -1,0 +1,24 @@
+.line {
+  position: relative;
+  margin: 2px 0;
+  font-size: 16px;
+}
+
+.chord {
+  color: #d32f2f;
+  font-weight: 700;
+  position: relative;
+  cursor: pointer;
+}
+
+.chordPopup {
+  position: absolute;
+  top: -150px; /* hiện phía trên chữ hợp âm */
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  z-index: 100;
+}

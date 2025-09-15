@@ -2,7 +2,7 @@ import { guitarChords } from "../../../data/allChord";
 
 export default function GuitarChordSVG({
   chord,
-  width = 120,
+  width = 140,
   accentColor = "#111",
   showTitle = false,
 }) {
@@ -11,24 +11,32 @@ export default function GuitarChordSVG({
     return <div style={{ width, textAlign: "center" }}>Chưa hỗ trợ {chord}</div>;
   }
 
-  const padL = 15, padT = 24, stringGap = 18, fretGap = 22;
+  const padL = 25, padT = 28, stringGap = 20, fretGap = 24;
   const numStrings = 6, numFrets = 5;
   const svgWidth = width;
   const svgHeight = padT + fretGap * (numFrets + 1) + (showTitle ? 16 : 0);
 
+  // ✅ dây 6 bên trái → dây 1 bên phải
   const xForString = (s) => padL + (numStrings - s) * stringGap;
 
 
+  // 👉 Tính ngăn cao nhất được dùng để hiển thị số "fr"
+  const maxFret = Math.max(
+    ...(shape.frets.filter((f) => typeof f === "number" && f > 0)),
+    shape.barre?.fret || 0
+  );
+  const baseFret = maxFret > numFrets ? Math.min(...shape.frets.filter(f => typeof f === "number" && f > 0)) : 1;
+
   return (
     <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-      {/* Tiêu đề */}
+      {/* Tiêu đề hợp âm */}
       {showTitle && (
-        <text x={svgWidth / 2} y={14} textAnchor="middle" fontSize="12" fontWeight="700">
+        <text x={svgWidth / 2} y={14} textAnchor="middle" fontSize="13" fontWeight="700">
           {chord}
         </text>
       )}
 
-      {/* 6 dây */}
+      {/* Dây dọc */}
       {Array.from({ length: numStrings }, (_, i) => (
         <line
           key={`s${i}`}
@@ -40,7 +48,7 @@ export default function GuitarChordSVG({
         />
       ))}
 
-      {/* 5 phím */}
+      {/* Phím ngang */}
       {Array.from({ length: numFrets }, (_, i) => (
         <line
           key={`f${i}`}
@@ -52,25 +60,48 @@ export default function GuitarChordSVG({
         />
       ))}
 
-      {/* Nut (phím 0) */}
-      <line
-        x1={padL}
-        y1={padT}
-        x2={padL + (numStrings - 1) * stringGap}
-        y2={padT}
-        stroke="#000"
-        strokeWidth="3"
-      />
+      {/* Nut (phím 0 dày hơn) */}
+      {baseFret === 1 && (
+        <line
+          x1={padL}
+          y1={padT}
+          x2={padL + (numStrings - 1) * stringGap}
+          y2={padT}
+          stroke="#000"
+          strokeWidth="3"
+        />
+      )}
+
+      {/* Số ngăn bên trái */}
+      {Array.from({ length: numFrets }, (_, i) => (
+        <text
+          key={`num${i}`}
+          x={padL - 10}
+          y={padT + (i + 1) * fretGap - 6}
+          fontSize="10"
+          textAnchor="end"
+          fill="#444"
+        >
+          {baseFret + i}
+        </text>
+      ))}
 
       {/* Barre (nếu có) */}
       {shape.barre && (() => {
-        const sFrom = Math.min(shape.barre.fromString, shape.barre.toString);
-        const sTo = Math.max(shape.barre.fromString, shape.barre.toString);
+        const { fromString, toString, fret } = shape.barre;
+        const xA = xForString(fromString);
+        const xB = xForString(toString);
+
+        // ✅ Phủ trọn từ dây ngoài này sang dây ngoài kia (tính theo mép, không chỉ tâm)
+        const xLeft = Math.min(xA, xB) - stringGap / 2;
+        const xRight = Math.max(xA, xB) + stringGap / 2;
+        const w = xRight - xLeft;
+
         return (
           <rect
-            x={xForString(sFrom)}
-            y={padT + (shape.barre.fret - 0.5) * fretGap - 6}
-            width={(sTo - sFrom) * stringGap}
+            x={xLeft}
+            y={padT + (fret - baseFret + 0.5) * fretGap - 6}
+            width={w}
             height={12}
             rx={6}
             fill={accentColor}
@@ -79,10 +110,25 @@ export default function GuitarChordSVG({
         );
       })()}
 
-      {/* Nốt */}
+
+      {/* Nốt bấm + O/X */}
       {shape.frets.map((fret, idx) => {
-        const stringNumber = idx + 1; // idx=0 → dây 1, idx=5 → dây 6
+        // mảng frets: [E6, A5, D4, G3, B2, E1]
+        // → stringNumber 6..1
+        const stringNumber = numStrings - idx;
         const x = xForString(stringNumber);
+
+        // ✅ Bỏ vẽ nốt nếu nốt nằm đúng phím barre và trong phạm vi dây barre
+        const inBarre =
+          shape.barre &&
+          typeof fret === "number" &&
+          fret === shape.barre.fret &&
+          (
+            (stringNumber <= shape.barre.fromString && stringNumber >= shape.barre.toString) ||
+            (stringNumber >= shape.barre.fromString && stringNumber <= shape.barre.toString)
+          );
+
+        if (inBarre) return null;
 
         if (fret === "x") {
           return <text key={`x${idx}`} x={x} y={padT - 8} fontSize="12" textAnchor="middle">X</text>;
@@ -90,8 +136,20 @@ export default function GuitarChordSVG({
         if (fret === 0) {
           return <text key={`o${idx}`} x={x} y={padT - 8} fontSize="12" textAnchor="middle">O</text>;
         }
-        return <circle key={`n${idx}`} cx={x} cy={padT + (fret - 0.5) * fretGap} r={6.5} fill={accentColor} />;
+        if (typeof fret === "number") {
+          return (
+            <circle
+              key={`n${idx}`}
+              cx={x}
+              cy={padT + (fret - baseFret + 0.5) * fretGap}
+              r={6.5}
+              fill={accentColor}
+            />
+          );
+        }
+        return null;
       })}
+
     </svg>
   );
 }

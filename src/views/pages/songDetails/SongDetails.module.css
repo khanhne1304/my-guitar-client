@@ -1,0 +1,226 @@
+.song-details {
+  width: 100%;
+  margin: 0;
+  padding: 24px 16px;
+  font-family: var(--font-sans, Arial);
+  line-height: 1.6;
+  background-color: #fffbe8;
+  min-height: 100vh;
+}
+
+/* Header */
+.song-details__header {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #f7e8a4;
+  border-radius: 6px;
+}
+
+.song-details__home {
+  padding: 6px 12px;
+  background: #000;
+  color: #ffd700;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.song-details__titleMeta {
+  flex: 1;
+  text-align: center;
+}
+
+.song-details__title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.song-details__meta {
+  color: #444;
+  font-size: 14px;
+}
+
+/* Lyrics */
+.song-details__lyrics {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 20px;
+  columns: 3;
+  column-gap: 40px;
+  column-rule: 1px solid #ddd;
+}
+
+@media (max-width: 1024px) {
+  .song-details__lyrics {
+    columns: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .song-details__lyrics {
+    columns: 1;
+  }
+}
+
+.song-details__chord {
+  color: #0066cc;
+  font-weight: 700;
+  margin: 0 2px;
+  background-color: #fffbe8;
+}
+
+/* Danh sách hợp âm */
+
+
+.song-details__chordsTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #333;
+}
+
+.song-details__chordsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  /* tăng min 160px */
+  gap: 30px;
+  /* thêm khoảng cách giữa các ô */
+  justify-items: center;
+  /* căn giữa nội dung trong mỗi ô */
+}
+
+.song-details__chordItem {
+  width: 160px;
+  /* tăng width hộp để không bị bóp lại */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.song-details__chords {
+  margin-top: 40px;
+  padding: 30px 40px;
+  background: #fffbe8;       /* ✅ màu vàng nhạt nổi bật */
+  border-top: 2px solid #ddd;
+  border-radius: 8px;          /* ✅ bo góc */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* ✅ bóng đổ nhẹ */
+}
+/* Bài hát liên quan */
+.song-details__related {
+  margin-top: 40px;
+  padding: 20px 30px;
+  background: #e8f5e9;   /* nền xanh nhạt */
+  border-radius: 8px;
+  border: 1px solid #c8e6c9;
+}
+
+.song-details__relatedTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #2e7d32;
+  text-align: center;
+}
+
+.song-details__relatedList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.song-details__relatedLink {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.song-details__relatedLink:hover {
+  text-decoration: underline;
+  color: #004999;
+}
+.song-details__ratings {
+  margin-top: 40px;
+  padding: 20px;
+  background: #fffef0;
+  border-top: 2px solid #ddd;
+  border-radius: 6px;
+}
+.song-details__avg {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.song-details__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.song-details__list li {
+  border: 1px solid #ddd;     /* ✅ khung mỏng xung quanh */
+  border-radius: 6px;         /* bo nhẹ */
+  padding: 12px 16px;         /* khoảng cách trong khung */
+  margin-bottom: 12px;        /* khoảng cách giữa các khung */
+  background: #fffef8;        /* nền nhẹ */
+}
+html, body {
+  overflow-x: hidden;  /* ✅ Ẩn thanh kéo ngang */
+}
+
+.song-details__list li strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.song-details__form textarea {
+  width: 100%;
+  min-height: 60px;
+  margin: 10px 0;
+  padding: 8px;
+}
+.song-details__form button {
+  background: #ffd700;
+  border: none;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.song-details__chordItem svg {
+  max-width: 100px;
+  /* ✅ SVG không vượt quá box */
+}
+
+.song-details__chordName {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* State */
+.state {
+  text-align: center;
+  padding: 40px;
+}
+
+.stateError {
+  text-align: center;
+  padding: 40px;
+  color: red;
+  font-weight: bold;
+}

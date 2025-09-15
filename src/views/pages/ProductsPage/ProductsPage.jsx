@@ -10,7 +10,7 @@ export default function ProductsPage() {
 
   return (
     <div className={styles['products-page']}>
-      <Header products={products} />
+      <Header />
 
       <main className={styles['products-page__main']}>
         <div className={styles['products-page__container']}>

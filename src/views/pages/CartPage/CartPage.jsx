@@ -2,7 +2,6 @@
 import styles from './CartPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
-import { MOCK_PRODUCTS } from '../../components/Data/dataProduct';
 
 import EmptyCart from '../../components/cart/EmptyCart';
 import CartList from '../../components/cart/CartList';
@@ -19,7 +18,7 @@ export default function CartPage() {
 
   return (
     <div className={styles.cart}>
-      <Header products={MOCK_PRODUCTS} />
+      <Header />
 
       <main className={styles['cart__main']}>
         <div className={styles['cart__container']}>
