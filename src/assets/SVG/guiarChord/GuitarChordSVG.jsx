@@ -1,4 +1,4 @@
-import { guitarChords } from "../../../data/allChord";
+import { extendedGuitarChords } from "../../../data/allChord";
 
 export default function GuitarChordSVG({
   chord,
@@ -6,7 +6,9 @@ export default function GuitarChordSVG({
   accentColor = "#111",
   showTitle = false,
 }) {
-  const shape = guitarChords[chord];
+  // Hỗ trợ slash chord: A/C# → tra cứu A, vẫn hiển thị tên đầy đủ
+  const baseChord = (chord || "").split("/")[0];
+  const shape = extendedGuitarChords[baseChord] || extendedGuitarChords[chord];
   if (!shape) {
     return <div style={{ width, textAlign: "center" }}>Chưa hỗ trợ {chord}</div>;
   }

@@ -4,7 +4,8 @@ import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 
 export default function ChordTooltip({ chordText, children }) {
   const [visible, setVisible] = useState(false);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const [placeAbove, setPlaceAbove] = useState(true);
+  const [align, setAlign] = useState("center"); // center | left | right
   const ref = useRef(null);
 
   const chord = chordText.replace(/\[|\]/g, "").trim();
@@ -13,23 +14,19 @@ export default function ChordTooltip({ chordText, children }) {
     const el = ref.current || e.currentTarget;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const tooltipWidth = 160;
-    const tooltipHeight = 160;
-    const padding = 8;
+    const tooltipHeight = 190;
+    const gap = 10;
+    // Nếu không đủ chỗ phía trên thì hiển thị phía dưới
+    const aboveTop = rect.top - tooltipHeight - gap;
+    setPlaceAbove(aboveTop >= 10);
 
-    let top = rect.top + window.scrollY - tooltipHeight - padding;
-    let left = rect.left + window.scrollX;
-
-    // Nếu không đủ chỗ phía trên, hiển thị phía dưới
-    if (top < window.scrollY + 10) {
-      top = rect.bottom + window.scrollY + padding;
-    }
-
-    // Điều chỉnh để không tràn phải
-    const maxLeft = window.scrollX + window.innerWidth - tooltipWidth - 10;
-    if (left > maxLeft) left = maxLeft;
-
-    setPos({ top, left });
+    // Căn giữa nhưng clamp hai biên màn hình
+    const tooltipWidth = 180;
+    const centerLeft = rect.left + rect.width / 2 - tooltipWidth / 2;
+    const vw = window.innerWidth;
+    if (centerLeft < 8) setAlign("left");
+    else if (centerLeft + tooltipWidth > vw - 8) setAlign("right");
+    else setAlign("center");
     setVisible(true);
   }
 
@@ -47,10 +44,13 @@ export default function ChordTooltip({ chordText, children }) {
       {children}
       {visible && (
         <div
-          className={styles.chordTooltip}
-          style={{ top: pos.top, left: pos.left }}
+          className={`${styles.chordTooltip} ${placeAbove ? styles.above : styles.below} ${
+            align === "left" ? styles.alignLeft : align === "right" ? styles.alignRight : styles.alignCenter
+          }`}
+          style={{ "--gap": "10px" }}
         >
-          <GuitarChordSVG chord={chord} width={150} showTitle />
+          <div className={styles.chordTooltipTitle}>{chord}</div>
+          <GuitarChordSVG chord={chord} width={160} showTitle={false} />
         </div>
       )}
     </span>

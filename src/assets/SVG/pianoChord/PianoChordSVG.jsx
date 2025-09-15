@@ -1,4 +1,4 @@
-import { pianoChords } from "../../../data/allChord";
+import { extendedPianoChords } from "../../../data/allChord";
 
 export default function PianoChordSVG({
   chord,
@@ -6,7 +6,9 @@ export default function PianoChordSVG({
   highlight = "#F59E0B",
   showTitle = false,
 }) {
-  const notes = pianoChords[chord];
+  // Hỗ trợ slash chord: A/C# → hiển thị như A nhưng vẫn giữ tên đầy đủ
+  const baseChord = (chord || "").split("/")[0];
+  const notes = extendedPianoChords[baseChord] || extendedPianoChords[chord];
   if (!notes) {
     return <div style={{ width, textAlign: "center" }}>Chưa hỗ trợ {chord}</div>;
   }
