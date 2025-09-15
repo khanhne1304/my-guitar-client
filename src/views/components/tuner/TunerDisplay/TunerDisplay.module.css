@@ -1,26 +1,28 @@
 .card {
-  background-color: #1e293b;
+  background-color: #ffffff;
   border-radius: 16px;
   padding: 2rem;
   text-align: center;
   width: 400px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eee;
+  color: #111827;
 }
 
 .modeToggle {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  background: #334155;
+  background: #f3f4f6;
   border-radius: 8px;
   padding: 0.25rem;
+  border: 1px solid #e5e7eb;
 }
 
 .modeBtn {
   flex: 1;
   background: transparent;
-  color: #cbd5e1;
+  color: #374151;
   border: none;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
@@ -31,7 +33,7 @@
 }
 
 .modeBtn:hover {
-  background: #475569;
+  background: #e5e7eb;
 }
 
 .modeBtn.active {
@@ -46,7 +48,7 @@
 
 .target {
   font-size: 1rem;
-  color: #cbd5e1;
+  color: #6b7280;
   margin-bottom: 0.5rem;
 }
 
@@ -76,22 +78,40 @@
 
 .bar {
   position: relative;
-  background: #334155;
-  height: 6px;
-  border-radius: 3px;
+  background: #ffffff;
+  height: 20px;
+  border-radius: 5px;
+  border: 2px solid #4f5767;
+}
+
+.zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 0;
+  opacity: 0.8;
+}
+
+.zoneGood {
+  background: #22c55e;
+}
+
+.zoneWarn {
+  background: #f59e0b;
 }
 
 .indicator {
   position: absolute;
-  top: -6px;
+  top: -7px;
   width: 2px;
-  height: 18px;
+  height: 24px;
   background-color: #22c55e;
   transition: left 0.15s ease-out;
+  box-shadow: 0 0 0 2px #ffffff; /* giúp nổi trên zone */
 }
 
 .statusNeutral {
-  color: #cbd5e1;
+  color: #6b7280;
 }
 
 .statusGood {

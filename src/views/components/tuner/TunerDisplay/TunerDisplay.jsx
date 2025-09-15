@@ -11,7 +11,7 @@ export default function TunerDisplay({
   setSelectedString
 }) {
   const strings = ["E2", "A2", "D3", "G3", "B3", "E4"];
-  const IN_TUNE_TOLERANCE_CENTS = 159; // khoảng cho phép ±5 cents
+  const IN_TUNE_TOLERANCE_CENTS = 20; // vùng chấp nhận tổng: ±20 cents
 
   let deviation = noteData?.cents || 0;
   let statusText = isRunning ? "Đang nghe..." : "Chưa bắt đầu";
@@ -48,13 +48,13 @@ export default function TunerDisplay({
           className={`${styles.modeBtn} ${tunerMode === "auto" ? styles.active : ""}`}
           onClick={() => setTunerMode("auto")}
         >
-          🎯 Auto Detect
+          Auto Detect
         </button>
         <button
           className={`${styles.modeBtn} ${tunerMode === "manual" ? styles.active : ""}`}
           onClick={() => setTunerMode("manual")}
         >
-          🎸 Manual Select
+          Manual Select
         </button>
       </div>
 
@@ -78,9 +78,19 @@ export default function TunerDisplay({
         </div>
       )}
 
-      {/* Thanh hiển thị độ lệch */}
+      {/* Thanh hiển thị độ lệch + vùng chấp nhận */}
       <div className={styles.barWrapper}>
         <div className={styles.bar}>
+          {/* Mapping: 1% = 5 cents. Total tolerance ±20c (46%↔54%).
+              Green (perfect) ±6c: width 12c ⇒ 2.4% (48.8%↔51.2%).
+              Orange (tolerance) 6–20c: each side width 14c ⇒ 2.8%. */}
+          {/* Orange left: 46% → 48.8% */}
+          <div className={`${styles.zone} ${styles.zoneWarn}`} style={{ left: '46%', width: '2.8%' }} />
+          {/* Green center: 48.8% → 51.2% */}
+          <div className={`${styles.zone} ${styles.zoneGood}`} style={{ left: '48.8%', width: '2.4%' }} />
+          {/* Orange right: 51.2% → 54% */}
+          <div className={`${styles.zone} ${styles.zoneWarn}`} style={{ left: '51.2%', width: '2.8%' }} />
+
           <div
             className={styles.indicator}
             style={{ left: `${indicatorLeft}%` }}

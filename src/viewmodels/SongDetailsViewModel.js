@@ -17,8 +17,13 @@ export function useSongDetailsVM(slug) {
         setLoading(true);
         const data = await songService.getBySlug(slug);
         if (alive) {
-          setSong(data);
-          setRatings(data?.ratings || []);
+          if (!data?.isActive) {
+            setError("Bài hát đã bị ẩn");
+            setSong(null);
+          } else {
+            setSong(data);
+            setRatings(data.ratings || []);
+          }
         }
       } catch (e) {
         if (alive) setError(e.message || "Không tải được chi tiết bài hát");
@@ -30,6 +35,7 @@ export function useSongDetailsVM(slug) {
       alive = false;
     };
   }, [slug]);
+
 
   // Action: gửi đánh giá (chưa có API riêng thì update tạm trong state)
   const handleSubmitRating = async () => {
