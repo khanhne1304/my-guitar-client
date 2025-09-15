@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import styles from "../../../pages/songDetails/SongDetails.module.css";
-import GuitarChordSVG from "../../../assets/SVG/guiarChord/GuitarChordSVG";
+import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 
 export default function ChordTooltip({ chordText, children }) {
   const [visible, setVisible] = useState(false);
