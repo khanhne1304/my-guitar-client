@@ -99,3 +99,27 @@ export const pianoChords = {
     "F#dim": ["F#", "A", "C"],
     "G#dim": ["G#", "B", "D"],
 };
+
+// Helper: mở rộng các hợp âm 7 và slash A/B bằng alias về dạng cơ bản
+function extendSeventhAndSlash(dict) {
+  const bases = Object.keys(dict);
+  const result = { ...dict };
+  const sevens = ["7", "maj7", "m7", "dim7", "mMaj7"]; // ánh xạ đơn giản: dùng hình/notes cơ bản
+
+  bases.forEach((b) => {
+    // Tạo alias cho slash: ví dụ C/E, G/B ... đều trỏ về hình C, G
+    bases.forEach((bass) => {
+      const slash = `${b}/${bass}`;
+      if (!result[slash]) result[slash] = dict[b];
+    });
+    // Tạo alias cho hợp âm 7 phổ biến trỏ về dạng thường nếu chưa có
+    sevens.forEach((suf) => {
+      const name = `${b}${suf}`;
+      if (!result[name]) result[name] = dict[b];
+    });
+  });
+  return result;
+}
+
+export const extendedGuitarChords = extendSeventhAndSlash(guitarChords);
+export const extendedPianoChords = extendSeventhAndSlash(pianoChords);
