@@ -32,9 +32,16 @@ export default function AddressForm({ form, setForm }) {
         value={form.address}
         onChange={(e) => setForm({ ...form, address: e.target.value })}
       />
+      {/* New city input */}
       <input
         className={styles['checkout__input']}
-        placeholder="Tỉnh/TP, Quận/Huyện, Phường/Xã"
+        placeholder="Tỉnh/Thành phố"
+        value={form.city}
+        onChange={(e) => setForm({ ...form, city: e.target.value })}
+      />
+      <input
+        className={styles['checkout__input']}
+        placeholder="Quận/Huyện, Phường/Xã"
         value={form.district}
         onChange={(e) => setForm({ ...form, district: e.target.value })}
       />

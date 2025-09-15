@@ -7,6 +7,7 @@ import { useStoresEligibility } from '../hooks/useStoresEligibility';
 import { STORES } from '../../src/views/components/Data/stores';
 import { getUser } from '../utils/storage';
 import { CheckoutForm, CheckoutOrder } from '../models/checkoutModel';
+import { checkoutOrderApi } from '../services/orderService';
 
 const SHIP_METHODS = [
   { id: 'economy', name: 'Tiết kiệm', eta: '2–4 ngày', fee: 15000 },
@@ -40,6 +41,7 @@ export function useCheckoutViewModel() {
       email: prev.email || email,
       phone: prev.phone || phone,
       address: prev.address || addrObj.address || addrObj.street || '',
+      city: prev.city || addrObj.city || addrObj.province || '',
       district: prev.district || addrObj.district || addrObj.ward || '',
       country: prev.country || addrObj.country || 'Vietnam',
     }));
@@ -70,14 +72,14 @@ export function useCheckoutViewModel() {
     `VNPAY|ORDER=${order.orderId}|AMOUNT=${order.total}|INFO=${orderInfo}`,
   )}`;
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (cartItems.length === 0) {
       alert('Giỏ hàng trống.');
       navigate('/cart');
       return;
     }
     if (mode === 'delivery') {
-      if (!form.name || !form.phone || !form.address || !form.district) {
+      if (!form.name || !form.phone || !form.address || !form.city || !form.district) {
         alert('Vui lòng nhập đầy đủ thông tin giao hàng!');
         return;
       }
@@ -97,8 +99,49 @@ export function useCheckoutViewModel() {
       }
     }
 
-    clearCart();
-    setShowSuccess(true);
+    // Build payload for API
+    const payload = {
+      cart: cartItems.map((i) => ({
+        productId: i.productId,
+        name: i.name,
+        price: i.price,
+        qty: i.qty,
+      })),
+      buyer: {
+        name: form.name,
+        fullName: form.name,
+        phone: form.phone,
+      },
+      shipping: {
+        mode,
+        address:
+          mode === 'delivery'
+            ? {
+                fullName: form.name,
+                phone: form.phone,
+                address: form.address,
+                city: form.city,
+                district: form.district,
+              }
+            : undefined,
+        pickupStore: mode === 'pickup' ? pickedStore || null : undefined,
+      },
+      payment: {
+        method: form.method,
+      },
+      pricing: {
+        total,
+      },
+    };
+
+    try {
+      const orderRes = await checkoutOrderApi(payload);
+      // Có thể dùng orderRes nếu cần hiển thị mã đơn
+      clearCart();
+      setShowSuccess(true);
+    } catch (e) {
+      alert(e?.message || 'Không thể tạo đơn hàng.');
+    }
   };
 
   return {
