@@ -50,7 +50,7 @@
 .song-details__lyrics {
   font-size: 16px;
   line-height: 1.6;
-  margin-top: 20px;
+  margin-top: 28px; /* tăng khoảng đệm để tooltip trên cùng không bị cắt */
   columns: 3;
   column-gap: 40px;
   column-rule: 1px solid #ddd;

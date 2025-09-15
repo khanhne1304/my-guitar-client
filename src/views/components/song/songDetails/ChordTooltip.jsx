@@ -16,9 +16,10 @@ export default function ChordTooltip({ chordText, children }) {
     const rect = el.getBoundingClientRect();
     const tooltipHeight = 190;
     const gap = 10;
-    // Nếu không đủ chỗ phía trên thì hiển thị phía dưới
-    const aboveTop = rect.top - tooltipHeight - gap;
-    setPlaceAbove(aboveTop >= 10);
+    // Chọn vị trí có nhiều không gian hơn để tránh bị cắt ở mép
+    const spaceAbove = rect.top - gap;
+    const spaceBelow = window.innerHeight - rect.bottom - gap;
+    setPlaceAbove(spaceAbove > spaceBelow);
 
     // Căn giữa nhưng clamp hai biên màn hình
     const tooltipWidth = 180;
