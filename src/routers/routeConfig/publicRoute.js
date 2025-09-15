@@ -12,7 +12,7 @@ import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
 import Songs from "../../views/pages/SongsPage/SongsPage";
 import ChordsPage from "../../views/pages/ToolsPage/ChordsPage/ChordsPage";
 import SongDetails from "../../views/pages/songDetails/SongDetails";
-
+import TunerPage from "../../views/pages/TunerPage/TunerPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -26,6 +26,7 @@ const publicRoutes = [
   { path: "/account", element: <Account /> },
   { path: "/tools/metronome", element: <Metronome /> },
   { path: "/tools/chords", element: <ChordsPage/> },
+  { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
 

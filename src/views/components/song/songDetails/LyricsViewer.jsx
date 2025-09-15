@@ -1,4 +1,5 @@
 import styles from "../../../pages/songDetails/SongDetails.module.css";
+import ChordTooltip from "./ChordTooltip";
 export default function LyricsViewer({ lyrics }) {
   return (
     <div className={styles["song-details__lyrics"]}>
@@ -6,7 +7,7 @@ export default function LyricsViewer({ lyrics }) {
         <p key={i}>
           {line.split(/(\[.*?\])/g).map((part, j) =>
             part.startsWith("[") ? (
-              <span key={j} className={styles["song-details__chord"]}>{part}</span>
+              <ChordTooltip key={j} chordText={part}>{part}</ChordTooltip>
             ) : (
               <span key={j}>{part}</span>
             )

@@ -73,6 +73,20 @@
   font-weight: 700;
   margin: 0 2px;
   background-color: #fffbe8;
+  position: relative;
+  cursor: pointer;
+}
+
+.chordTooltip {
+  position: absolute;
+  z-index: 1000;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 8px;
+  width: 160px;
+  height: 160px;
 }
 
 /* Danh sách hợp âm */
