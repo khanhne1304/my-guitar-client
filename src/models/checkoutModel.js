@@ -7,6 +7,7 @@ export class CheckoutForm {
     this.email = '';
     this.country = 'Vietnam';
     this.address = '';
+    this.city = '';
     this.district = '';
     this.method = 'cod';
     this.note = '';

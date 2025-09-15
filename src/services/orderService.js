@@ -1,5 +1,6 @@
 // src/services/orderService.js
 import { apiClient } from './apiClient';
+import { getToken as getStoredToken } from '../utils/storage';
 
 /**
  * Map payload từ Checkout.jsx (cart/pricing/shipping/payment/...) sang
@@ -17,7 +18,7 @@ function mapCheckoutToOrderDoc(payload) {
     product: i._id || i.id || i.productId, // ObjectId string
     name: i.name,
     price: Number(i.price) || 0,
-    qty: Number(i.quantity) || 0,
+    qty: Number(i.qty ?? i.quantity) || 0,
   }));
 
   // Suy ra shippingAddress
@@ -25,22 +26,21 @@ function mapCheckoutToOrderDoc(payload) {
 
   const buyerPhone =
     payload?.buyer?.phone || payload?.shipping?.address?.phone || '';
+  const buyerName = payload?.buyer?.name || payload?.buyer?.fullName || '';
   const addr = payload?.shipping?.address || null; // khi mode = 'delivery'
   const store = payload?.shipping?.pickupStore || null; // khi mode = 'pickup'
 
   if (payload?.shipping?.mode === 'delivery' && addr) {
     shippingAddress = {
+      fullName: addr.fullName || buyerName || '',
       phone: buyerPhone || '',
-      city:
-        addr.city ||
-        addr.province || // nếu FE bạn để "province"
-        addr.country || // fallback (tránh null)
-        '',
+      city: addr.city || addr.province || addr.country || '',
       district: addr.district || '',
       address: addr.address || '', // optional
     };
   } else if (payload?.shipping?.mode === 'pickup' && store) {
     shippingAddress = {
+      fullName: store.fullName || buyerName || '',
       phone: buyerPhone || '',
       city: store.city || '',
       district: store.district || '',
@@ -48,10 +48,11 @@ function mapCheckoutToOrderDoc(payload) {
     };
   } else {
     shippingAddress = {
+      fullName: buyerName || '',
       phone: buyerPhone || '',
-      city: '',
-      district: '',
-      address: '',
+      city: payload?.buyer?.city || '',
+      district: payload?.buyer?.district || '',
+      address: payload?.buyer?.address || '',
     };
   }
 
@@ -70,16 +71,13 @@ function mapCheckoutToOrderDoc(payload) {
   };
 }
 
-/**
- * Lấy token từ localStorage (đã được lưu bởi saveSession)
- * Nếu bạn dùng key khác, đổi lại bên dưới.
- */
-function getToken() {
-  try {
-    return localStorage.getItem('token');
-  } catch {
-    return null;
-  }
+// Lấy token thống nhất từ utils/storage và chuẩn hoá tiền tố Bearer
+function buildAuthHeader() {
+  const raw = getStoredToken?.() || '';
+  const token = typeof raw === 'string' ? raw.trim() : '';
+  if (!token) return {};
+  const prefixed = /^bearer\s+/i.test(token) ? token : `Bearer ${token}`;
+  return { Authorization: prefixed };
 }
 
 /**
@@ -88,14 +86,11 @@ function getToken() {
  */
 export async function checkoutOrderApi(viewPayload) {
   const body = mapCheckoutToOrderDoc(viewPayload);
-  const token = getToken();
 
   try {
     const res = await apiClient.post('/orders', body, {
-      // Nếu BE dùng JWT Header:
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-      // Nếu BE dùng cookie-session, bật dòng dưới (và server phải set CORS credentials)
-      withCredentials: true,
+      headers: buildAuthHeader(),
+      // Nếu BE dùng cookie-session, cần bật credentials trong apiClient
     });
     return res?.data ?? res;
   } catch (err) {
