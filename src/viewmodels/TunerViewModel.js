@@ -106,9 +106,7 @@ export function useTunerViewModel() {
       const confidence = pitchResult.confidence || 0.5; // Default confidence nếu không có
       const signalRms = pitchResult.rms || 0;
 
-      console.log(
-        `🎵 Raw pitch: ${pitchResult.freq.toFixed(2)} Hz → Normalized: ${pitch.toFixed(2)} Hz | Confidence: ${(confidence * 100).toFixed(1)}% | RMS: ${signalRms.toFixed(4)}`
-      );
+
 
       // 3️⃣ Enhanced smoothing với confidence weighting
       const MAX_HISTORY = 8; // Tăng history để smoothing tốt hơn
@@ -142,10 +140,6 @@ export function useTunerViewModel() {
         const nowLog = performance.now();
         if (nowLog - lastLogAtRef.current > 100) { // ~10 lần/giây
           lastLogAtRef.current = nowLog;
-          console.log(
-            `🎙️ Captured: ${pitchResult.freq.toFixed(2)} Hz | Smoothed: ${smoothed.toFixed(2)} Hz`
-          );
-        }
 
         // 4️⃣ Stability check - chỉ cập nhật khi pitch ổn định
         const STABILITY_THRESHOLD = 2.0; // Hz - tăng để dễ ổn định hơn
@@ -181,9 +175,7 @@ export function useTunerViewModel() {
               const DEADZONE_CENTS = 10;
               if (Math.abs(finalCents) < DEADZONE_CENTS) finalCents = 0;
 
-              console.log(
-                `🎯 Auto Mode - Stable: ${smoothed.toFixed(2)} Hz | Note: ${finalNote} | Δ: ${finalCents.toFixed(1)} cents | Conf: ${(confidence * 100).toFixed(1)}%`
-              );
+
 
               // Throttle cập nhật UI ~20fps
               const now = performance.now();
@@ -209,9 +201,6 @@ export function useTunerViewModel() {
               const DEADZONE_CENTS = 6;
               if (Math.abs(cents) < DEADZONE_CENTS) cents = 0;
 
-              console.log(
-                `🎯 Manual Mode - Stable: ${smoothed.toFixed(2)} Hz | Target: ${selectedString} (${targetFreq} Hz) | Δ: ${cents.toFixed(1)} cents | Conf: ${(confidence * 100).toFixed(1)}%`
-              );
 
               const now = performance.now();
               if (now - lastUiUpdateAtRef.current > 50) {

@@ -17,7 +17,6 @@ export function useHomeViewModel() {
     if (selectedBrand) {
       params.brandSlug = selectedBrand;
     }
-    console.log('🏠 HomeViewModel - API Params:', params);
     return params;
   }, [selectedCategory, selectedBrand]);
 
