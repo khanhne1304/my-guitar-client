@@ -119,6 +119,8 @@ export default function ProductManager() {
                     Xóa
                   </button>
                 </td>
+
+
               </tr>
             ))}
           </tbody>
@@ -139,7 +141,7 @@ export default function ProductManager() {
           product={editProduct}
           onSuccess={fetchProducts}
         />
-        )}
+      )}
     </div>
   );
 }

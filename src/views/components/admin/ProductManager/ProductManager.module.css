@@ -72,35 +72,38 @@
   font-weight: 600;
 }
 
-.editBtn,
-.deleteBtn {
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+/* === Buttons === */
+.actionBtn {
+  padding: 6px 14px;
+  border-radius: 4px;
   font-weight: 600;
-  margin-right: 6px;
+  border: 1px solid #000;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
+/* Nút sửa (màu nền vàng + chữ đen) */
 .editBtn {
-  background: #2563eb;
-  color: white;
+  composes: actionBtn;
+  background: #ffd700;
+  color: #000;
 }
 
 .editBtn:hover {
-  background: #1e4ed8;
+  background: #e6c200;
 }
 
+/* Nút xóa (màu nền đen + chữ vàng) */
 .deleteBtn {
-  background: #dc2626;
-  color: white;
+  composes: actionBtn;
+  background: #000;
+  color: #ffd700;
 }
 
 .deleteBtn:hover {
-  background: #b91c1c;
+  background: #333;
 }
+
 
 .loading {
   text-align: center;
