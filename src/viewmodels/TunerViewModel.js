@@ -30,7 +30,6 @@ export function useTunerViewModel() {
   const currentNoteRef = useRef(null);
   const lastLogAtRef = useRef(0);
 
-  // Dừng micro + dọn dẹp
   const stop = useCallback(() => {
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     if (mediaStreamRef.current) {
@@ -44,19 +43,15 @@ export function useTunerViewModel() {
     setIsRunning(false);
   }, []);
 
-  // Hàm normalize pitch → chia 2, chia 3 nếu cần
   function normalizePitch(freq) {
     let pitch = freq;
-    // nếu pitch cao hơn 500Hz → có thể là harmonic
-    while (pitch > 500) pitch = pitch / 2;
+    while (pitch > 500) pitch /= 2;
     return pitch;
   }
 
-  // Đưa tần số về OCTAVE gần target nhất (giảm sai chiều khi cách > 1 octave)
   function normalizeToNearestOctave(freq, target) {
     let f = freq;
     if (!target || !isFinite(target) || target <= 0) return f;
-    // Kéo f về sao cho |f - target| là nhỏ nhất khi nhân/chia 2
     let improved = true;
     while (improved) {
       improved = false;
@@ -73,7 +68,6 @@ export function useTunerViewModel() {
     return f;
   }
 
-  // Hàm lấy tần số target của dây đàn
   const getTargetFrequency = useCallback((note) => {
     const FREQUENCIES = {
       E2: 82.41,
@@ -90,129 +84,113 @@ export function useTunerViewModel() {
     if (!analyserRef.current || !bufferRef.current) return;
     analyserRef.current.getFloatTimeDomainData(bufferRef.current);
 
-    // 1️⃣ RMS
+    // RMS
     let r = 0;
     const buf = bufferRef.current;
     for (let i = 0; i < buf.length; i++) r += buf[i] * buf[i];
     r = Math.sqrt(r / buf.length);
     setRms(r);
 
-    // 2️⃣ Phát hiện pitch với confidence score
     const ctx = audioContextRef.current;
     const pitchResult = detectPitch(buf, ctx.sampleRate);
 
     if (pitchResult && pitchResult.freq) {
       let pitch = normalizePitch(pitchResult.freq);
-      const confidence = pitchResult.confidence || 0.5; // Default confidence nếu không có
-      const signalRms = pitchResult.rms || 0;
+      const confidence = pitchResult.confidence || 0.5;
 
-
-
-      // 3️⃣ Enhanced smoothing với confidence weighting
-      const MAX_HISTORY = 8; // Tăng history để smoothing tốt hơn
-      const MIN_CONFIDENCE = 0.4; // Chỉ nhận kết quả có confidence >= 60%
-      
-      // Chỉ dùng khi đủ tin cậy
+      const MAX_HISTORY = 8;
+      const MIN_CONFIDENCE = 0.6; // >= 60%
       if (confidence >= MIN_CONFIDENCE) {
         pitchHistory.current.push(pitch);
         confidenceHistory.current.push(confidence);
       }
-      
+
       if (pitchHistory.current.length > MAX_HISTORY) {
         pitchHistory.current.shift();
         confidenceHistory.current.shift();
       }
 
-      // Weighted average dựa trên confidence
       if (pitchHistory.current.length >= 3) {
         let weightedSum = 0;
         let totalWeight = 0;
-        
         for (let i = 0; i < pitchHistory.current.length; i++) {
           const weight = confidenceHistory.current[i] || 0.1;
           weightedSum += pitchHistory.current[i] * weight;
           totalWeight += weight;
         }
-        
         const smoothed = weightedSum / totalWeight;
 
-        // Log tần số đang thu (throttled)
+        // throttle log
         const nowLog = performance.now();
-        if (nowLog - lastLogAtRef.current > 100) { // ~10 lần/giây
+        if (nowLog - lastLogAtRef.current > 100) {
           lastLogAtRef.current = nowLog;
+        }
 
-        // 4️⃣ Stability check - chỉ cập nhật khi pitch ổn định
-        const STABILITY_THRESHOLD = 2.0; // Hz - tăng để dễ ổn định hơn
-        const MIN_STABLE_COUNT = 2; // Giảm xuống 2 lần để phản hồi nhanh hơn
-        
-        if (!lastPitchRef.current || Math.abs(lastPitchRef.current - smoothed) > STABILITY_THRESHOLD) {
+        const STABILITY_THRESHOLD = 2.0;
+        const MIN_STABLE_COUNT = 2;
+        if (
+          !lastPitchRef.current ||
+          Math.abs(lastPitchRef.current - smoothed) > STABILITY_THRESHOLD
+        ) {
           stableCountRef.current = 0;
           lastPitchRef.current = smoothed;
         } else {
           stableCountRef.current++;
         }
 
-        // Chỉ cập nhật UI khi pitch đã ổn định (bỏ điều kiện confidence)
         if (stableCountRef.current >= MIN_STABLE_COUNT) {
           if (smoothed >= 70 && smoothed <= 500) {
             if (tunerMode === "auto") {
-              // Chế độ tự động: detect note gần nhất
               const { note, targetFreq, cents } = findClosestNote(smoothed);
 
-              // Hysteresis tránh nhảy note khi sát biên
-              const HYSTERESIS_CENTS = 20; // ~1/5 semitone
+              const HYSTERESIS_CENTS = 20;
               const lastNote = currentNoteRef.current;
               let finalNote = note;
               let finalTarget = targetFreq;
               let finalCents = cents;
-              if (lastNote && lastNote !== note && noteData?.note === lastNote && Math.abs(cents) < HYSTERESIS_CENTS) {
-                finalNote = noteData.note;
-                finalTarget = noteData.targetFreq;
+
+              if (lastNote && lastNote !== note && Math.abs(cents) < HYSTERESIS_CENTS) {
+                finalNote = lastNote;
+                finalTarget = getTargetFrequency(lastNote) || targetFreq;
                 finalCents = 1200 * Math.log2(smoothed / finalTarget);
               }
 
-              // Deadzone để giảm rung
               const DEADZONE_CENTS = 10;
               if (Math.abs(finalCents) < DEADZONE_CENTS) finalCents = 0;
 
-
-
-              // Throttle cập nhật UI ~20fps
               const now = performance.now();
               if (now - lastUiUpdateAtRef.current > 50) {
                 lastUiUpdateAtRef.current = now;
-                setNoteData({ 
-                  pitch: smoothed, 
-                  note: finalNote, 
-                  cents: finalCents, 
-                  targetFreq: finalTarget, 
+                setNoteData({
+                  pitch: smoothed,
+                  note: finalNote,
+                  cents: finalCents,
+                  targetFreq: finalTarget,
                   confidence,
-                  isStable: true 
+                  isStable: true,
                 });
                 currentNoteRef.current = finalNote;
               }
             } else {
-              // Chế độ manual: so sánh với dây đã chọn
               const targetFreq = getTargetFrequency(selectedString);
               const aligned = normalizeToNearestOctave(smoothed, targetFreq);
               let cents = 1200 * Math.log2(aligned / targetFreq);
 
-              // Deadzone để giảm rung
               const DEADZONE_CENTS = 6;
               if (Math.abs(cents) < DEADZONE_CENTS) cents = 0;
-
 
               const now = performance.now();
               if (now - lastUiUpdateAtRef.current > 50) {
                 lastUiUpdateAtRef.current = now;
-                setNoteData({ 
-                  pitch: smoothed, 
-                  note: selectedString, 
-                  cents, 
-                  targetFreq, 
+                setNoteData({
+                  pitch: smoothed,
+                  note: selectedString,
+                  cents,
+                  targetFreq,
                   confidence,
-                  isStable: true 
+                  isStable: true,
                 });
+                currentNoteRef.current = selectedString;
               }
             }
             lastStablePitchRef.current = smoothed;
@@ -220,7 +198,6 @@ export function useTunerViewModel() {
         }
       }
     } else {
-      // Không có pitch detected - reset stability counter
       stableCountRef.current = 0;
     }
 
@@ -244,23 +221,22 @@ export function useTunerViewModel() {
           noiseSuppression: false,
           autoGainControl: false,
           channelCount: 1,
-          sampleRate: 44100, // Tăng sample rate để độ chính xác cao hơn
+          sampleRate: 44100,
           sampleSize: 16,
         },
       });
 
       mediaStreamRef.current = stream;
       const source = ctx.createMediaStreamSource(stream);
-      // Audio pre-filter chain to improve SNR
+
       const gain = ctx.createGain();
-      gain.gain.value = 1.8; // nhẹ nhàng nâng tín hiệu
+      gain.gain.value = 1.8;
 
       const hp = ctx.createBiquadFilter();
       hp.type = "highpass";
-      hp.frequency.value = 80; // cut rumble mạnh hơn
+      hp.frequency.value = 80;
       hp.Q.value = 0.707;
 
-      // Notch 50Hz và 100Hz để loại nhiễu điện lưới
       const notch50 = ctx.createBiquadFilter();
       notch50.type = "notch";
       notch50.frequency.value = 50;
@@ -273,23 +249,22 @@ export function useTunerViewModel() {
 
       const lp = ctx.createBiquadFilter();
       lp.type = "lowpass";
-      lp.frequency.value = 550; // limit to guitar band
+      lp.frequency.value = 550;
       lp.Q.value = 0.707;
 
       const band = ctx.createBiquadFilter();
       band.type = "bandpass";
-      band.frequency.value = 200; // broad in auto; will retune in manual
+      band.frequency.value = 200;
       band.Q.value = 1.2;
 
       const analyser = ctx.createAnalyser();
-      analyser.smoothingTimeConstant = 0.1; // Một chút smoothing để giảm nhiễu
-      analyser.fftSize = 32768; // Tăng fftSize để detect fundamental tốt hơn
-      analyser.minDecibels = -90; // Giảm ngưỡng để bắt âm thanh yếu hơn
-      analyser.maxDecibels = -10; // Giảm max để tránh clipping
+      analyser.smoothingTimeConstant = 0.1;
+      analyser.fftSize = 32768;
+      analyser.minDecibels = -90;
+      analyser.maxDecibels = -10;
       analyserRef.current = analyser;
       bufferRef.current = new Float32Array(analyser.fftSize);
 
-      // Reset bộ nhớ lọc/stability khi bắt đầu lần mới
       pitchHistory.current = [];
       confidenceHistory.current = [];
       lastPitchRef.current = null;
@@ -297,7 +272,6 @@ export function useTunerViewModel() {
       lastStablePitchRef.current = null;
       lastUiUpdateAtRef.current = 0;
 
-      // Wire graph: source -> HPF -> LPF -> Bandpass -> Analyser
       preGainRef.current = gain;
       hpFilterRef.current = hp;
       lpFilterRef.current = lp;
@@ -312,6 +286,7 @@ export function useTunerViewModel() {
       notch100.connect(lp);
       lp.connect(band);
       band.connect(analyser);
+
       setIsRunning(true);
       rafIdRef.current = requestAnimationFrame(loop);
     } catch (e) {
@@ -325,24 +300,23 @@ export function useTunerViewModel() {
     return () => stop();
   }, [stop]);
 
-  return { 
-    noteData, 
-    rms, 
-    isRunning, 
-    error, 
-    start, 
+  return {
+    noteData,
+    rms,
+    isRunning,
+    error,
+    start,
     stop,
     tunerMode,
     setTunerMode: (mode) => {
-      // Khi đổi chế độ, reset bộ lọc để tránh kẹt trạng thái cũ
       pitchHistory.current = [];
       confidenceHistory.current = [];
       lastPitchRef.current = null;
       stableCountRef.current = 0;
       lastStablePitchRef.current = null;
       lastUiUpdateAtRef.current = 0;
+      currentNoteRef.current = mode === "manual" ? selectedString : null;
 
-      // Auto: bandpass rộng; Manual: retune theo dây
       if (bandFilterRef.current) {
         if (mode === "auto") {
           bandFilterRef.current.frequency.value = 200;
@@ -350,26 +324,27 @@ export function useTunerViewModel() {
         } else {
           const tf = getTargetFrequency(selectedString);
           bandFilterRef.current.frequency.value = tf || 200;
-          bandFilterRef.current.Q.value = 5; // narrow band for stability
+          bandFilterRef.current.Q.value = 5;
         }
       }
       setTunerMode(mode);
     },
     selectedString,
     setSelectedString: (s) => {
-      // Khi đổi dây, cũng reset smoothing
       pitchHistory.current = [];
       confidenceHistory.current = [];
       lastPitchRef.current = null;
       stableCountRef.current = 0;
       lastStablePitchRef.current = null;
       lastUiUpdateAtRef.current = 0;
+      currentNoteRef.current = s;
+
       if (bandFilterRef.current && tunerMode === "manual") {
         const tf = getTargetFrequency(s);
         bandFilterRef.current.frequency.value = tf || 200;
         bandFilterRef.current.Q.value = 5;
       }
       setSelectedString(s);
-    }
+    },
   };
 }
