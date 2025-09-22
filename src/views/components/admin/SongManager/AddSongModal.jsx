@@ -5,7 +5,6 @@ import { songService } from "../../../../services/songService";
 export default function AddSongModal({ open, onClose, onSuccess }) {
   const [form, setForm] = useState({
     title: "",
-    subtitle: "",
     artists: "",
     posterName: "",
     postedAt: "",
@@ -38,7 +37,6 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
 
     const payload = {
       title: form.title,
-      subtitle: form.subtitle,
       artists: form.artists
         ? form.artists.split(",").map((a) => a.trim())
         : [],
@@ -84,16 +82,6 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Subtitle
-            <input
-              type="text"
-              name="subtitle"
-              value={form.subtitle}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
             Nghệ sĩ (cách nhau bởi dấu ,)
             <input
               type="text"
@@ -124,17 +112,6 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Lượt xem
-            <input
-              type="number"
-              name="views"
-              value={form.views}
-              onChange={handleChange}
-              min={0}
-            />
-          </label>
-
-          <label>
             Thể loại (styleLabel)
             <input
               type="text"
@@ -145,7 +122,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Tag (cách nhau bởi dấu ,)
+            Hợp âm sử dụng (cách nhau bởi dấu ,)*
             <input
               type="text"
               name="tags"
@@ -155,7 +132,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Trích đoạn (excerpt)
+            Tóm tắt* 
             <textarea
               name="excerpt"
               value={form.excerpt}
@@ -165,7 +142,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Lời bài hát (lyrics) *
+            Lời bài hát*
             <textarea
               name="lyrics"
               value={form.lyrics}
