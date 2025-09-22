@@ -1,0 +1,82 @@
+.history {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.history__main {
+    flex: 1;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.history__title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.history__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.history__card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: white;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.history__header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.history__status {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status--pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status--paid {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status--shipped {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status--completed {
+    background: #e2f0d9;
+    color: #155724;
+}
+
+.status--cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.history__empty {
+    text-align: center;
+    color: #777;
+}
+
+.history__error {
+    text-align: center;
+    color: red;
+}

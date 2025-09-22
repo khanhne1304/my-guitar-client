@@ -72,13 +72,29 @@ function mapCheckoutToOrderDoc(payload) {
 }
 
 // Lấy token thống nhất từ utils/storage và chuẩn hoá tiền tố Bearer
+
 function buildAuthHeader() {
-  const raw = getStoredToken?.() || '';
+  const raw = getStoredToken?.();
+  if (!raw) {
+    console.warn("⚠️ No token found in localStorage");
+    return {};
+  }
   const token = typeof raw === 'string' ? raw.trim() : '';
-  if (!token) return {};
-  const prefixed = /^bearer\s+/i.test(token) ? token : `Bearer ${token}`;
-  return { Authorization: prefixed };
+  return { Authorization: token.startsWith('Bearer ') ? token : `Bearer ${token}` };
 }
+
+// ✅ Lấy đơn hàng của user
+export async function getMyOrdersApi() {
+  try {
+    const data = await apiClient.get('/orders/mine');
+    console.log("✅ Orders API data:", data); // debug
+    return Array.isArray(data) ? data : [];  // Đảm bảo luôn trả về mảng
+  } catch (err) {
+    console.error("❌ getMyOrdersApi failed:", err);
+    return [];
+  }
+}
+
 
 /**
  * Tạo đơn hàng theo schema DB + kèm Authorization

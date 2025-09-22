@@ -111,9 +111,6 @@ export default function AddProductModal({ onClose, onSuccess }) {
               onChange={(e) => setLinkAnh(e.target.value)}
               placeholder="https://..."
             />
-            <div className={styles.preview}>
-              <img src={linkAnh || DEFAULT_IMAGE} alt="preview" className={styles.imagePreview} />
-            </div>
           </div>
 
           <div className={styles.field}>

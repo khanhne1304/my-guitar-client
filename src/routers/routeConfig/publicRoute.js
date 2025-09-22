@@ -6,6 +6,7 @@ import ProductDetails from "../../views/pages/ProductDetailsPage/ProductDetailsP
 import ViewCategory from "../../views/pages/CategoryPage/CategoryPage";
 import Cart from "../../views/pages/CartPage/CartPage";
 import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
+import CheckOutHistory from "../../views/pages/CheckOutHistory/CheckOutHistory";
 import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê/tìm kiếm sản phẩm
 import Account from "../../views/pages/AccountPage/AccountPage";
 import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
@@ -25,6 +26,8 @@ const publicRoutes = [
   { path: "/cart", element: <Cart /> },
   { path: "/favorites", element: <FavoritesPage /> },
   { path: "/checkout", element: <Checkout /> },
+  { path: "/checkout-history", element: <CheckOutHistory /> },
+
   // { path: "/productsCategory", element: <ProductsCategory /> }, // (tuỳ chọn) alias cũ, có thể bỏ
   { path: "/account", element: <Account /> },
   { path: "/tools/metronome", element: <Metronome /> },
