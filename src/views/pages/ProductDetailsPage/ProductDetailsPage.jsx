@@ -23,6 +23,7 @@ export default function ProductDetailsPage() {
   const {
     prod,
     headerProducts,
+    loadingRelated,
     galleryImages,
     priceNow,
     oldPrice,
@@ -155,6 +156,9 @@ export default function ProductDetailsPage() {
             onGo={(href) => navigate(href)}
             items={related}
           />
+
+          {loadingRelated && <p>Đang tải sản phẩm liên quan...</p>}
+
         </div>
       </main>
 

@@ -28,9 +28,9 @@ const normalizeProduct = (p) => {
     imageAlt: first?.alt || p?.name || '',
     images: Array.isArray(p?.images)
       ? p.images.map((i) => ({
-          ...i,
-          url: makeAbs(i?.url || DEFAULT_IMAGE),
-        }))
+        ...i,
+        url: makeAbs(i?.url || DEFAULT_IMAGE),
+      }))
       : [{ url: DEFAULT_IMAGE, alt: p?.name || 'No image' }],
   };
 };
@@ -47,7 +47,13 @@ export const productService = {
     const data = await apiClient.get(`/products/${slug}`);
     return normalizeProduct(data);
   },
-
+  async listByCategory(categorySlug, params = {}) {
+    if (!categorySlug) return [];
+    const data = await apiClient.get(
+      `/products/category/${categorySlug}${toQuery(params)}`
+    );
+    return (Array.isArray(data) ? data : []).map(normalizeProduct);
+  },
   async create(data) {
     const res = await apiClient.post('/products', data);
     return normalizeProduct(res);

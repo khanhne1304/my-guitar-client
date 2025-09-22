@@ -1,10 +1,10 @@
-// ProductDetailsViewModel.js
+// src/viewmodels/ProductDetailsViewModel.js
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../src/context/CartContext';
 import { useProductBySlug } from '../hooks/useProductBySlug';
 import { useProducts } from '../hooks/useProducts';
 import { usePrice } from '../hooks/usePrice';
-import { useRelatedProducts } from '../hooks/useRelatedProduct';
+import { useRelatedProducts } from '../hooks/useRelatedProduct'; // ✅ Đổi sang file mới chuẩn API
 
 const FILE_BASE = import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
 const ensureAbsolute = (u) =>
@@ -15,20 +15,25 @@ export function useProductDetailsViewModel() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
+  // Lấy thông tin sản phẩm hiện tại
   const { prod, images } = useProductBySlug(slug);
   const { products: headerProducts } = useProducts();
   const { priceNow, oldPrice, discount } = usePrice(prod);
-  const related = useRelatedProducts(prod?.category?.slug, prod?.slug);
 
+  // ✅ Gọi API thật để lấy sản phẩm liên quan
+  const { related, loading } = useRelatedProducts(prod?.category?.slug, prod?.slug);
+
+  // Chuẩn hóa hình ảnh gallery
   const galleryImages = (images?.length ? images : prod?.images || []).map((i) => ({
     url: ensureAbsolute(i?.url),
     alt: i?.alt || prod?.name || 'Ảnh sản phẩm',
   }));
 
+  // Xử lý thêm vào giỏ
   const handleAddToCart = (qty, goToCart = false) => {
     const user = localStorage.getItem('user');
     if (!user) return navigate('/login');
-    if (prod.stock <= 0) return;
+    if (prod?.stock <= 0) return;
 
     addToCart(
       {
@@ -54,6 +59,7 @@ export function useProductDetailsViewModel() {
     oldPrice,
     discount,
     related,
+    loadingRelated: loading, // ✅ Trả về loading để FE hiển thị Skeleton
     handleAddToCart,
     navigate,
   };
