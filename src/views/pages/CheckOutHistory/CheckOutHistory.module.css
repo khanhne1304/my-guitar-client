@@ -17,19 +17,31 @@
     font-weight: 700;
     margin-bottom: 24px;
 }
-
 .history__list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch; /* Chiếm hết chiều ngang container */
+  width: 100%;
+  padding: 0 24px; /* Khoảng cách 2 bên */
+  max-width: 1200px; /* Container rộng hơn */
+  margin: 0 auto;
 }
 
 .history__card {
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background: white;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.history__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .history__header {
