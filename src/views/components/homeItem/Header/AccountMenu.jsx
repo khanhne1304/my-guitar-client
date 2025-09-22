@@ -29,7 +29,7 @@ export default function AccountMenu({ user, handleLogout }) {
         </button>
         <button
           className={styles.dropdownBtn}
-          onClick={() => navigate("/favorites")}
+          onClick={() => navigate("/checkout-history")}
         >
           Lịch sử đơn hàng
         </button>
