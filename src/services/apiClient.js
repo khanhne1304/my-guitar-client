@@ -1,12 +1,26 @@
 // src/services/apiClient.js
+import { getToken } from '../utils/storage';
+
 const BASE_URL =
   import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
 async function request(path, { method = 'GET', headers = {}, body } = {}) {
+  // 👇 Lấy token từ localStorage
+  const token = getToken();
+
+  const authHeaders = token
+    ? { Authorization: `Bearer ${token}` }
+    : {};
+
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json', ...headers },
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders, // 👈 Đính kèm token vào request
+      ...headers,
+    },
     body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include', // nếu bạn cần cookie cho cross-origin
   });
 
   let data = null;

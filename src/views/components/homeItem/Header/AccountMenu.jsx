@@ -19,6 +19,15 @@ export default function AccountMenu({ user, handleLogout }) {
         >
           Cài đặt tài khoản của tôi
         </button>
+
+        {/* Nút mới */}
+        <button
+          className={styles.dropdownBtn}
+          onClick={() => navigate("/favorites")}
+        >
+          Danh sách yêu thích
+        </button>
+
         <button
           className={styles.dropdownBtn}
           onClick={handleLogout}

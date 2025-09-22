@@ -14,6 +14,70 @@
   flex-direction: column;
   gap: 12px;
 }
+.product-details__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.product-details__fav-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.product-details__fav-btn:hover {
+  transform: scale(1.1);
+}
+
+.product-details__fav-btn.active {
+  color: #ef4444;
+}
+/* Container yêu thích */
+.product-details__fav-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.product-details__fav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.product-details__fav-btn:hover {
+  transform: scale(1.1);
+}
+
+.product-details__fav-icon {
+  font-size: 26px;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.product-details__fav-btn.active .product-details__fav-icon {
+  color: #ef4444;
+}
+.active .product-details__fav-icon {
+  color: #ef4444;
+}
+
+.product-details__fav-text {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+  user-select: none;
+}
 
 /* Ảnh chính */
 .product-details__gallery-main {

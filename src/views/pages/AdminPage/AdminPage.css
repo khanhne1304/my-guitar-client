@@ -1,0 +1,26 @@
+/* src/views/pages/admin/AdminPage.css */
+.admin-page__header {
+  margin-bottom: 16px;
+  border-bottom: 2px solid #ffe27a; /* cùng tone vàng */
+  padding-bottom: 8px;
+}
+
+.admin-page__title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
+}
+
+.admin-page__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.admin-page__content {
+  background: #fff;
+  padding: 20px;
+  border: 2px solid #ffe27a;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}

@@ -1,0 +1,11 @@
+.adminLayout {
+  display: block; /* Không cần flex vì sidebar fixed */
+}
+
+.adminContent {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 24px;
+  margin-left: 240px; /* dịch toàn bộ nội dung sang phải bằng chiều rộng sidebar */
+  box-sizing: border-box;
+}

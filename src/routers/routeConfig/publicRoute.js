@@ -12,7 +12,9 @@ import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
 import Songs from "../../views/pages/SongsPage/SongsPage";
 import ChordsPage from "../../views/pages/ToolsPage/ChordsPage/ChordsPage";
 import SongDetails from "../../views/pages/songDetails/SongDetails";
+import FavoritesPage from "../../views/pages/FavoritesPage/FavoritesPage";
 import TunerPage from "../../views/pages/TunerPage/TunerPage";
+import AdminPage from "../../views/pages/AdminPage/AdminPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -21,12 +23,14 @@ const publicRoutes = [
   { path: "/products", element: <ProductsCategory /> },     // tìm kiếm/lọc sản phẩm theo ?q=&category=&brand=
   { path: "/category/:slug", element: <ViewCategory /> },   // list sản phẩm theo :slug
   { path: "/cart", element: <Cart /> },
+  { path: "/favorites", element: <FavoritesPage /> },
   { path: "/checkout", element: <Checkout /> },
   // { path: "/productsCategory", element: <ProductsCategory /> }, // (tuỳ chọn) alias cũ, có thể bỏ
   { path: "/account", element: <Account /> },
   { path: "/tools/metronome", element: <Metronome /> },
   { path: "/tools/chords", element: <ChordsPage/> },
   { path: "/tools/tuner", element: <TunerPage /> },
+  { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
 
