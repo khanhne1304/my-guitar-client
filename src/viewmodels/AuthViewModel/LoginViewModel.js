@@ -48,7 +48,13 @@ export function useLoginViewModel() {
       setUser(merged);
 
       setOk('Đăng nhập thành công! Đang chuyển hướng...');
-      setTimeout(() => navigate('/'), 800);
+      setTimeout(() => {
+        if (merged.role === 'admin') {
+          navigate('/admin'); // 👈 điều hướng tới trang admin
+        } else {
+          navigate('/'); // user bình thường về trang chủ
+        }
+      }, 800);
     } catch (error) {
       setErr(error.message);
     } finally {
