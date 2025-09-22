@@ -141,7 +141,7 @@ export default function CheckoutPage() {
         open={vm.showSuccess}
         onClose={() => {
           vm.setShowSuccess(false);
-          vm.navigate('/');
+          vm.navigate('/checkout-history');
         }}
         onContinue={() => {
           vm.setShowSuccess(false);

@@ -14,7 +14,7 @@ export default function SuccessModal({ open, onClose, onContinue }) {
         </p>
         <div className={styles.actions}>
           <button className={styles.okBtn} onClick={onClose}>
-            OK
+            Xem lịch sử thanh toán
           </button>
           <button className={styles.continueBtn} onClick={onContinue}>
             Tiếp tục mua sắm
