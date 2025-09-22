@@ -101,9 +101,7 @@
   display: block;
   transition: transform 0.3s ease;
 }
-.product-details__gallery-main:hover img {
-  transform: scale(1.02);
-}
+
 .product-details__gallery-sale {
   position: absolute;
   top: 10px;
