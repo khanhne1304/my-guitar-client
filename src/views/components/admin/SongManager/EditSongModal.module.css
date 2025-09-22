@@ -1,0 +1,91 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 640px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+input,
+textarea {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Nút giống theme header */
+.cancelBtn {
+  padding: 8px 16px;
+  border: 1px solid #000;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.cancelBtn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.submitBtn {
+  padding: 8px 16px;
+  border: 1px solid #000;
+  background: #000;
+  color: #ffd700;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.submitBtn:hover {
+  background: #333;
+}
+
+.error {
+  background: #ffe5e5;
+  color: #c00;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}

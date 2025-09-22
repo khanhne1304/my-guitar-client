@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "../../layouts/admin/AdminLayout/AdminLayout";
 import ProductManager from "../../components/admin/ProductManager/ProductManager";
 import OrderManager from "../../components/admin/OrderManager";
-import SongManager from "../../components/admin/SongManager";
+import SongManager from "../../components/admin/SongManager/SongManager";
 
 export default function AdminPage() {
   return (
