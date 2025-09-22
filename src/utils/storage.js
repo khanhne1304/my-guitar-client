@@ -7,7 +7,9 @@ export const STORAGE_KEYS = {
 
 // ---- TOKEN ----
 export function setToken(token) {
-  if (token) localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+  if (token) {
+    localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+  }
 }
 
 export function getToken() {
@@ -55,4 +57,22 @@ export function clearSession() {
 export function mergeUser(newUser, existingUser) {
   if (!newUser && !existingUser) return null;
   return { ...(existingUser || {}), ...(newUser || {}) };
+}
+
+// ---- FAVORITES ----
+// Xóa toàn bộ danh sách favorites trong localStorage
+// (bao gồm cả guest và user)
+export function clearAllFavorites() {
+  try {
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('favorites_')) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+  } catch (error) {
+    console.error('Error clearing favorites from storage:', error);
+  }
 }

@@ -1,4 +1,4 @@
-// ProductDetailsView.jsx
+// src/views/pages/ProductDetailsPage/ProductDetailsPage.jsx
 import { useState } from 'react';
 import styles from './ProductDetailsPage.module.css';
 
@@ -12,7 +12,13 @@ import QtySelector from '../../components/product/QtySelector';
 import MetaInfo from '../../components/product/MetaInfo';
 import Tabs from '../../components/product/Tabs';
 import RelatedProducts from '../../components/product/RelatedProducts';
+
 import { useProductDetailsViewModel } from '../../../viewmodels/ProductDetailsViewModel';
+import { useFavorites } from '../../../context/FavoritesContext';
+import { getUser } from '../../../utils/storage';
+import { useNavigate } from 'react-router-dom';
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+
 export default function ProductDetailsPage() {
   const {
     prod,
@@ -26,16 +32,33 @@ export default function ProductDetailsPage() {
     navigate,
   } = useProductDetailsViewModel();
 
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const navigateRouter = useNavigate();
+  const user = getUser();
+
+  const handleFavoriteClick = () => {
+    if (!user) {
+      navigateRouter(`/login?redirect=/products/${prod?.slug}`);
+      return;
+    }
+    toggleFavorite({ ...prod, id: prod._id });
+  };
+
   if (!prod) {
     return (
       <div className={styles['product-details__state']}>
         Không tìm thấy sản phẩm.
-        <button className={styles['product-details__btn']} onClick={() => navigate(-1)}>
+        <button
+          className={styles['product-details__btn']}
+          onClick={() => navigate(-1)}
+        >
           Quay lại
         </button>
       </div>
     );
   }
+
+  const favorited = isFavorite(prod._id);
 
   return (
     <div className={styles['product-details']}>
@@ -62,12 +85,32 @@ export default function ProductDetailsPage() {
             <Gallery images={galleryImages} discount={discount} />
 
             <div className={styles['product-details__info']}>
+              {/* Tiêu đề */}
               <h1 className={styles['product-details__title']}>{prod.name}</h1>
 
+              {/* Thương hiệu + SKU */}
               <div className={styles['product-details__sub']}>
                 <span><b>Thương hiệu:</b> {prod?.brand?.name}</span>
                 <span className={styles['product-details__sep']}>•</span>
                 <span><b>Model/SKU:</b> {prod.sku}</span>
+              </div>
+
+              {/* Nút thêm yêu thích */}
+              <div className={styles['product-details__fav-container']}>
+                <button
+                  className={`${styles['product-details__fav-btn']} ${favorited ? styles['active'] : ''}`}
+                  onClick={handleFavoriteClick}
+                  aria-label="Yêu thích"
+                >
+                  {favorited ? (
+                    <FaHeart className={styles['product-details__fav-icon']} />
+                  ) : (
+                    <FaRegHeart className={styles['product-details__fav-icon']} />
+                  )}
+                </button>
+                <span className={styles['product-details__fav-text']}>
+                  {favorited ? "Đã thêm vào danh sách yêu thích" : "Thêm vào danh sách yêu thích"}
+                </span>
               </div>
 
               <PriceBlock priceNow={priceNow} oldPrice={oldPrice} discount={discount} />
