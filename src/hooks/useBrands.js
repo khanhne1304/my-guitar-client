@@ -28,37 +28,28 @@ export function useBrands() {
     
     // Kiểm tra global cache trước
     if (globalBrandsCache.has(slug)) {
-      console.log(`⏭️ Brands for ${slug} found in global cache, using cached data...`);
       setBrands((s) => ({ ...s, [slug]: globalBrandsCache.get(slug) }));
       return;
     }
     
     // Kiểm tra xem đang loading không
     if (globalLoadingCache.has(slug)) {
-      console.log(`⏳ Brands for ${slug} is already loading, skipping...`);
       return;
     }
     
-    console.log(`🔄 Loading brands for category: ${slug}`);
     setLoading((s) => ({ ...s, [slug]: true }));
     loadedCategoriesRef.current.add(slug);
     globalLoadingCache.add(slug);
     
     try {
-      console.log(`📡 Calling API: /brands/category/${slug}`);
       const apiBrands = await categoryService.listBrandsBySlug(slug);
-      console.log(`📡 API response:`, apiBrands);
       
       let finalBrands = [];
       if (apiBrands?.length) {
-        console.log(`✅ Using API brands for ${slug}:`, apiBrands);
         finalBrands = apiBrands;
       } else {
-        console.log(`⚠️ No API brands, trying fallback from products...`);
         const prods = await productService.list({ categorySlug: slug });
-        console.log(`📦 Products found:`, prods.length);
         finalBrands = deriveBrandsFromProducts(prods);
-        console.log(`🔧 Derived brands:`, finalBrands);
       }
       
       // Lưu vào global cache
@@ -66,19 +57,15 @@ export function useBrands() {
       setBrands((s) => ({ ...s, [slug]: finalBrands }));
       
     } catch (error) {
-      console.error(`❌ Error loading brands for ${slug}:`, error);
       // Try fallback even on error
       try {
-        console.log(`🔄 Trying fallback after error...`);
         const prods = await productService.list({ categorySlug: slug });
         const derivedBrands = deriveBrandsFromProducts(prods);
-        console.log(`🔧 Fallback brands:`, derivedBrands);
         
         // Lưu vào global cache
         globalBrandsCache.set(slug, derivedBrands);
         setBrands((s) => ({ ...s, [slug]: derivedBrands }));
       } catch (fallbackError) {
-        console.error(`❌ Fallback also failed:`, fallbackError);
         globalBrandsCache.set(slug, []);
         setBrands((s) => ({ ...s, [slug]: [] }));
       }

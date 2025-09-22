@@ -18,15 +18,12 @@ export function useProducts(initialParams = {}) {
   const paramsRef = useRef(null);
 
   const fetchProducts = useCallback(async (params) => {
-    console.log('🔄 Fetching products with params:', params);
     setLoading(true);
     setErr('');
     try {
       const items = await productService.list(params);
-      console.log('✅ Products fetched:', items);
       setProducts(Array.isArray(items) ? items : []);
     } catch (e) {
-      console.error('❌ Error fetching products:', e);
       setErr(e?.message || 'Không thể tải sản phẩm');
       setProducts([]);
     } finally {
@@ -38,12 +35,6 @@ export function useProducts(initialParams = {}) {
   useEffect(() => {
     const hasParamsChanged = JSON.stringify(paramsRef.current) !== JSON.stringify(memoizedParams);
     
-    console.log('🔍 Params check:', {
-      current: paramsRef.current,
-      new: memoizedParams,
-      changed: hasParamsChanged,
-      isFirstCall: paramsRef.current === null
-    });
     
     if (hasParamsChanged || paramsRef.current === null) {
       paramsRef.current = memoizedParams;

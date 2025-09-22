@@ -40,12 +40,6 @@ export default function Header() {
     loadBrandsFor("piano");
   }, []); // Bỏ dependency loadBrandsFor để tránh re-render
 
-  // Debug brands state
-  useEffect(() => {
-    console.log("🏷️ Current brands state:", brands);
-    console.log("⏳ Current loading state:", loading);
-  }, [brands, loading]);
-
   // Search state
   const [keyword, setKeyword] = useState(searchParams.get("q") ?? "");
   const [categoryFilter] = useState(searchParams.get("category") ?? "");

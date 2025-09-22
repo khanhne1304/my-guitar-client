@@ -1,16 +1,23 @@
 // src/views/pages/HomePage/HomeView.jsx  (giữ nguyên đường dẫn file của bạn)
-import { useEffect, useRef } from 'react';
-import styles from './HomePage.module.css';
-import Header from '../../components/homeItem/Header/Header';
-import Footer from '../../components/homeItem/Footer/Footer';
-import Hero from '../../components/home/Hero';
-import Section from '../../components/home/Section';
-import ProductGrid from '../../components/home/ProductGrid';
-import { useHomeViewModel } from '../../../viewmodels/HomeViewModel';
-import { useCategory } from '../../../context/CategoryContext';
+import { useEffect, useRef } from "react";
+import styles from "./HomePage.module.css";
+import Header from "../../components/homeItem/Header/Header";
+import Footer from "../../components/homeItem/Footer/Footer";
+import Hero from "../../components/home/Hero";
+import Section from "../../components/home/Section";
+import ProductGrid from "../../components/home/ProductGrid";
+import { useHomeViewModel } from "../../../viewmodels/HomeViewModel";
+import { useCategory } from "../../../context/CategoryContext";
 
 export default function HomePage() {
-  const { products, loading, err, discountedTop3, selectedCategory, selectedBrand } = useHomeViewModel();
+  const {
+    products,
+    loading,
+    err,
+    discountedTop3,
+    selectedCategory,
+    selectedBrand,
+  } = useHomeViewModel();
   const { clearFilters } = useCategory();
   const hasClearedFilters = useRef(false);
 
@@ -34,25 +41,27 @@ export default function HomePage() {
           {err && <div className={styles.home__error}>{err}</div>}
 
           {!loading && !err && (
-            <Section 
+            <Section
               title={
-                selectedCategory 
-                  ? `Sản phẩm ${selectedCategory.toUpperCase()}${selectedBrand ? ` - ${selectedBrand}` : ''}`
+                selectedCategory
+                  ? `Sản phẩm ${selectedCategory.toUpperCase()}${
+                      selectedBrand ? ` - ${selectedBrand}` : ""
+                    }`
                   : "Các sản phẩm"
               }
             >
               {selectedCategory && (
-                <div style={{ marginBottom: '16px' }}>
-                  <button 
+                <div style={{ marginBottom: "16px" }}>
+                  <button
                     onClick={clearFilters}
                     style={{
-                      padding: '8px 16px',
-                      backgroundColor: '#ff6b6b',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontWeight: '600'
+                      padding: "8px 16px",
+                      backgroundColor: "#ff6b6b",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontWeight: "600",
                     }}
                   >
                     Xóa bộ lọc
