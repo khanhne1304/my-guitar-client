@@ -1,0 +1,58 @@
+/* src/views/pages/AddressPage/AddressPage.module.css */
+
+.addressPage {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.addressPage__main {
+  padding: 20px 0 40px;
+}
+
+.addressPage__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.addressPage__header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.addressPage__header h1 {
+  margin: 0 0 8px;
+  color: #333;
+  font-size: 2em;
+}
+
+.addressPage__header p {
+  margin: 0;
+  color: #666;
+}
+
+.addressPage__content {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .addressPage__main {
+    padding: 10px 0 20px;
+  }
+  
+  .addressPage__container {
+    padding: 0 10px;
+  }
+  
+  .addressPage__content {
+    padding: 20px;
+  }
+  
+  .addressPage__header h1 {
+    font-size: 1.5em;
+  }
+}

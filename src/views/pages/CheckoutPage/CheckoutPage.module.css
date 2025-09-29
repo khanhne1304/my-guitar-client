@@ -12,6 +12,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 16px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .checkout__brand {
@@ -32,6 +34,17 @@
   }
 }
 
+@media (max-width: 768px) {
+  .checkout__container {
+    padding: 0 10px;
+  }
+  
+  .checkout__box {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+}
+
 .checkout__left {}
 
 .checkout__right {}
@@ -43,6 +56,8 @@
   border-radius: 12px;
   padding: 14px;
   margin-bottom: 14px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .checkout__box-head {
@@ -65,11 +80,40 @@
   gap: 10px;
 }
 
-.checkout__input {
+.checkout__input,
+.checkout__form input,
+.checkout__form select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #ddd !important;
   border-radius: 10px;
+  background: white;
+  color: #333;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.checkout__input:focus,
+.checkout__form input:focus,
+.checkout__form select:focus {
+  outline: none;
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.checkout__input:disabled {
+  background: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+  border-color: #e0e0e0 !important;
+}
+
+.checkout__input:hover,
+.checkout__form input:hover,
+.checkout__form select:hover {
+  border-color: #bbb !important;
 }
 
 .checkout__textarea {
