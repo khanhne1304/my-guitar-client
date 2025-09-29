@@ -1,10 +1,11 @@
 // CheckoutView.jsx
+import { useState } from 'react';
 import styles from './CheckoutPage.module.css';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
 
 import ShipTabs from '../../components/checkout/ShipTabs';
-import AddressForm from '../../components/checkout/AddressForm';
+import AddressSelector from '../../components/checkout/AddressSelector';
 import PickupStoreList from '../../components/checkout/PickupStoreList';
 import ShipMethods from '../../components/checkout/ShipMethods';
 import PaymentMethods from '../../components/checkout/PaymentMethods';
@@ -18,6 +19,7 @@ import { useCheckoutViewModel } from '../../../viewmodels/CheckoutViewModel';
 
 export default function CheckoutPage() {
   const vm = useCheckoutViewModel();
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   return (
     <div className={styles.checkout}>
@@ -35,7 +37,12 @@ export default function CheckoutPage() {
               <div className={styles['checkout__box']}>
                 <ShipTabs mode={vm.mode} onChange={vm.setMode} />
                 {vm.mode === 'delivery' ? (
-                  <AddressForm form={vm.form} setForm={vm.setForm} />
+                  <AddressSelector 
+                    selectedAddress={selectedAddress}
+                    onAddressSelect={setSelectedAddress}
+                    form={vm.form} 
+                    setForm={vm.setForm} 
+                  />
                 ) : (
                   <PickupStoreList
                     stores={vm.eligibleStores}
@@ -50,7 +57,7 @@ export default function CheckoutPage() {
                 <div className={styles['checkout__box-title']}>Phương thức giao hàng</div>
                 <ShipMethods
                   visible={vm.mode === 'delivery'}
-                  methods={vm.SHIP_METHODS}
+                  methods={vm.shipMethods || vm.SHIP_METHODS}
                   shipMethod={vm.shipMethod}
                   setShipMethod={vm.setShipMethod}
                 />
@@ -118,14 +125,25 @@ export default function CheckoutPage() {
                   <input
                     className={styles['checkout__input']}
                     placeholder="Nhập mã khuyến mãi"
+                    value={vm.couponCode}
+                    onChange={(e) => vm.setCouponCode(e.target.value)}
                   />
-                  <button className={styles['checkout__btn--dark']}>Áp dụng</button>
+                  {vm.couponInfo ? (
+                    <button className={styles['checkout__btn--dark']} onClick={vm.removeCoupon}>
+                      Hủy mã
+                    </button>
+                  ) : (
+                    <button className={styles['checkout__btn--dark']} onClick={vm.applyCoupon}>
+                      Áp dụng
+                    </button>
+                  )}
                 </div>
               </div>
 
               <Summary
                 subtotal={vm.order.subtotal}
                 shipFee={vm.order.shipFee}
+                discount={vm.discount}
                 total={vm.order.total}
                 onPlace={vm.placeOrder}
                 placeBtnClass={styles['checkout__place-btn']}

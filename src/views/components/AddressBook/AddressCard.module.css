@@ -1,0 +1,167 @@
+/* src/views/components/AddressBook/AddressCard.module.css */
+
+.addressCard {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.addressCard:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.addressCard.selected {
+  border-color: #007bff;
+  background: #f8f9ff;
+}
+
+.defaultBadge {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: #ffc107;
+  color: #212529;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 600;
+}
+
+.content {
+  margin-bottom: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.label {
+  background: #e9ecef;
+  color: #495057;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.contact {
+  margin-bottom: 8px;
+}
+
+.phone {
+  color: #666;
+  font-weight: 500;
+}
+
+.address {
+  color: #555;
+  line-height: 1.4;
+  font-size: 0.95em;
+}
+
+.selectedIndicator {
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: #d4edda;
+  color: #155724;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.actions button {
+  padding: 6px 12px;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.selectButton {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.selectButton:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+.defaultButton {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.defaultButton:hover {
+  background: #218838;
+  border-color: #1e7e34;
+}
+
+.editButton {
+  background: #ffc107;
+  color: #212529;
+  border-color: #ffc107;
+}
+
+.editButton:hover {
+  background: #e0a800;
+  border-color: #d39e00;
+}
+
+.deleteButton {
+  background: transparent;
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.deleteButton:hover {
+  background: #dc3545;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .addressCard {
+    padding: 12px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .actions button {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9em;
+  }
+}

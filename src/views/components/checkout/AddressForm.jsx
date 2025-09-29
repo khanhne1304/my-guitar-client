@@ -19,7 +19,7 @@ export default function AddressForm({ form, setForm }) {
     const provinceCode = e.target.value;
     setForm({ ...form, city: "", district: "", ward: "" });
 
-    const selectedProvince = provinces.find((p) => p.code === provinceCode);
+    const selectedProvince = provinces.find((p) => String(p.code) === String(provinceCode));
     setForm({ ...form, city: selectedProvince?.name || "" });
 
     setDistricts([]);
@@ -36,7 +36,7 @@ export default function AddressForm({ form, setForm }) {
   // Khi chọn huyện -> fetch xã
   const handleDistrictChange = async (e) => {
     const districtCode = e.target.value;
-    const selectedDistrict = districts.find((d) => d.code === districtCode);
+    const selectedDistrict = districts.find((d) => String(d.code) === String(districtCode));
     setForm({ ...form, district: selectedDistrict?.name || "", ward: "" });
 
     setWards([]);
@@ -51,7 +51,7 @@ export default function AddressForm({ form, setForm }) {
 
   // Khi chọn xã
   const handleWardChange = (e) => {
-    const selectedWard = wards.find((w) => w.code === e.target.value);
+    const selectedWard = wards.find((w) => String(w.code) === String(e.target.value));
     setForm({ ...form, ward: selectedWard?.name || "" });
   };
 
