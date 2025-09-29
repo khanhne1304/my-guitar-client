@@ -21,6 +21,7 @@ export function useSongDetailsVM(slug) {
             setError("Bài hát đã bị ẩn");
             setSong(null);
           } else {
+            console.log("🎵 Song data từ API:", data);
             setSong(data);
             setRatings(data.ratings || []);
           }
