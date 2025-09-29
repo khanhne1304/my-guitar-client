@@ -20,6 +20,7 @@ export default function AddressFormModal({ address, onSubmit, onClose }) {
   const [wards, setWards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
 
   // Load provinces on mount
   useEffect(() => {
@@ -113,11 +114,27 @@ export default function AddressFormModal({ address, onSubmit, onClose }) {
     }
     
     setLoading(true);
+    setSubmitError('');
     
     try {
       await onSubmit(formData);
     } catch (error) {
       console.error('Form submit error:', error);
+      const data = error?.data;
+      if (data?.errors && Array.isArray(data.errors)) {
+        const fieldErrors = {};
+        data.errors.forEach((e) => {
+          if (e?.path && e?.msg) {
+            fieldErrors[e.path] = e.msg;
+          }
+        });
+        if (Object.keys(fieldErrors).length) {
+          setErrors((prev) => ({ ...prev, ...fieldErrors }));
+        }
+      }
+      if (error?.message) {
+        setSubmitError(error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -141,6 +158,11 @@ export default function AddressFormModal({ address, onSubmit, onClose }) {
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
+          {submitError && (
+            <div className={styles.formError}>
+              {submitError}
+            </div>
+          )}
           <div className={styles.formGroup}>
             <label>Họ và tên *</label>
             <input
