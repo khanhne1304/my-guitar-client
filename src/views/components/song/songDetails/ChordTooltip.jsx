@@ -1,14 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "../../../pages/songDetails/SongDetails.module.css";
 import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 
-export default function ChordTooltip({ chordText, children }) {
+export default function ChordTooltip({ chordText, children, active = false }) {
   const [visible, setVisible] = useState(false);
   const [coords, setCoords] = useState({
     top: 0,
     left: 0,
-    placeAbove: true,
-    align: "center",
+    side: "right",
   });
   const ref = useRef(null);
 
@@ -26,30 +25,51 @@ export default function ChordTooltip({ chordText, children }) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Tính vị trí trên/dưới
-    const spaceAbove = rect.top;
-    const spaceBelow = vh - rect.bottom;
-    const placeAbove = spaceAbove > spaceBelow;
-    const top = placeAbove ? rect.top - tooltipHeight - gap : rect.bottom + gap;
+    // Đặt tooltip sang trái/phải để không che chữ
+    const spaceRight = vw - rect.right;
+    const spaceLeft = rect.left;
+    const side = spaceRight >= tooltipWidth + gap || spaceRight >= spaceLeft ? "right" : "left";
 
-    // Tính căn giữa và clamp biên
-    let left = rect.left + rect.width / 2;
-    let align = "center";
-    if (left - tooltipWidth / 2 < 8) {
-      left = rect.left + 4;
-      align = "left";
-    } else if (left + tooltipWidth / 2 > vw - 8) {
-      left = rect.right - 4;
-      align = "right";
-    }
+    const topCenter = rect.top + rect.height / 2 - tooltipHeight / 2;
+    const top = Math.max(8, Math.min(topCenter, vh - tooltipHeight - 8));
+    const left = side === "right" ? rect.right + gap : rect.left - tooltipWidth - gap;
 
-    setCoords({ top, left, placeAbove, align });
+    setCoords({ top, left, side });
     setVisible(true);
   }
 
   function handleLeave() {
     setVisible(false);
   }
+
+  // Programmatically show tooltip when active
+  useEffect(() => {
+    if (!active) {
+      setVisible(false);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const tooltipWidth = 180;
+    const tooltipHeight = 190;
+    const gap = 10;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const spaceRight = vw - rect.right;
+    const spaceLeft = rect.left;
+    const side = spaceRight >= tooltipWidth + gap || spaceRight >= spaceLeft ? "right" : "left";
+
+    const topCenter = rect.top + rect.height / 2 - tooltipHeight / 2;
+    const top = Math.max(8, Math.min(topCenter, vh - tooltipHeight - 8));
+    const left = side === "right" ? rect.right + gap : rect.left - tooltipWidth - gap;
+
+    setCoords({ top, left, side });
+    setVisible(true);
+  }, [active]);
 
   return (
     <>
@@ -63,21 +83,15 @@ export default function ChordTooltip({ chordText, children }) {
       </span>
       {visible && (
         <div
-          className={`${styles.chordTooltip} ${
-            coords.placeAbove ? styles.above : styles.below
-          }`}
+          className={styles.chordTooltip}
           style={{
             position: "fixed",
             top: coords.top,
-            left:
-              coords.align === "center"
-                ? coords.left
-                : coords.align === "left"
-                ? coords.left
-                : coords.left - 180,
-            transform: coords.align === "center" ? "translateX(-50%)" : "none",
+            left: coords.left,
             width: 180,
+            height: 190,
             zIndex: 9999,
+            pointerEvents: "none",
           }}
         >
           <div className={styles.chordTooltipTitle}>{chord}</div>

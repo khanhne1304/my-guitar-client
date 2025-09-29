@@ -30,6 +30,16 @@
   padding: 16px;
 }
 
+.error {
+  background: #fff2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
 .field {
   display: flex;
   flex-direction: column;
