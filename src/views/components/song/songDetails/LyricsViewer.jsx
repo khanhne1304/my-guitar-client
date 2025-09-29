@@ -5,10 +5,17 @@ import styles from "../../../pages/songDetails/SongDetails.module.css";
 
 export default function LyricsViewer({ lyrics, tempo }) {
   const [playing, setPlaying] = useState(false);
-  const [highlightIndex, setHighlightIndex] = useState(0); // luôn bắt đầu từ 0 (show lyric full)
+  const [highlightIndex, setHighlightIndex] = useState(0);
+  const [tempoInput, setTempoInput] = useState(String(tempo || 90)); // ✅ lưu dưới dạng string
   const intervalRef = useRef(null);
 
-  // ✅ Dùng useMemo để luôn parse lyrics trước khi render
+  // Convert tempoInput -> number an toàn (dùng useMemo để tránh parse mỗi lần render)
+  const localTempo = useMemo(() => {
+    const n = parseInt(tempoInput, 10);
+    return isNaN(n) ? 90 : Math.max(40, Math.min(n, 240)); // clamp 40-240
+  }, [tempoInput]);
+
+  // Parse lyrics
   const parts = useMemo(() => {
     let result = [];
     let idx = 0;
@@ -23,22 +30,19 @@ export default function LyricsViewer({ lyrics, tempo }) {
     return result;
   }, [lyrics]);
 
-  // ✅ Start không reset highlightIndex -> tiếp tục từ chỗ đang dừng
   function start() {
     setPlaying(true);
   }
 
-  // ✅ Stop không reset highlightIndex -> giữ nguyên vị trí
   function stop() {
     setPlaying(false);
     if (intervalRef.current) clearInterval(intervalRef.current);
   }
 
-  // ✅ Khi playing thay đổi -> chạy interval từ current index
   useEffect(() => {
     if (!playing) return;
 
-    const beatDuration = 60000 / (tempo || 90);
+    const beatDuration = 60000 / localTempo;
     let idx = highlightIndex;
 
     intervalRef.current = setInterval(() => {
@@ -51,16 +55,34 @@ export default function LyricsViewer({ lyrics, tempo }) {
     }, beatDuration);
 
     return () => clearInterval(intervalRef.current);
-  }, [playing, tempo, parts.length]);
+  }, [playing, localTempo, parts.length]);
 
   return (
     <div className={styles["song-details__lyricsWrapper"]}>
-      {/* Nút Play/Stop */}
+      {/* Tempo Control */}
+      <div className={styles.tempoControl}>
+        <label htmlFor="tempoInput" className={styles.tempoLabel}>
+          Tempo:
+        </label>
+        <input
+          id="tempoInput"
+          type="number"
+          min={40}
+          max={240}
+          value={tempoInput}
+          onChange={(e) => setTempoInput(e.target.value)} // lưu raw string
+          className={styles.tempoInput}
+        />
+        <span className={styles.tempoUnit}>BPM</span>
+      </div>
+
+      {/* Play/Stop */}
       <button onClick={playing ? stop : start} className={styles.playBtn}>
-        {playing ? <FaStop /> : <FaPlay />} {playing ? "Dừng" : highlightIndex > 0 ? "Tiếp tục" : "Phát"}
+        {playing ? <FaStop /> : <FaPlay />}{" "}
+        {playing ? "Dừng" : highlightIndex > 0 ? "Tiếp tục" : "Phát"}
       </button>
 
-      {/* Luôn hiển thị lyrics ngay từ đầu */}
+      {/* Lyrics */}
       <div className={styles["song-details__lyrics"]}>
         {parts.map((p, i) =>
           p.isChord ? (
