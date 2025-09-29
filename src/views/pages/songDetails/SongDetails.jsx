@@ -6,7 +6,6 @@ import LyricsViewer from "../../components/song/songDetails/LyricsViewer";
 import ChordList from "../../components/song/songDetails/ChordList";
 import RelatedSongs from "../../components/song/songDetails/RelatedSongs";
 import RatingsSection from "../../components/song/songDetails/RatingsSection";
-
 export default function SongDetails() {
   const { slug } = useParams();
   const { state, actions } = useSongDetailsVM(slug);
@@ -21,7 +20,7 @@ export default function SongDetails() {
   return (
     <div className={styles["song-details"]}>
       <SongHeader song={song} />
-      <LyricsViewer lyrics={song.lyrics} />
+      <LyricsViewer lyrics={song.lyrics} tempo={song.tempo} />
       <ChordList chords={uniqueChords} />
       <RelatedSongs relatedSongs={relatedSongs} artist={song.artists.join(", ")} />
       <RatingsSection
