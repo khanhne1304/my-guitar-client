@@ -16,6 +16,7 @@ import SongDetails from "../../views/pages/songDetails/SongDetails";
 import FavoritesPage from "../../views/pages/FavoritesPage/FavoritesPage";
 import TunerPage from "../../views/pages/TunerPage/TunerPage";
 import AdminPage from "../../views/pages/AdminPage/AdminPage";
+import AccountEditPage from "../../views/pages/AccountPage/AccountEditPage/AccountEditPage";
 import AddressPage from "../../views/pages/AddressPage/AddressPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
@@ -38,7 +39,7 @@ const publicRoutes = [
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
-
+  { path: "/account/edit", element: <AccountEditPage /> },
 ];
 
 export default publicRoutes;

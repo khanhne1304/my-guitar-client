@@ -31,7 +31,7 @@ export default function AccountPage() {
               <div className={styles["account__row"]}>
                 <span className={styles["account__label"]}>Họ và tên</span>
                 <span className={styles["account__value"]}>
-                  {val(user?.name || user?.fullName)}
+                  {val(user?.fullName)}
                 </span>
               </div>
 
@@ -58,8 +58,8 @@ export default function AccountPage() {
                   {val(
                     typeof user?.address === "object"
                       ? [user.address?.address, user.address?.district, user.address?.country]
-                          .filter(Boolean)
-                          .join(", ")
+                        .filter(Boolean)
+                        .join(", ")
                       : user?.address
                   )}
                 </span>

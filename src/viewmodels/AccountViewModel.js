@@ -1,19 +1,32 @@
-// AccountViewModel.js
+// src/viewmodels/AccountViewModel.js
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccountUser } from "../models/accountModel";
+import { getUserProfileApi } from "../services/userService";
 
 export function useAccountViewModel() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  // Hàm gọi API lấy profile
+  async function fetchProfile() {
     try {
+      const data = await getUserProfileApi();
+      setUser({
+        ...data,
+        fullName: data.fullName || "", // đảm bảo luôn có key
+      });
+      localStorage.setItem("user", JSON.stringify(data));
+    } catch (e) {
+      console.error("❌ Không thể tải thông tin user:", e);
       const raw = localStorage.getItem("user");
       setUser(raw ? new AccountUser(JSON.parse(raw)) : null);
-    } catch {
-      setUser(null);
     }
+  }
+
+  // 👇 GỌI API khi component mount
+  useEffect(() => {
+    fetchProfile();
   }, []);
 
   const fmtDate = (iso) => {
