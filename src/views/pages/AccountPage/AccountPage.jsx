@@ -80,6 +80,12 @@ export default function AccountPage() {
                   Cập nhật thông tin
                 </button>
                 <button
+                  className={`${styles["account__btn"]} ${styles["account__btn--secondary"]}`}
+                  onClick={() => navigate("/addresses")}
+                >
+                  Sổ địa chỉ
+                </button>
+                <button
                   className={`${styles["account__btn"]} ${styles["account__btn--ghost"]}`}
                   onClick={handleLogout}
                 >

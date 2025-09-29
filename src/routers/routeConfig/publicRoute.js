@@ -16,6 +16,7 @@ import SongDetails from "../../views/pages/songDetails/SongDetails";
 import FavoritesPage from "../../views/pages/FavoritesPage/FavoritesPage";
 import TunerPage from "../../views/pages/TunerPage/TunerPage";
 import AdminPage from "../../views/pages/AdminPage/AdminPage";
+import AddressPage from "../../views/pages/AddressPage/AddressPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -30,6 +31,7 @@ const publicRoutes = [
 
   // { path: "/productsCategory", element: <ProductsCategory /> }, // (tuỳ chọn) alias cũ, có thể bỏ
   { path: "/account", element: <Account /> },
+  { path: "/addresses", element: <AddressPage /> },
   { path: "/tools/metronome", element: <Metronome /> },
   { path: "/tools/chords", element: <ChordsPage/> },
   { path: "/tools/tuner", element: <TunerPage /> },

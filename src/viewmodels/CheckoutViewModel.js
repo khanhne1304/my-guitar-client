@@ -8,8 +8,11 @@ import { STORES } from '../../src/views/components/Data/stores';
 import { getUser } from '../utils/storage';
 import { CheckoutForm, CheckoutOrder } from '../models/checkoutModel';
 import { checkoutOrderApi } from '../services/orderService';
+import { calculateDistanceToStore, calculateShippingMethods } from '../helpers/shippingHelper';
+import { applyCouponApi } from '../services/couponService';
 
-const SHIP_METHODS = [
+// Dynamic based on distance/subtotal; fallback initial values
+const DEFAULT_SHIP_METHODS = [
   { id: 'economy', name: 'Tiết kiệm', eta: '2–4 ngày', fee: 15000 },
   { id: 'standard', name: 'Nhanh', eta: '24–48 giờ', fee: 30000 },
   { id: 'express', name: 'Hỏa tốc', eta: '2–4 giờ (nội thành)', fee: 80000 },
@@ -22,6 +25,11 @@ export function useCheckoutViewModel() {
   // ===== SHIPPING / FORM =====
   const { mode, setMode, shipMethod, setShipMethod, delivery } = useDeliveryState();
   const [form, setForm] = useState(new CheckoutForm());
+  const [distanceKm, setDistanceKm] = useState(0);
+  const [shipMethods, setShipMethods] = useState(DEFAULT_SHIP_METHODS);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponInfo, setCouponInfo] = useState(null); // { discount, finalTotal, coupon }
+  const discount = useMemo(() => couponInfo?.discount || 0, [couponInfo]);
 
   // ===== STORE PICKUP =====
   const { eligibleStores } = useStoresEligibility(cartItems, STORES);
@@ -33,10 +41,11 @@ export function useCheckoutViewModel() {
 
   // ===== PRICING =====
   const shipFee = useMemo(
-    () => (mode === 'pickup' ? 0 : SHIP_METHODS.find((m) => m.id === shipMethod)?.fee || 0),
-    [mode, shipMethod]
+    () => (mode === 'pickup' ? 0 : shipMethods.find((m) => m.id === shipMethod)?.fee || 0),
+    [mode, shipMethod, shipMethods]
   );
-  const total = useMemo(() => subtotal + shipFee, [subtotal, shipFee]);
+  const preDiscountTotal = useMemo(() => subtotal + shipFee, [subtotal, shipFee]);
+  const total = useMemo(() => Math.max(0, preDiscountTotal - discount), [preDiscountTotal, discount]);
 
   // ===== ORDER INFO =====
   const [orderId] = useState(() => `MM${Date.now()}`);
@@ -79,6 +88,66 @@ export function useCheckoutViewModel() {
       country: prev.country || addrObj.country || 'Vietnam',
     }));
   }, []);
+
+  // ===== DISTANCE & SHIPPING METHODS (per-km) =====
+  useEffect(() => {
+    if (mode !== 'delivery') {
+      setDistanceKm(0);
+      setShipMethods(DEFAULT_SHIP_METHODS);
+      return;
+    }
+
+    const addrStr = [form.address, form.district, form.city].filter(Boolean).join(', ');
+    if (!addrStr) {
+      setDistanceKm(0);
+      setShipMethods(DEFAULT_SHIP_METHODS);
+      return;
+    }
+
+    let mounted = true;
+    (async () => {
+      try {
+        const km = await calculateDistanceToStore(addrStr);
+        if (!mounted) return;
+        setDistanceKm(km);
+        const methods = calculateShippingMethods(km, subtotal);
+        setShipMethods(methods);
+        // Ensure selected method is valid
+        const exists = methods.some((m) => m.id === shipMethod);
+        if (!exists) setShipMethod(methods[0]?.id || 'standard');
+      } catch {
+        if (!mounted) return;
+        setDistanceKm(0);
+        setShipMethods(DEFAULT_SHIP_METHODS);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [mode, form.address, form.district, form.city, subtotal]);
+
+  // ===== COUPON =====
+  const applyCoupon = async () => {
+    const code = (couponCode || '').trim();
+    if (!code) {
+      alert('Vui lòng nhập mã giảm giá');
+      return;
+    }
+    try {
+      const res = await applyCouponApi({ code, orderTotal: preDiscountTotal });
+      setCouponInfo(res);
+      alert('Áp dụng mã thành công');
+    } catch (e) {
+      alert(e?.message || 'Không áp dụng được mã');
+      setCouponInfo(null);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponInfo(null);
+    setCouponCode('');
+  };
 
   // ===== PLACE ORDER FUNCTION =====
   const placeOrder = async () => {
@@ -186,6 +255,14 @@ export function useCheckoutViewModel() {
     order,
     orderInfo,
     qrUrl,
+    shipMethods,
+    // Coupon
+    couponCode,
+    setCouponCode,
+    couponInfo,
+    discount,
+    applyCoupon,
+    removeCoupon,
 
     // Payment
     payIsOnline,
@@ -202,6 +279,6 @@ export function useCheckoutViewModel() {
     // Actions
     placeOrder,
     navigate,
-    SHIP_METHODS,
+    SHIP_METHODS: shipMethods,
   };
 }
