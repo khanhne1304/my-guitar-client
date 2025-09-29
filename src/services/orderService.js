@@ -12,6 +12,17 @@ import { getToken as getStoredToken } from '../utils/storage';
  *   total: number
  * }
  */
+// ✅ Lấy danh sách đơn hàng cho admin
+export async function adminListOrdersApi() {
+  try {
+    const data = await apiClient.get('/orders');
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.error("❌ adminListOrdersApi failed:", err);
+    return [];
+  }
+}
+
 function mapCheckoutToOrderDoc(payload) {
   // Map cart -> items
   const items = (payload?.cart || []).map((i) => ({
