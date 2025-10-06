@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { detectPitch } from "../utils/pitchDetection";
+import { hpsPitchDetection } from "../utils/hpsPitchDetection";
 import { findClosestNote } from "../models/NoteModel";
 
 export function useTunerViewModel() {
@@ -29,19 +29,47 @@ export function useTunerViewModel() {
   const lastUiUpdateAtRef = useRef(0);
   const currentNoteRef = useRef(null);
   const lastLogAtRef = useRef(0);
+  // Thời gian người dùng giữ đúng tông
+  const inTuneSinceRef = useRef(null);
+
+  // Thời gian yêu cầu phải giữ đúng tông để phát beep (ms)
+  const IN_TUNE_REQUIRED_MS = 3000; // 3 giây
+
+  // Thời lượng tiếng beep phát ra (s)
+  const BEEP_DURATION = 0.3;
 
   const stop = useCallback(() => {
+    inTuneSinceRef.current = null;
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach((t) => t.stop());
       mediaStreamRef.current = null;
     }
     if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current.close().catch(() => { });
       audioContextRef.current = null;
     }
     setIsRunning(false);
   }, []);
+  function playBeep() {
+    console.log("🔊 playBeep được gọi!");
+
+    if (!audioContextRef.current) return;
+
+    const ctx = audioContextRef.current;
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = 880; // tần số beep (A5 - nghe rõ ràng)
+
+    gainNode.gain.setValueAtTime(0.2, ctx.currentTime); // volume nhỏ
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + BEEP_DURATION);
+  }
 
   function normalizePitch(freq) {
     let pitch = freq;
@@ -92,14 +120,14 @@ export function useTunerViewModel() {
     setRms(r);
 
     const ctx = audioContextRef.current;
-    const pitchResult = detectPitch(buf, ctx.sampleRate);
+    const pitchResult = hpsPitchDetection(buf, ctx.sampleRate);
 
     if (pitchResult && pitchResult.freq) {
       let pitch = normalizePitch(pitchResult.freq);
       const confidence = pitchResult.confidence || 0.5;
 
       const MAX_HISTORY = 8;
-      const MIN_CONFIDENCE = 0.6; // >= 60%
+      const MIN_CONFIDENCE = 0.4; // >= 60%
       if (confidence >= MIN_CONFIDENCE) {
         pitchHistory.current.push(pitch);
         confidenceHistory.current.push(confidence);
@@ -156,7 +184,24 @@ export function useTunerViewModel() {
               }
 
               const DEADZONE_CENTS = 10;
-              if (Math.abs(finalCents) < DEADZONE_CENTS) finalCents = 0;
+              if (Math.abs(finalCents) < DEADZONE_CENTS) {
+                finalCents = 0;
+
+                // 🕒 Nếu bắt đầu đúng tông → lưu thời điểm
+                if (!inTuneSinceRef.current) {
+                  inTuneSinceRef.current = performance.now();
+                } else {
+                  const elapsed = performance.now() - inTuneSinceRef.current;
+                  if (elapsed >= IN_TUNE_REQUIRED_MS) {
+                    playBeep();
+                    inTuneSinceRef.current = null; // reset để không kêu liên tục
+                  }
+                }
+              } else {
+                // ❌ lệch tông → reset bộ đếm
+                inTuneSinceRef.current = null;
+              }
+
 
               const now = performance.now();
               if (now - lastUiUpdateAtRef.current > 50) {
@@ -177,7 +222,23 @@ export function useTunerViewModel() {
               let cents = 1200 * Math.log2(aligned / targetFreq);
 
               const DEADZONE_CENTS = 6;
-              if (Math.abs(cents) < DEADZONE_CENTS) cents = 0;
+              if (Math.abs(cents) < DEADZONE_CENTS) {
+                cents = 0;
+
+                // Manual mode cũng áp dụng đếm 3 giây
+                if (!inTuneSinceRef.current) {
+                  inTuneSinceRef.current = performance.now();
+                } else {
+                  const elapsed = performance.now() - inTuneSinceRef.current;
+                  if (elapsed >= IN_TUNE_REQUIRED_MS) {
+                    playBeep();
+                    inTuneSinceRef.current = null;
+                  }
+                }
+              } else {
+                inTuneSinceRef.current = null;
+              }
+
 
               const now = performance.now();
               if (now - lastUiUpdateAtRef.current > 50) {
@@ -331,6 +392,8 @@ export function useTunerViewModel() {
     },
     selectedString,
     setSelectedString: (s) => {
+      // 🔄 Reset toàn bộ state
+       inTuneSinceRef.current = null; 
       pitchHistory.current = [];
       confidenceHistory.current = [];
       lastPitchRef.current = null;
@@ -339,12 +402,20 @@ export function useTunerViewModel() {
       lastUiUpdateAtRef.current = 0;
       currentNoteRef.current = s;
 
+      // 🎯 Điều chỉnh bandpass filter về dây mới
       if (bandFilterRef.current && tunerMode === "manual") {
         const tf = getTargetFrequency(s);
         bandFilterRef.current.frequency.value = tf || 200;
         bandFilterRef.current.Q.value = 5;
       }
+
+      // 🧠 Restart loop để tránh dùng lại dữ liệu cũ
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = requestAnimationFrame(loop);
+
+      // ✅ Cập nhật state react
       setSelectedString(s);
     },
+
   };
 }
