@@ -114,6 +114,10 @@
   height: 190px;
 }
 
+.chordTooltipDocked {
+  height: auto; /* cho phép box tự cao theo nội dung khi dock */
+}
+
 .chordTooltipTitle {
   font-weight: 800;
   font-size: 14px;
@@ -240,6 +244,13 @@
   background: #fff176;
   transition: background 0.2s ease-in;
 }
+
+/* Màu xoay vòng cho từng chữ đã highlight */
+.charC1 { color: #d32f2f; }
+.charC2 { color: #1976d2; }
+.charC3 { color: #388e3c; }
+.charC4 { color: #f57c00; }
+.charC5 { color: #6a1b9a; }
 
 .lyricChord {
   color: #0066cc;
