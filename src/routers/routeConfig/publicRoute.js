@@ -18,6 +18,7 @@ import TunerPage from "../../views/pages/TunerPage/TunerPage";
 import AdminPage from "../../views/pages/AdminPage/AdminPage";
 import AccountEditPage from "../../views/pages/AccountPage/AccountEditPage/AccountEditPage";
 import AddressPage from "../../views/pages/AddressPage/AddressPage";
+import CoursesPage from "../../pages/Courses/CoursesPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -39,6 +40,7 @@ const publicRoutes = [
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
+  { path: "/courses", element: <CoursesPage /> },
   { path: "/account/edit", element: <AccountEditPage /> },
 ];
 

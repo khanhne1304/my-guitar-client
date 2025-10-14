@@ -1,0 +1,361 @@
+/* CourseDetail.module.css - Đồng bộ với giao diện hiện tại */
+
+.courseDetail {
+  background: #fffbe8;
+  min-height: 100vh;
+  padding: 24px 0;
+}
+
+.courseDetail__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Breadcrumb */
+.courseDetail__breadcrumb {
+  margin-bottom: 24px;
+}
+
+.courseDetail__breadcrumbList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.courseDetail__breadcrumbItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.courseDetail__breadcrumbLink {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.courseDetail__breadcrumbLink:hover {
+  color: #ffd000;
+}
+
+.courseDetail__breadcrumbSeparator {
+  color: #999;
+}
+
+.courseDetail__breadcrumbCurrent {
+  color: #000;
+  font-weight: 500;
+}
+
+/* Loading State */
+.courseDetail__loading {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.courseDetail__spinner {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #ffd000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.courseDetail__loadingText {
+  margin-top: 16px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Error State */
+.courseDetail__error {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.courseDetail__errorIcon {
+  margin-bottom: 24px;
+}
+
+.courseDetail__errorSvg {
+  width: 48px;
+  height: 48px;
+  color: #e53e3e;
+  margin-bottom: 8px;
+}
+
+.courseDetail__errorTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e53e3e;
+  margin: 0 0 8px 0;
+}
+
+.courseDetail__errorMessage {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 24px 0;
+}
+
+.courseDetail__retryButton {
+  background: #ffd000;
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.courseDetail__retryButton:hover {
+  background: #e6b800;
+}
+
+/* Main Content */
+.courseDetail__main {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.courseDetail__header {
+  padding: 32px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.courseDetail__title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #000;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.courseDetail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.courseDetail__metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.courseDetail__metaIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.courseDetail__level {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.courseDetail__levelBeginner {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.courseDetail__levelIntermediate {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.courseDetail__levelAdvanced {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.courseDetail__description {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Thumbnail */
+.courseDetail__thumbnail {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.courseDetail__thumbnailPlaceholder {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* Content */
+.courseDetail__content {
+  padding: 32px;
+}
+
+.courseDetail__section {
+  margin-bottom: 32px;
+}
+
+.courseDetail__sectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #ffd000;
+}
+
+/* Lessons */
+.courseDetail__lessons {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.courseDetail__lesson {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.courseDetail__lesson:hover {
+  background: #e9ecef;
+  border-color: #ffd000;
+}
+
+.courseDetail__lessonNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #ffd000;
+  color: #000;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+.courseDetail__lessonContent {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.courseDetail__lessonTitle {
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+  font-size: 16px;
+}
+
+.courseDetail__lessonDescription {
+  color: #666;
+  font-size: 14px;
+  margin: 4px 0 0 0;
+}
+
+/* Actions */
+.courseDetail__actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.courseDetail__actionButton {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.courseDetail__actionButtonPrimary {
+  background: #ffd000;
+  color: #000;
+}
+
+.courseDetail__actionButtonPrimary:hover {
+  background: #e6b800;
+  transform: translateY(-1px);
+}
+
+.courseDetail__actionButtonSecondary {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.courseDetail__actionButtonSecondary:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .courseDetail__header {
+    padding: 24px;
+  }
+  
+  .courseDetail__content {
+    padding: 24px;
+  }
+  
+  .courseDetail__title {
+    font-size: 24px;
+  }
+  
+  .courseDetail__meta {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .courseDetail__actions {
+    flex-direction: column;
+  }
+  
+  .courseDetail__actionButton {
+    text-align: center;
+  }
+}
