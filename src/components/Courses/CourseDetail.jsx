@@ -28,15 +28,16 @@ export default function CourseDetail() {
       if (courseResponse.success) {
         setCourse(courseResponse.data);
         
-        // Fetch user progress for this course
+        // Fetch user progress for this course (optional, requires authentication)
         try {
           const progressResponse = await getCourseProgress(courseResponse.data._id);
           if (progressResponse.success) {
             setProgress(progressResponse.data);
           }
         } catch (progressErr) {
-          console.warn('Could not fetch progress:', progressErr);
+          console.warn('Could not fetch progress (user may not be logged in):', progressErr);
           // Progress is optional, don't fail the whole component
+          setProgress(null);
         }
       } else {
         setError(courseResponse.message || 'Không tìm thấy khóa học');
