@@ -19,6 +19,8 @@ import AdminPage from "../../views/pages/AdminPage/AdminPage";
 import AccountEditPage from "../../views/pages/AccountPage/AccountEditPage/AccountEditPage";
 import AddressPage from "../../views/pages/AddressPage/AddressPage";
 import CoursesPage from "../../pages/Courses/CoursesPage";
+import CourseDetail from "../../components/Courses/CourseDetail";
+import LessonPlayer from "../../components/Learning/LessonPlayer";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -41,6 +43,8 @@ const publicRoutes = [
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
   { path: "/courses", element: <CoursesPage /> },
+  { path: "/courses/:slug", element: <CourseDetail /> },
+  { path: "/learning/:courseSlug/lessons/:moduleOrder.:lessonOrder", element: <LessonPlayer /> },
   { path: "/account/edit", element: <AccountEditPage /> },
 ];
 

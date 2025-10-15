@@ -1,158 +1,543 @@
-/* LessonPlayer.module.css - Giao diện học bài tương tác */
-
+/* LessonPlayer.module.css */
 .lessonPlayer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  flex-direction: column;
 }
 
-/* Header */
-.lessonPlayer__header {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-}
-
-.lessonPlayer__breadcrumb {
+/* Breadcrumb */
+.breadcrumb {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #6b7280;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
 }
 
-.lessonPlayer__backButton {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: none;
-  border: none;
-  color: #667eea;
-  cursor: pointer;
-  font-weight: 600;
-  transition: color 0.3s ease;
+.breadcrumbLink {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
-.lessonPlayer__backButton:hover {
-  color: #5a67d8;
+.breadcrumbLink:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
 }
 
-.lessonPlayer__backButton svg {
-  width: 16px;
-  height: 16px;
+.breadcrumbSeparator {
+  margin: 0 8px;
+  color: #9ca3af;
 }
 
-.lessonPlayer__separator {
-  color: #d1d5db;
-}
-
-.lessonPlayer__module,
-.lessonPlayer__lesson {
+.breadcrumbCurrent {
   color: #374151;
   font-weight: 500;
 }
 
-.lessonPlayer__controls {
+/* Lesson Header */
+.lessonHeader {
   display: flex;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
 }
 
-.lessonPlayer__navButton {
+.lessonInfo {
+  flex: 1;
+}
+
+.lessonTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.lessonDescription {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  opacity: 0.9;
+}
+
+.lessonMeta {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #667eea;
+  flex-wrap: wrap;
+  gap: 15px;
+  font-size: 0.9rem;
+}
+
+.lessonDuration,
+.lessonType,
+.lessonSkills {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.lessonActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.completeButton {
+  background: #10b981;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 12px 24px;
   border-radius: 8px;
-  cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
 }
 
-.lessonPlayer__navButton:hover:not(:disabled) {
-  background: #5a67d8;
+.completeButton:hover:not(:disabled) {
+  background: #059669;
   transform: translateY(-1px);
 }
 
-.lessonPlayer__navButton:disabled {
-  opacity: 0.5;
+.completeButton:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.completedBadge {
+  background: #10b981;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Practice Controls */
+.practiceControls {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.practiceInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.practiceTime {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.practiceButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.practiceButton,
+.metronomeToggle {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.practiceButton:hover,
+.metronomeToggle:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.practiceButton:disabled {
+  background: #9ca3af;
   cursor: not-allowed;
   transform: none;
 }
 
-.lessonPlayer__navButton svg {
-  width: 16px;
-  height: 16px;
+.metronomeToggle {
+  background: #8b5cf6;
 }
 
-/* Content */
-.lessonPlayer__content {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
-  gap: 1rem;
-  padding: 1rem;
-  max-width: 1400px;
-  margin: 0 auto;
+.metronomeToggle:hover {
+  background: #7c3aed;
+}
+
+/* Metronome Section */
+.metronomeSection {
+  background: #1f2937;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+/* Tab Navigation */
+.tabNavigation {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #64748b;
+}
+
+.tabButton:hover {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.tabButton.active {
+  background: white;
+  color: #1e293b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab Content */
+.tabContentContainer {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  min-height: 400px;
+}
+
+/* Video */
+.videoContainer {
+  position: relative;
   width: 100%;
-}
-
-/* Video Section */
-.lessonPlayer__videoSection {
-  grid-column: 1 / -1;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* Tab Section */
-.lessonPlayer__tabSection {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: #000;
+  border-radius: 8px;
   overflow: hidden;
 }
 
-/* Practice Section */
-.lessonPlayer__practiceSection {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
-/* Loading State */
-.lessonPlayer__loading {
+/* Tab Content */
+.tabContent {
+  font-family: 'Courier New', monospace;
+}
+
+.tabItem {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.tabItem h4 {
+  margin: 0 0 10px 0;
+  color: #1e293b;
+  font-size: 1.1rem;
+}
+
+.tabText {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #374151;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Chords */
+.chordsContent h4 {
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  font-size: 1.2rem;
+}
+
+.chordsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.chordCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.chordCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chordCard h5 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.chordFingering {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.chordDifficulty {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.difficulty-easy {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.difficulty-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.difficulty-hard {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Strum Pattern */
+.strumPattern h4 {
+  margin: 0 0 15px 0;
+  color: #1e293b;
+  font-size: 1.2rem;
+}
+
+.patternDisplay {
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* Instructions */
+.instructions {
+  line-height: 1.7;
+  color: #374151;
+}
+
+.instructions h1,
+.instructions h2,
+.instructions h3,
+.instructions h4 {
+  color: #1e293b;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.instructions p {
+  margin-bottom: 15px;
+}
+
+.instructions ul,
+.instructions ol {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.instructions li {
+  margin-bottom: 5px;
+}
+
+/* No Content */
+.noContent {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.noContentIcon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.noContent p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Checklist */
+.checklistSection {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.checklistTitle {
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checklistItem:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.checklistCheckbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checklistText {
+  flex: 1;
+  font-size: 1rem;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.checklistText.completed {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+/* Navigation */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.backButton {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px 20px;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.navButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.prevButton,
+.nextButton {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.prevButton:hover,
+.nextButton:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+.nextButton {
+  background: #3b82f6;
+}
+
+.nextButton:hover {
+  background: #2563eb;
+}
+
+/* Loading */
+.loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  color: white;
+  min-height: 400px;
+  color: #6b7280;
 }
 
-.lessonPlayer__spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid white;
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  margin-bottom: 20px;
 }
 
 @keyframes spin {
@@ -160,123 +545,97 @@
   100% { transform: rotate(360deg); }
 }
 
-.lessonPlayer__loadingText {
-  margin-top: 1rem;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-/* Error State */
-.lessonPlayer__error {
+/* Error */
+.error {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 2rem;
+  min-height: 400px;
   text-align: center;
+  color: #dc2626;
 }
 
-.lessonPlayer__errorIcon {
-  width: 64px;
-  height: 64px;
-  color: #ef4444;
-  margin-bottom: 1rem;
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
 }
 
-.lessonPlayer__errorTitle {
+.error h2 {
+  margin: 0 0 10px 0;
   font-size: 1.5rem;
-  font-weight: 700;
+}
+
+.error p {
+  margin: 0 0 20px 0;
+  color: #6b7280;
+}
+
+.retryButton {
+  background: #dc2626;
   color: white;
-  margin-bottom: 0.5rem;
-}
-
-.lessonPlayer__errorMessage {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  max-width: 500px;
-}
-
-.lessonPlayer__errorButton {
-  background: white;
-  color: #667eea;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
-.lessonPlayer__errorButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.retryButton:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .lessonPlayer__content {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-  }
-  
-  .lessonPlayer__videoSection {
-    grid-column: 1;
-  }
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .lessonPlayer__header {
-    padding: 1rem;
+  .lessonPlayer {
+    padding: 15px;
+  }
+  
+  .lessonHeader {
     flex-direction: column;
-    gap: 1rem;
+    gap: 20px;
   }
   
-  .lessonPlayer__breadcrumb {
-    font-size: 0.8rem;
+  .lessonTitle {
+    font-size: 1.5rem;
   }
   
-  .lessonPlayer__controls {
+  .lessonMeta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .practiceInfo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .practiceButtons {
+    justify-content: center;
+  }
+  
+  .tabNavigation {
+    flex-wrap: wrap;
+  }
+  
+  .tabButton {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .navigation {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .navButtons {
     width: 100%;
     justify-content: center;
   }
   
-  .lessonPlayer__content {
-    padding: 0.5rem;
-    gap: 0.5rem;
-  }
-  
-  .lessonPlayer__videoSection,
-  .lessonPlayer__tabSection,
-  .lessonPlayer__practiceSection {
-    padding: 0.75rem;
+  .chordsGrid {
+    grid-template-columns: 1fr;
   }
 }
-
-@media (max-width: 480px) {
-  .lessonPlayer__header {
-    padding: 0.75rem;
-  }
-  
-  .lessonPlayer__breadcrumb {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .lessonPlayer__navButton {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-  
-  .lessonPlayer__content {
-    padding: 0.25rem;
-  }
-  
-  .lessonPlayer__videoSection,
-  .lessonPlayer__tabSection,
-  .lessonPlayer__practiceSection {
-    padding: 0.5rem;
-  }
-}
-
