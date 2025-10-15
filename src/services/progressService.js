@@ -56,7 +56,7 @@ export const getLessonProgress = async (lessonKey) => {
 export const getCourseProgress = async (courseId) => {
   try {
     const response = await apiClient.get(`/progress/course/${courseId}`);
-    return response.data;
+    return response;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Có lỗi khi lấy tiến độ khóa học');
   }
