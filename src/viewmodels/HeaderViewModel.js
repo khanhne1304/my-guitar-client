@@ -30,12 +30,17 @@ export function useHeaderViewModel(products = []) {
     }
   }, []);
 
+  const { clearCartOnLogout } = useCart();
+
   const handleLogout = useCallback(() => {
+    // Xóa giỏ hàng trước khi đăng xuất
+    clearCartOnLogout();
+    
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     navigate("/login");
-  }, [navigate]);
+  }, [navigate, clearCartOnLogout]);
 
   // ===== Brand menus (tách khỏi products để tránh chớp tắt) =====
   const [guitarBrands, setGuitarBrands] = useState([]); // [{name, slug}]

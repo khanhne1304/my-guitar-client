@@ -43,7 +43,23 @@ export default function ProductCard({
       (Array.isArray(images) && images[0] && images[0].url) ||
       cover ||
       '';
-    return ensureAbsolute(candidate);
+    
+    const finalUrl = ensureAbsolute(candidate);
+    
+    // Debug: log URL ảnh để kiểm tra
+    if (process.env.NODE_ENV === 'development') {
+      console.log('ProductCard image debug:', {
+        name,
+        image,
+        thumbnail,
+        images,
+        cover,
+        candidate,
+        finalUrl
+      });
+    }
+    
+    return finalUrl;
   };
 
   const resolveAlt = () => {
@@ -81,11 +97,14 @@ export default function ProductCard({
       loading='lazy'
       onError={(e) => {
         e.currentTarget.onerror = null;
+        console.warn('Image failed to load:', resolveSrc());
         e.currentTarget.src = 'https://placehold.co/600x400?text=No+Image';
+        e.currentTarget.style.opacity = '1';
       }}
       onLoad={(e) => {
         // Thêm class để hiển thị ảnh mượt mà
         e.currentTarget.style.opacity = '1';
+        console.log('Image loaded successfully:', resolveSrc());
       }}
       style={{
         opacity: 0,

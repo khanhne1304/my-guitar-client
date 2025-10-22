@@ -5,6 +5,7 @@ import { songService } from "../../../../services/songService";
 export default function AddSongModal({ open, onClose, onSuccess }) {
   const [form, setForm] = useState({
     title: "",
+    subtitle: "",
     artists: "",
     posterName: "",
     postedAt: "",
@@ -30,18 +31,43 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
     setError("");
 
     // validate cơ bản
-    if (!form.title || !form.lyrics) {
-      setError("Tiêu đề và lời bài hát là bắt buộc!");
+    if (!form.title.trim()) {
+      setError("Thiếu tên bài hát");
+      setTimeout(() => {
+        document.querySelector('input[name="title"]')?.focus();
+      }, 100);
+      return;
+    }
+    if (!form.tags.trim()) {
+      setError("Vui lòng điền vào trường Hợp âm");
+      setTimeout(() => {
+        document.querySelector('input[name="tags"]')?.focus();
+      }, 100);
+      return;
+    }
+    if (!form.excerpt.trim()) {
+      setError("Thiếu tóm tắt bài hát");
+      setTimeout(() => {
+        document.querySelector('textarea[name="excerpt"]')?.focus();
+      }, 100);
+      return;
+    }
+    if (!form.lyrics.trim()) {
+      setError("Thiếu lời bài hát");
+      setTimeout(() => {
+        document.querySelector('textarea[name="lyrics"]')?.focus();
+      }, 100);
       return;
     }
 
     const payload = {
       title: form.title,
+      subtitle: form.subtitle || undefined,
       artists: form.artists
         ? form.artists.split(",").map((a) => a.trim())
         : [],
       posterName: form.posterName || undefined,
-      postedAt: form.postedAt ? new Date(form.postedAt) : undefined,
+      postedAt: form.postedAt ? new Date(form.postedAt) : new Date(), // Sử dụng ngày hiện tại nếu không có
       views: Number(form.views) || 0,
       styleLabel: form.styleLabel,
       tags: form.tags ? form.tags.split(",").map((t) => t.trim()) : [],
@@ -69,7 +95,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
 
         {error && <div className={styles.error}>{error}</div>}
 
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form} noValidate>
           <label>
             Tiêu đề *
             <input
@@ -77,7 +103,16 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
               name="title"
               value={form.title}
               onChange={handleChange}
-              required
+            />
+          </label>
+
+          <label>
+            Phụ đề
+            <input
+              type="text"
+              name="subtitle"
+              value={form.subtitle}
+              onChange={handleChange}
             />
           </label>
 
@@ -112,7 +147,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Thể loại (styleLabel)
+            Thể loại
             <input
               type="text"
               name="styleLabel"
@@ -122,7 +157,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Hợp âm sử dụng (cách nhau bởi dấu ,)*
+            Hợp âm sử dụng (cách nhau dấu phẩy) *
             <input
               type="text"
               name="tags"
@@ -132,23 +167,22 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
           </label>
 
           <label>
-            Tóm tắt* 
+            Tóm tắt *
             <textarea
               name="excerpt"
               value={form.excerpt}
               onChange={handleChange}
-              rows={2}
+              rows={3}
             />
           </label>
 
           <label>
-            Lời bài hát*
+            Lời bài hát *
             <textarea
               name="lyrics"
               value={form.lyrics}
               onChange={handleChange}
               rows={6}
-              required
             />
           </label>
 

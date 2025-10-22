@@ -29,7 +29,7 @@ export default function LoginPage() {
               <input
                 type="text"
                 name="identifier"
-                placeholder="Email hoặc Username"
+                placeholder="Email hoặc Username *"
                 value={form.identifier}
                 onChange={onChange}
                 autoComplete="username"
@@ -38,7 +38,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 name="password"
-                placeholder="Mật khẩu"
+                placeholder="Mật khẩu *"
                 value={form.password}
                 onChange={onChange}
                 autoComplete="current-password"

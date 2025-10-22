@@ -41,13 +41,44 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErr("");
+    
+    // Validation phía client
+    if (!form.title.trim()) {
+      setErr("Thiếu tên bài hát");
+      setTimeout(() => {
+        document.querySelector('input[name="title"]')?.focus();
+      }, 100);
+      return;
+    }
+    if (!form.tags.trim()) {
+      setErr("Vui lòng điền vào trường Hợp âm");
+      setTimeout(() => {
+        document.querySelector('input[name="tags"]')?.focus();
+      }, 100);
+      return;
+    }
+    if (!form.excerpt.trim()) {
+      setErr("Thiếu tóm tắt bài hát");
+      setTimeout(() => {
+        document.querySelector('textarea[name="excerpt"]')?.focus();
+      }, 100);
+      return;
+    }
+    if (!form.lyrics.trim()) {
+      setErr("Thiếu lời bài hát");
+      setTimeout(() => {
+        document.querySelector('textarea[name="lyrics"]')?.focus();
+      }, 100);
+      return;
+    }
+    
     setLoading(true);
     try {
       await songService.update(song._id, {
         ...form,
         artists: form.artists.split(",").map((a) => a.trim()).filter(Boolean),
         tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
-        postedAt: form.postedAt ? new Date(form.postedAt).toISOString() : null,
+        postedAt: form.postedAt ? new Date(form.postedAt).toISOString() : new Date().toISOString(), // Sử dụng ngày hiện tại nếu không có
       });
       onSuccess?.(); // reload list
       onClose?.(); // close modal
@@ -68,7 +99,7 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
 
         {err && <div className={styles.error}>{err}</div>}
 
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form} noValidate>
           <label>
             Tiêu đề *
             <input
@@ -76,7 +107,6 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
               name="title"
               value={form.title}
               onChange={handleChange}
-              required
             />
           </label>
 
@@ -131,7 +161,7 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
           </label>
 
           <label>
-            Tags (cách nhau dấu phẩy)
+            Hợp âm sử dụng (cách nhau dấu phẩy) *
             <input
               type="text"
               name="tags"
@@ -141,7 +171,7 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
           </label>
 
           <label>
-            Tóm tắt
+            Tóm tắt *
             <textarea
               name="excerpt"
               value={form.excerpt}
@@ -156,7 +186,6 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
               name="lyrics"
               value={form.lyrics}
               onChange={handleChange}
-              required
               rows={6}
             />
           </label>

@@ -92,25 +92,41 @@ export function CartProvider({ children }) {
 
   const normalizeApiItem = (it) => normalizeItem(it);
 
-  // Load giỏ hàng theo user (nếu có token) và merge với local
+  // Load giỏ hàng theo user (nếu có token) - KHÔNG merge với local
   const loadMyCart = useCallback(async () => {
     const token = getToken();
-    if (!token) return; // chưa đăng nhập -> giữ local
+    if (!token) {
+      // Chưa đăng nhập -> xóa local cart để tránh trộn lẫn
+      setItems([]);
+      clearStoredCartUtil();
+      return;
+    }
+    
     setLoading(true);
     try {
+      console.log('Loading cart for authenticated user...');
       const data = await getMyCart(token);
       const serverItems = (data?.items || []).map(normalizeApiItem);
-      const localItems = getStoredCart().map(normalizeItem);
-      const merged = mergeCarts(serverItems, localItems);
-      setItems(merged);
-      setStoredCart(merged);
+      
+      // CHỈ load từ server, KHÔNG merge với local
+      setItems(serverItems);
+      setStoredCart(serverItems);
+      
+      console.log('Loaded cart from server:', serverItems);
     } catch (e) {
       console.error('Load cart fail', e);
-      // vẫn giữ local khi lỗi
+      // Nếu load server fail, xóa local để tránh trộn lẫn
+      setItems([]);
+      clearStoredCartUtil();
     } finally {
       setLoading(false);
     }
   }, []);
+
+  // 🆕 Load giỏ hàng từ server khi component mount
+  useEffect(() => {
+    loadMyCart();
+  }, [loadMyCart]);
 
   // Local update tiện dụng
   const localUpdate = (productId, nextQty) => {
@@ -196,20 +212,32 @@ export function CartProvider({ children }) {
     clearStoredCartUtil();
   };
 
+  // 🆕 Clear cart khi đăng xuất (để tránh trộn lẫn giữa các user)
+  const clearCartOnLogout = () => {
+    console.log('Clearing cart on logout...');
+    setItems([]);
+    clearStoredCartUtil();
+  };
+
   // Thêm item: cập nhật UI trước, rồi gọi API nếu có token
   const addItem = async (productId, qty = 1, meta = {}) => {
     const token = getToken();
+    
+    console.log('Adding item to cart:', { productId, qty, meta, token: !!token });
 
+    // Optimistic update UI
     setItems((prev) => {
       const cur = prev.find((i) => i.productId === productId);
       if (cur) {
-        return prev.map((i) =>
+        const newItems = prev.map((i) =>
           i.productId === productId
             ? { ...i, qty: (i.qty || 0) + (qty || 0) }
             : i,
         );
+        console.log('Updated existing item in cart:', newItems);
+        return newItems;
       }
-      return [
+      const newItems = [
         ...prev,
         normalizeItem({
           productId,
@@ -217,14 +245,40 @@ export function CartProvider({ children }) {
           ...meta,
         }),
       ];
+      console.log('Added new item to cart:', newItems);
+      return newItems;
     });
 
+    // Sync với server
     if (token) {
       try {
+        console.log('Syncing with server...');
         await apiAddItem(productId, qty, token);
+        console.log('Item added to server cart successfully');
       } catch (e) {
-        console.error(e);
+        console.error('Failed to add item to server cart:', e);
+        console.log('Rolling back UI...');
+        // Rollback UI nếu server fail
+        setItems((prev) => {
+          const cur = prev.find((i) => i.productId === productId);
+          if (cur) {
+            const newQty = Math.max(0, (cur.qty || 0) - (qty || 0));
+            if (newQty <= 0) {
+              const filtered = prev.filter((i) => i.productId !== productId);
+              console.log('Removed item from cart after rollback:', filtered);
+              return filtered;
+            }
+            const updated = prev.map((i) =>
+              i.productId === productId ? { ...i, qty: newQty } : i,
+            );
+            console.log('Reduced item quantity after rollback:', updated);
+            return updated;
+          }
+          return prev;
+        });
       }
+    } else {
+      console.log('No token, keeping local only');
     }
   };
 
@@ -278,6 +332,7 @@ export function CartProvider({ children }) {
     addItem,
     addToCart, // alias cho code cũ
     clearCart, // 🆕 để Checkout xoá cả context & storage
+    clearCartOnLogout, // 🆕 để xóa cart khi đăng xuất
   };
 
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;

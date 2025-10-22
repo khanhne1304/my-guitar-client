@@ -38,19 +38,19 @@ export default function RegisterPage() {
               onSubmit={handleSubmit}
               noValidate
             >
-              <input type="text" name="username" placeholder="Tên tài khoản"
+              <input type="text" name="username" placeholder="Tên tài khoản *"
                 value={form.username} onChange={onChange} required />
-              <input type="email" name="email" placeholder="Email"
+              <input type="email" name="email" placeholder="Email *"
                 value={form.email} onChange={onChange} required />
-              <input type="text" name="fullName" placeholder="Họ và tên"
+              <input type="text" name="fullName" placeholder="Họ và tên *"
                 value={form.fullName} onChange={onChange} required />
-              <input type="text" name="address" placeholder="Địa chỉ"
+              <input type="text" name="address" placeholder="Địa chỉ *"
                 value={form.address} onChange={onChange} required />
-              <input type="tel" name="phone" placeholder="Số điện thoại"
+              <input type="tel" name="phone" placeholder="Số điện thoại *"
                 value={form.phone} onChange={onChange} required />
-              <input type="password" name="password" placeholder="Mật khẩu"
+              <input type="password" name="password" placeholder="Mật khẩu *"
                 value={form.password} onChange={onChange} required />
-              <input type="password" name="confirm" placeholder="Nhập lại mật khẩu"
+              <input type="password" name="confirm" placeholder="Nhập lại mật khẩu *"
                 value={form.confirm} onChange={onChange} required />
 
               <div className={styles.register__terms}>

@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccountUser } from "../models/accountModel";
 import { getUserProfileApi } from "../services/userService";
+import { useCart } from "../context/CartContext";
 
 export function useAccountViewModel() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const { clearCartOnLogout } = useCart();
 
   // Hàm gọi API lấy profile
   async function fetchProfile() {
@@ -46,6 +48,9 @@ export function useAccountViewModel() {
   const val = (v) => (v && String(v).trim() ? v : "—");
 
   const handleLogout = () => {
+    // Xóa giỏ hàng trước khi đăng xuất
+    clearCartOnLogout();
+    
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
