@@ -55,8 +55,7 @@ class ChordAudioPlayer {
         frequencies.push({
           string: stringNumber,
           fret: fret,
-          frequency: frequency,
-          note: this.getNoteName(frequency)
+          frequency: frequency
         });
       }
     });
@@ -64,15 +63,6 @@ class ChordAudioPlayer {
     return frequencies;
   }
 
-  // Lấy tên nốt từ tần số (để debug)
-  getNoteName(frequency) {
-    const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const A4 = 440; // Tần số chuẩn của A4
-    const semitones = Math.round(12 * Math.log2(frequency / A4));
-    const noteIndex = ((semitones % 12) + 12) % 12;
-    const octave = Math.floor(semitones / 12) + 4;
-    return `${noteNames[noteIndex]}${octave}`;
-  }
 
   // Phát âm thanh hợp âm
   async playChord(chordData) {
@@ -95,8 +85,6 @@ class ChordAudioPlayer {
         return;
       }
 
-      // Debug: in ra các nốt sẽ được phát
-      console.log('Các nốt trong hợp âm:', frequencies.map(f => `${f.note} (dây ${f.string}, ngăn ${f.fret})`));
       
       // Tạo oscillator cho mỗi nốt
       frequencies.forEach((note, index) => {

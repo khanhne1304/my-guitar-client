@@ -38,10 +38,15 @@ export function useCartViewModel() {
     payload,
   } = useDeliveryTime();
 
-  useEffect(() => {
-    const u = getUser();
-    if (u?.id || u?._id) loadMyCart?.();
-  }, [loadMyCart]);
+  // Tạm thời tắt để tránh conflict với CartContext
+  // useEffect(() => {
+  //   const u = getUser();
+  //   console.log('CartViewModel: User check', { user: u, hasId: !!(u?.id || u?._id) });
+  //   if (u?.id || u?._id) {
+  //     console.log('CartViewModel: Loading cart...');
+  //     loadMyCart?.();
+  //   }
+  // }, [loadMyCart]);
 
   const isEmpty = useMemo(
     () => !loading && Array.isArray(cartItems) && cartItems.length === 0,

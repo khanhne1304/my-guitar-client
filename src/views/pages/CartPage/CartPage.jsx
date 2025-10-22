@@ -15,6 +15,14 @@ import { useCartViewModel } from '../../../viewmodels/CartViewModel';
 export default function CartPage() {
   const vm = useCartViewModel();
   const { state } = vm;
+  
+  // Debug logging
+  console.log('CartPage: State', { 
+    cartItems: state.cartItems, 
+    loading: state.loading, 
+    isEmpty: vm.isEmpty,
+    cartItemsLength: state.cartItems?.length 
+  });
 
   return (
     <div className={styles.cart}>

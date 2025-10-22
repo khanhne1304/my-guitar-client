@@ -17,16 +17,30 @@ export const useFavorites = () => {
 };
 
 // ---- Chuẩn hóa dữ liệu để tránh mất ảnh / slug ----
-const normalizeProduct = (p) => ({
-  id: p._id || p.id,
-  name: p.name,
-  brand: p.brand,
-  model: p.model,
-  price: p.price,
-  oldPrice: p.oldPrice,
-  image: Array.isArray(p.images) ? p.images[0] : p.image,
-  slug: p.slug,
-});
+const normalizeProduct = (p) => {
+  // Xử lý ảnh từ nhiều định dạng khác nhau
+  let image = '';
+  if (Array.isArray(p.images) && p.images.length > 0) {
+    image = p.images[0].url || p.images[0];
+  } else if (p.image) {
+    image = p.image;
+  } else if (p.thumbnail) {
+    image = p.thumbnail;
+  } else if (p.cover) {
+    image = p.cover;
+  }
+
+  return {
+    id: p._id || p.id,
+    name: p.name,
+    brand: p.brand,
+    model: p.model,
+    price: p.price,
+    oldPrice: p.oldPrice,
+    image: image,
+    slug: p.slug,
+  };
+};
 
 export const FavoritesProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
@@ -58,32 +72,10 @@ export const FavoritesProvider = ({ children }) => {
     }
   }
 
-// src/context/FavoritesContext.jsx
-useEffect(() => {
-  async function fetchData() {
-    if (token && user?.id) {
-      try {
-        setLoading(true);
-        const res = await getMyFavorites();
-        // chuẩn hóa để đảm bảo FE luôn có image, slug
-        const mapped = res.data.map(f => ({
-          id: f.product._id,
-          name: f.product.name,
-          slug: f.product.slug,
-          price: f.product.price,
-          brand: f.product.brand,
-          image: f.product.images?.[0] || '/no-image.png',
-        }));
-        setFavorites(mapped);
-      } catch (err) {
-        console.error("Load favorites error", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-  }
-  fetchData();
-}, [user?.id, token]);
+  // ---- Load favorites khi component mount ----
+  useEffect(() => {
+    loadFavorites();
+  }, [user?.id, token]);
 
 
   // ---- Lưu cho guest khi favorites thay đổi ----

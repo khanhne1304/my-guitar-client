@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 import PianoChordSVG from "../../../../assets/SVG/pianoChord/PianoChordSVG";
 import SpeakerIcon from "../../../../components/SpeakerIcon";
-import ChordAudioTest from "../../../../components/ChordAudioTest";
 import chordAudioPlayer from "../../../../utils/chordAudio";
 
 import useChordsViewModel from "../../../../viewmodels/ChordsViewModel";
@@ -68,9 +67,6 @@ export default function ChordsPage() {
               </select>
             </label>
           </div>
-
-          {/* Test âm thanh - chỉ hiển thị cho guitar */}
-          {instrument === "Guitar" && <ChordAudioTest />}
 
           {/* list hợp âm */}
           <div className={styles.chords__list}>
