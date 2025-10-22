@@ -170,14 +170,55 @@
 
 .cartBadge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
+  top: -8px;
+  right: -8px;
+  background: #ff4444;
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: bold;
   border-radius: 50%;
-  padding: 2px 6px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: badgePulse 0.3s ease-out;
+}
+
+@keyframes badgePulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.badgeAnimating {
+  animation: badgeChange 0.3s ease-out;
+}
+
+@keyframes badgeChange {
+  0% {
+    transform: scale(1);
+    background: #ff4444;
+  }
+  50% {
+    transform: scale(1.2);
+    background: #ff6666;
+  }
+  100% {
+    transform: scale(1);
+    background: #ff4444;
+  }
 }
 
 

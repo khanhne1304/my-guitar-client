@@ -1,0 +1,319 @@
+.chordDetailPage {
+  min-height: 100vh;
+  background: #fffbe8;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.backButton {
+  background: #333;
+  border: 2px solid #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-right: 20px;
+}
+
+.backButton:hover {
+  background: #555;
+  border-color: #555;
+  transform: translateY(-2px);
+}
+
+.chordInfo {
+  flex: 1;
+  text-align: center;
+}
+
+.chordName {
+  color: #333;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.toneInfo {
+  color: #666;
+  font-size: 1rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navButton {
+  background: #333;
+  border: 2px solid #333;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.navButton:hover:not(:disabled) {
+  background: #555;
+  border-color: #555;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navButton:disabled {
+  background: #ccc;
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.chordCounter {
+  background: white;
+  border: 2px solid #000;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.leftPanel {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.chordInfo {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.chordInfo h3 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.notesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.noteItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #000;
+}
+
+.stringLabel {
+  font-weight: bold;
+  color: #333;
+  min-width: 80px;
+  margin-right: 15px;
+}
+
+.muted {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.open {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.fretted {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.barre {
+  color: #6f42c1;
+  font-weight: 500;
+}
+
+.sameToneChords {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sameToneChords h3 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.chordsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.chordCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 160px;
+  justify-content: center;
+}
+
+.chordCard:hover {
+  border-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Loại bỏ activeChord style vì không còn hiển thị hợp âm hiện tại */
+
+.chordCard .chordName {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #333;
+  text-align: center;
+}
+
+.error h2 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .chordInfo {
+    order: -1;
+  }
+  
+  .chordName {
+    font-size: 2rem;
+  }
+  
+  .toneInfo {
+    font-size: 0.9rem;
+  }
+  
+  .navigation {
+    order: 1;
+  }
+  
+  .leftPanel,
+  .chordInfo {
+    padding: 20px;
+  }
+  
+  .navButton {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+  
+  .chordCounter {
+    font-size: 12px;
+    padding: 6px 12px;
+    min-width: 60px;
+  }
+  
+  .chordsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .chordCard {
+    padding: 10px;
+    min-height: 140px;
+  }
+  
+  .chordCard .chordName {
+    font-size: 12px;
+  }
+}

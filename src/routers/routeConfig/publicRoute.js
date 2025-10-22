@@ -18,6 +18,7 @@ import TunerPage from "../../views/pages/TunerPage/TunerPage";
 import AdminPage from "../../views/pages/AdminPage/AdminPage";
 import AccountEditPage from "../../views/pages/AccountPage/AccountEditPage/AccountEditPage";
 import AddressPage from "../../views/pages/AddressPage/AddressPage";
+import ChordDetailPage from "../../views/pages/ChordDetailPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -35,6 +36,7 @@ const publicRoutes = [
   { path: "/addresses", element: <AddressPage /> },
   { path: "/tools/metronome", element: <Metronome /> },
   { path: "/tools/chords", element: <ChordsPage/> },
+  { path: "/tools/chords/:chordName", element: <ChordDetailPage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},

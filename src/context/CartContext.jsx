@@ -260,8 +260,14 @@ export function CartProvider({ children }) {
     await addItem(productId, qty, meta);
   };
 
+  // Tính tổng số lượng sản phẩm trong giỏ hàng
+  const cartCount = useMemo(() => {
+    return items.reduce((total, item) => total + (item.qty || 0), 0);
+  }, [items]);
+
   const value = {
     cartItems: items,
+    cartCount, // 🆕 Số lượng sản phẩm trong giỏ hàng
     subtotal,
     loading,
     loadMyCart,
