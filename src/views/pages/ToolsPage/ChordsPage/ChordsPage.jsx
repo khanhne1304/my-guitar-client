@@ -1,9 +1,13 @@
 import styles from "./ChordsPage.module.css";
 import Header from "../../../components/homeItem/Header/Header";
 import Footer from "../../../components/homeItem/Footer/Footer";
+import { Link } from "react-router-dom";
 
 import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 import PianoChordSVG from "../../../../assets/SVG/pianoChord/PianoChordSVG";
+import SpeakerIcon from "../../../../components/SpeakerIcon";
+import ChordAudioTest from "../../../../components/ChordAudioTest";
+import chordAudioPlayer from "../../../../utils/chordAudio";
 
 import useChordsViewModel from "../../../../viewmodels/ChordsViewModel";
 
@@ -16,6 +20,15 @@ export default function ChordsPage() {
     chords,
     toneOptions,
   } = useChordsViewModel();
+
+  // Hàm phát âm thanh hợp âm
+  const handlePlayChord = async (chordName) => {
+    try {
+      await chordAudioPlayer.playChordByName(chordName);
+    } catch (error) {
+      console.error('Lỗi phát âm thanh:', error);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -56,18 +69,37 @@ export default function ChordsPage() {
             </label>
           </div>
 
+          {/* Test âm thanh - chỉ hiển thị cho guitar */}
+          {instrument === "Guitar" && <ChordAudioTest />}
+
           {/* list hợp âm */}
           <div className={styles.chords__list}>
             {chords.map((chord) => (
               <div key={chord} className={styles.chords__card}>
-                <div className={styles.chords__item}>
-                  {instrument === "Guitar" ? (
-                    <GuitarChordSVG chord={chord} />
-                  ) : (
-                    <PianoChordSVG chord={chord} />
-                  )}
-                  <div className={styles.chords__name}>{chord}</div>
-                </div>
+                {/* Icon loa - chỉ hiển thị cho guitar */}
+                {instrument === "Guitar" && (
+                  <SpeakerIcon 
+                    chordName={chord} 
+                    onPlay={handlePlayChord}
+                  />
+                )}
+                
+                <Link 
+                  to={`/tools/chords/${chord}`} 
+                  className={styles.chords__link}
+                >
+                  <div className={styles.chords__item}>
+                    {instrument === "Guitar" ? (
+                      <GuitarChordSVG chord={chord} />
+                    ) : (
+                      <PianoChordSVG chord={chord} />
+                    )}
+                    <div className={styles.chords__name}>{chord}</div>
+                    <div className={styles.chords__detailHint}>
+                      {instrument === "Guitar" ? "👆 Xem chi tiết ngón tay" : "👆 Xem chi tiết"}
+                    </div>
+                  </div>
+                </Link>
               </div>
             ))}
           </div>

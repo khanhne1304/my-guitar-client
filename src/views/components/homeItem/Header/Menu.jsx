@@ -68,7 +68,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         {renderSubmenu("piano", brands.piano, loading.piano)}
       </div>
       <div className={styles.home__menuItem}>
-        <Link to="/">Khóa học</Link>
+        <Link to="/">Luyện tập</Link>
       </div>
       <div className={styles.home__menuItem}>
         <Link to="/">Công cụ</Link>
