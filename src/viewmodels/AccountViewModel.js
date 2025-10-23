@@ -4,11 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { AccountUser } from "../models/accountModel";
 import { getUserProfileApi } from "../services/userService";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { usePractice } from "../context/PracticeContext";
 
 export function useAccountViewModel() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const { clearCartOnLogout } = useCart();
+  const { logout: authLogout } = useAuth();
+  const { resetProgress } = usePractice();
 
   // Hàm gọi API lấy profile
   async function fetchProfile() {
@@ -51,8 +55,11 @@ export function useAccountViewModel() {
     // Xóa giỏ hàng trước khi đăng xuất
     clearCartOnLogout();
     
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // Reset practice progress
+    resetProgress();
+    
+    // Sử dụng AuthContext logout
+    authLogout();
     navigate("/login");
   };
 
