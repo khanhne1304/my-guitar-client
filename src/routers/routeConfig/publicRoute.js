@@ -19,6 +19,8 @@ import AdminPage from "../../views/pages/AdminPage/AdminPage";
 import AccountEditPage from "../../views/pages/AccountPage/AccountEditPage/AccountEditPage";
 import AddressPage from "../../views/pages/AddressPage/AddressPage";
 import ChordDetailPage from "../../views/pages/ChordDetailPage";
+import ChordPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticePage";
+import ChordPracticeDetailPage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticeDetailPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -37,6 +39,8 @@ const publicRoutes = [
   { path: "/tools/metronome", element: <Metronome /> },
   { path: "/tools/chords", element: <ChordsPage/> },
   { path: "/tools/chords/:chordName", element: <ChordDetailPage /> },
+  { path: "/tools/chord-practice", element: <ChordPracticePage /> },
+  { path: "/tools/chord-practice/:id", element: <ChordPracticeDetailPage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},

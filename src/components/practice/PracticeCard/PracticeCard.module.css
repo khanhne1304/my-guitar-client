@@ -1,0 +1,165 @@
+.card {
+  height: 120px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.cardFront {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background: #ffd700;
+  color: #000;
+  border: 2px solid #000;
+  position: relative;
+}
+
+.cardFrontContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  padding-right: 100px; /* Tạo khoảng trống cho vòng tròn */
+}
+
+
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.description {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 0;
+  text-align: left;
+  line-height: 1.4;
+}
+
+
+.progressContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.progressInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.progressStats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.progressCircleContainer {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.progressCircle {
+  margin: 0;
+}
+
+.progressStroke {
+  transition: stroke-dashoffset 0.8s ease-in-out;
+}
+
+.progressText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #000; /* Đảm bảo chữ hiển thị rõ trên nền vàng */
+}
+
+.progressNumber {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.progressPercentage {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.progressLabel {
+  font-size: 1.1rem; /* Tăng kích thước cho nổi bật trên mặt sau */
+  opacity: 0.9;
+  margin-bottom: 8px; /* Thêm khoảng cách bên dưới */
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Animation cho vòng tròn */
+@keyframes progressFill {
+  from {
+    stroke-dashoffset: 283; /* circumference */
+  }
+  to {
+    stroke-dashoffset: var(--target-offset);
+  }
+}
+
+.progressStroke {
+  animation: progressFill 1s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    height: 100px;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .description {
+    font-size: 0.8rem;
+  }
+  
+  .progressCircle {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .cardFront,
+  .cardBack {
+    padding: 16px;
+  }
+
+  .cardFrontContent {
+    padding-right: 80px; /* Điều chỉnh khoảng trống cho vòng tròn nhỏ hơn trên mobile */
+  }
+
+  .progressCircleContainer {
+    right: 16px; /* Điều chỉnh vị trí cho padding nhỏ hơn */
+  }
+}

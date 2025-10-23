@@ -6,6 +6,8 @@ import { CartProvider } from "../context/CartContext";
 import { CategoryProvider } from "../context/CategoryContext";
 import { FavoritesProvider } from "../context/FavoritesContext";
 import { AddressProvider } from "../context/AddressContext";
+import { PracticeProvider } from "../context/PracticeContext";
+import { AuthProvider } from "../context/AuthContext";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -17,20 +19,24 @@ function ScrollToTop() {
 
 export default function AppRouter() {
   return (
-    <CartProvider>
-      <CategoryProvider>
-        <FavoritesProvider>
-          <AddressProvider>
-            <ScrollToTop />
-            <Routes>
-              {publicRoutes.map((route) => (
-                <Route key={route.path} path={route.path} element={route.element} />
-              ))}
-              <Route path="*" element={<div style={{ padding: 16 }}>404</div>} />
-            </Routes>
-          </AddressProvider>
-        </FavoritesProvider>
-      </CategoryProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <CategoryProvider>
+          <FavoritesProvider>
+            <AddressProvider>
+              <PracticeProvider>
+                <ScrollToTop />
+                <Routes>
+                  {publicRoutes.map((route) => (
+                    <Route key={route.path} path={route.path} element={route.element} />
+                  ))}
+                  <Route path="*" element={<div style={{ padding: 16 }}>404</div>} />
+                </Routes>
+              </PracticeProvider>
+            </AddressProvider>
+          </FavoritesProvider>
+        </CategoryProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
