@@ -3,12 +3,14 @@ import AdminLayout from "../../layouts/admin/AdminLayout/AdminLayout";
 import ProductManager from "../../components/admin/ProductManager/ProductManager";
 import OrderManager from "../../components/admin/OrderManager/OrderManager";
 import SongManager from "../../components/admin/SongManager/SongManager";
+import UserManager from "../../components/admin/UserManager/UserManager";
 
 export default function AdminPage() {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
         <Route index element={<Navigate to="products" />} />
+        <Route path="users" element={<UserManager />} />
         <Route path="products" element={<ProductManager />} />
         <Route path="songs" element={<SongManager />} />
         <Route path="orders" element={<OrderManager />} />
