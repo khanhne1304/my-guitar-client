@@ -13,7 +13,6 @@ const STATUS_OPTIONS = [
 export default function UpdateOrderModal({ isOpen, onClose, order, onSuccess }) {
   const [status, setStatus] = useState(order?.status || "pending");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     if (order) setStatus(order.status);
@@ -25,13 +24,12 @@ export default function UpdateOrderModal({ isOpen, onClose, order, onSuccess }) 
     e.preventDefault();
     try {
       setLoading(true);
-      setError("");
       await apiClient.put(`/orders/${order._id}`, { status });
       onSuccess?.();
       onClose();
     } catch (err) {
       console.error("Lỗi khi cập nhật đơn:", err);
-      setError(err?.message || "Không thể cập nhật trạng thái đơn hàng");
+      alert(err.message || "Không thể cập nhật trạng thái đơn hàng");
     } finally {
       setLoading(false);
     }
@@ -42,11 +40,6 @@ export default function UpdateOrderModal({ isOpen, onClose, order, onSuccess }) 
       <div className={styles.modal}>
         <h2 className={styles.title}>Cập nhật đơn hàng</h2>
         <form className={styles.form} onSubmit={handleSubmit}>
-          {error && (
-            <div className={styles.error} role="alert">
-              {error}
-            </div>
-          )}
           <div className={styles.field}>
             <label>Trạng thái</label>
             <select value={status} onChange={(e) => setStatus(e.target.value)}>

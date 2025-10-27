@@ -1,22 +1,14 @@
-<<<<<<< HEAD
-import { useState, useRef, useEffect } from "react";
-import styles from "../../../pages/songDetails/SongDetails.module.css";
-import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
-
-export default function ChordTooltip({ chordText, children, active = false }) {
-  const [visible, setVisible] = useState(false);
-=======
 import { useEffect, useState, useRef } from "react";
 import styles from "../../../pages/songDetails/SongDetails.module.css";
 import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 
 export default function ChordTooltip({ chordText, children, forceVisible = false }) {
   const [hoverVisible, setHoverVisible] = useState(false);
->>>>>>> main
   const [coords, setCoords] = useState({
     top: 0,
     left: 0,
-    side: "right",
+    placeAbove: true,
+    align: "center",
   });
   const ref = useRef(null);
 
@@ -32,19 +24,6 @@ export default function ChordTooltip({ chordText, children, forceVisible = false
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-<<<<<<< HEAD
-    // Đặt tooltip sang trái/phải để không che chữ
-    const spaceRight = vw - rect.right;
-    const spaceLeft = rect.left;
-    const side = spaceRight >= tooltipWidth + gap || spaceRight >= spaceLeft ? "right" : "left";
-
-    const topCenter = rect.top + rect.height / 2 - tooltipHeight / 2;
-    const top = Math.max(8, Math.min(topCenter, vh - tooltipHeight - 8));
-    const left = side === "right" ? rect.right + gap : rect.left - tooltipWidth - gap;
-
-    setCoords({ top, left, side });
-    setVisible(true);
-=======
     const spaceAbove = rect.top;
     const spaceBelow = vh - rect.bottom;
     const placeAbove = spaceAbove > spaceBelow;
@@ -67,43 +46,12 @@ export default function ChordTooltip({ chordText, children, forceVisible = false
     const el = ref.current || e.currentTarget;
     computeAndSetCoords(el);
     setHoverVisible(true);
->>>>>>> main
   }
 
   function handleLeave() {
     setHoverVisible(false);
   }
 
-<<<<<<< HEAD
-  // Programmatically show tooltip when active
-  useEffect(() => {
-    if (!active) {
-      setVisible(false);
-      return;
-    }
-    const el = ref.current;
-    if (!el) return;
-
-    const rect = el.getBoundingClientRect();
-    const tooltipWidth = 180;
-    const tooltipHeight = 190;
-    const gap = 10;
-
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    const spaceRight = vw - rect.right;
-    const spaceLeft = rect.left;
-    const side = spaceRight >= tooltipWidth + gap || spaceRight >= spaceLeft ? "right" : "left";
-
-    const topCenter = rect.top + rect.height / 2 - tooltipHeight / 2;
-    const top = Math.max(8, Math.min(topCenter, vh - tooltipHeight - 8));
-    const left = side === "right" ? rect.right + gap : rect.left - tooltipWidth - gap;
-
-    setCoords({ top, left, side });
-    setVisible(true);
-  }, [active]);
-=======
   // Khi forceVisible bật: không cần tính toạ độ gần chữ (sẽ hiển thị dạng dock)
   useEffect(() => {
     if (forceVisible) return;
@@ -114,7 +62,6 @@ export default function ChordTooltip({ chordText, children, forceVisible = false
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, [forceVisible, hoverVisible]);
->>>>>>> main
 
   return (
     <>
@@ -126,24 +73,6 @@ export default function ChordTooltip({ chordText, children, forceVisible = false
       >
         {children}
       </span>
-<<<<<<< HEAD
-      {visible && (
-        <div
-          className={styles.chordTooltip}
-          style={{
-            position: "fixed",
-            top: coords.top,
-            left: coords.left,
-            width: 180,
-            height: 190,
-            zIndex: 9999,
-            pointerEvents: "none",
-          }}
-        >
-          <div className={styles.chordTooltipTitle}>{chord}</div>
-          <GuitarChordSVG chord={chord} width={160} showTitle={false} />
-        </div>
-=======
       {(forceVisible || hoverVisible) && (
         forceVisible ? (
           <div className={`${styles.chordTooltip} ${styles.chordTooltipDocked}`}
@@ -174,7 +103,6 @@ export default function ChordTooltip({ chordText, children, forceVisible = false
             <GuitarChordSVG chord={chord} width={160} showTitle={false} />
           </div>
         )
->>>>>>> main
       )}
     </>
   );
