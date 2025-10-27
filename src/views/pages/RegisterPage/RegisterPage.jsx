@@ -4,6 +4,7 @@ import styles from './RegisterPage.module.css';
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
+import OTPModal from '../../../components/OTPModal/OTPModal';
 import { useRegisterViewModel } from '../../../viewmodels/AuthViewModel/RegisterViewModel';
 
 export default function RegisterPage() {
@@ -13,9 +14,13 @@ export default function RegisterPage() {
     loading,
     err,
     ok,
+    showOTPModal,
     onChange,
     setAgree,
     handleSubmit,
+    handleVerifyOTP,
+    handleResendOTP,
+    handleCloseOTPModal,
   } = useRegisterViewModel();
 
   return (
@@ -67,7 +72,7 @@ export default function RegisterPage() {
                 }`}
                 disabled={!agree || loading}
               >
-                {loading ? 'Đang xử lý...' : 'Đăng ký'}
+                {loading ? 'Đang gửi OTP...' : 'Đăng ký'}
               </button>
             </form>
 
@@ -94,6 +99,14 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+
+      <OTPModal
+        isOpen={showOTPModal}
+        onClose={handleCloseOTPModal}
+        email={form.email}
+        onVerifyOTP={handleVerifyOTP}
+        onResendOTP={handleResendOTP}
+      />
     </div>
   );
 }
