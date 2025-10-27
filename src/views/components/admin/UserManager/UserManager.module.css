@@ -1,0 +1,401 @@
+/* UserManager Styles - đồng bộ với ProductManager */
+.container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+}
+
+.addBtn {
+  background: #000;
+  color: #ffd700;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.addBtn:hover {
+  background: #333;
+}
+
+.searchFilter {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.searchGroup {
+  display: flex;
+  flex: 1;
+}
+
+.searchGroup input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.searchGroup input:focus {
+  border-color: #000;
+}
+
+.searchGroup button {
+  padding: 8px 16px;
+  background: #000;
+  color: #ffd700;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.searchGroup button:hover {
+  background: #333;
+}
+
+.searchFilter select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 120px;
+  outline: none;
+}
+
+.searchFilter select:focus {
+  border-color: #000;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background: #f3f4f6;
+  font-weight: 700;
+}
+
+.roleBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.roleBadge.user {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.roleBadge.admin {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+/* === Buttons === */
+.actionBtn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 1px solid #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 6px;
+}
+
+/* Nút sửa (màu nền vàng + chữ đen) */
+.editBtn {
+  composes: actionBtn;
+  background: #ffd700;
+  color: #000;
+}
+
+.editBtn:hover {
+  background: #e6c200;
+}
+
+/* Nút đổi mật khẩu (màu cam) */
+.passwordBtn {
+  composes: actionBtn;
+  background: #f97316;
+  color: #fff;
+  border-color: #f97316;
+}
+
+.passwordBtn:hover {
+  background: #ea580c;
+}
+
+/* Nút xóa (màu nền đen + chữ vàng) */
+.deleteBtn {
+  composes: actionBtn;
+  background: #000;
+  color: #ffd700;
+}
+
+.deleteBtn:hover {
+  background: #333;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  padding: 10px 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+.loading {
+  text-align: center;
+  font-weight: 600;
+  padding: 16px;
+}
+
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  color: #111;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modalHeader button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalHeader button:hover {
+  color: #111;
+}
+
+.errorMessage {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+  margin: 0 20px;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  padding: 0 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #111;
+}
+
+.formGroup input,
+.formGroup select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #000;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.modalActions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.modalActions button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modalActions button[type="button"]:hover {
+  background-color: #545b62;
+}
+
+.modalActions button[type="submit"] {
+  background: #000;
+  color: #ffd700;
+}
+
+.modalActions button[type="submit"]:hover:not(:disabled) {
+  background: #333;
+}
+
+.modalActions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .searchFilter {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .searchGroup {
+    flex-direction: column;
+  }
+
+  .searchGroup input {
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+
+  .searchGroup button {
+    border-radius: 6px;
+  }
+
+  .table {
+    font-size: 12px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+  }
+
+  .actionBtn {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin-right: 4px;
+  }
+}

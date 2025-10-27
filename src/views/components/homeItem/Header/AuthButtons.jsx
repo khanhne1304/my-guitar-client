@@ -2,6 +2,7 @@ import styles from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
 import CartButton from "./CartButton";
 import AccountMenu from "./AccountMenu";
+import NotificationBellWrapper from "../../../../components/NotificationBell/NotificationBellWrapper";
 
 export default function AuthButtons({ user, cartCount, handleLogout }) {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function AuthButtons({ user, cartCount, handleLogout }) {
     <div className={styles.home__authButtons}>
       {user ? (
         <div className={styles.home__userWrap}>
+          <NotificationBellWrapper />
           <CartButton cartCount={cartCount} />
           <AccountMenu user={user} handleLogout={handleLogout} />
         </div>

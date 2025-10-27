@@ -21,6 +21,7 @@ import AddressPage from "../../views/pages/AddressPage/AddressPage";
 import ChordDetailPage from "../../views/pages/ChordDetailPage";
 import ChordPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticePage";
 import ChordPracticeDetailPage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticeDetailPage";
+import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -46,6 +47,7 @@ const publicRoutes = [
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
   { path: "/account/edit", element: <AccountEditPage /> },
+  { path: "/notifications", element: <ProtectedNotificationCenter /> },
 ];
 
 export default publicRoutes;
