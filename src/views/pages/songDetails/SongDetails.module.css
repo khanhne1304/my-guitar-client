@@ -69,10 +69,10 @@
 }
 
 .song-details__chord {
-  color: #0b63c8; /* tăng tương phản một chút */
+  color: #0066cc;
   font-weight: 700;
   margin: 0 2px;
-  background-color: transparent; /* không nền để không bị che */
+  background-color: #fffbe8;
   position: relative;
   cursor: pointer;
 }
@@ -240,11 +240,9 @@
   width: fit-content;
 }
 
-/* Highlighted text: change text color only */
 .highlight {
-  color: #d32f2f; /* đỏ đậm dễ nhìn */
-  font-weight: 700;
-  transition: color 0.2s ease-in;
+  background: #fff176;
+  transition: background 0.2s ease-in;
 }
 
 /* Màu xoay vòng cho từng chữ đã highlight */
@@ -257,11 +255,6 @@
 .lyricChord {
   color: #0066cc;
   font-weight: 700;
-}
-
-/* Dim non-highlighted text while playing */
-.dimmed {
-  color: #666; /* tối hơn để tương phản tốt hơn */
 }
 
 .song-details__list {
