@@ -1,0 +1,17 @@
+/* AdminCourseNewPage.module.css - Đồng bộ với giao diện hiện tại */
+
+.adminCourseNewPage {
+  min-height: 100vh;
+  background: #fffbe8;
+  font-family: var(--font-sans);
+}
+
+.adminCourseNewPage__content {
+  padding: 24px;
+  background: #fffbe8;
+}
+
+.adminCourseNewPage__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}

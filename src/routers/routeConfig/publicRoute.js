@@ -18,9 +18,15 @@ import TunerPage from "../../views/pages/TunerPage/TunerPage";
 import AdminPage from "../../views/pages/AdminPage/AdminPage";
 import AccountEditPage from "../../views/pages/AccountPage/AccountEditPage/AccountEditPage";
 import AddressPage from "../../views/pages/AddressPage/AddressPage";
+<<<<<<< HEAD
+import CoursesPage from "../../pages/Courses/CoursesPage";
+import CourseDetail from "../../components/Courses/CourseDetail";
+import LessonPlayer from "../../components/Learning/LessonPlayer";
+=======
 import ChordDetailPage from "../../views/pages/ChordDetailPage";
 import ChordPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticePage";
 import ChordPracticeDetailPage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticeDetailPage";
+>>>>>>> main
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -45,6 +51,9 @@ const publicRoutes = [
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
+  { path: "/courses", element: <CoursesPage /> },
+  { path: "/courses/:slug", element: <CourseDetail /> },
+  { path: "/learning/:courseSlug/lessons/:moduleOrder.:lessonOrder", element: <LessonPlayer /> },
   { path: "/account/edit", element: <AccountEditPage /> },
 ];
 

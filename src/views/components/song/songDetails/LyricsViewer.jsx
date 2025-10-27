@@ -8,8 +8,12 @@ export default function LyricsViewer({ lyrics, tempo }) {
   const [stepIndex, setStepIndex] = useState(0);
   const [tempoInput, setTempoInput] = useState(String(tempo || 90)); // ✅ lưu dưới dạng string
   const intervalRef = useRef(null);
+<<<<<<< HEAD
+  const currentChordIndexRef = useRef(-1);
+=======
   const [currentChord, setCurrentChord] = useState("");
   const [stepsPerBeat, setStepsPerBeat] = useState(1);
+>>>>>>> main
 
   // Convert tempoInput -> number an toàn (dùng useMemo để tránh parse mỗi lần render)
   const localTempo = useMemo(() => {
@@ -17,7 +21,7 @@ export default function LyricsViewer({ lyrics, tempo }) {
     return isNaN(n) ? 90 : Math.max(40, Math.min(n, 240)); // clamp 40-240
   }, [tempoInput]);
 
-  // Parse lyrics
+  // Parse lyrics into atomic units: chords as a token, text split by character
   const parts = useMemo(() => {
     let result = [];
     let idx = 0;
@@ -25,7 +29,13 @@ export default function LyricsViewer({ lyrics, tempo }) {
       const chunks = line.split(/(\[.*?\])/g);
       chunks.forEach((chunk) => {
         if (!chunk) return;
-        result.push({ id: idx++, text: chunk, isChord: chunk.startsWith("[") });
+        if (chunk.startsWith("[")) {
+          result.push({ id: idx++, text: chunk, isChord: true });
+        } else {
+          for (const ch of chunk.split("")) {
+            result.push({ id: idx++, text: ch, isChord: false });
+          }
+        }
       });
       result.push({ id: idx++, text: "\n", isChord: false });
     });
@@ -112,6 +122,21 @@ export default function LyricsViewer({ lyrics, tempo }) {
     return () => clearInterval(intervalRef.current);
   }, [playing, localTempo, stepsPerBeat, stepIndex, timeline]);
 
+  // Track the latest chord index to trigger tooltip
+  useEffect(() => {
+    if (!playing) {
+      currentChordIndexRef.current = -1;
+      return;
+    }
+    // find nearest chord at or before highlightIndex
+    for (let i = highlightIndex; i >= 0 && i < parts.length; i--) {
+      if (parts[i].isChord) {
+        currentChordIndexRef.current = i;
+        break;
+      }
+    }
+  }, [highlightIndex, parts, playing]);
+
   return (
     <div className={styles["song-details__lyricsWrapper"]}>
       {/* Tempo Control */}
@@ -151,17 +176,45 @@ export default function LyricsViewer({ lyrics, tempo }) {
 
       {/* Lyrics */}
       <div className={styles["song-details__lyrics"]}>
+<<<<<<< HEAD
+        {parts.map((p, i) => {
+          const isActive = playing && i === currentChordIndexRef.current;
+          if (p.isChord) {
+            return (
+              <ChordTooltip key={p.id} chordText={p.text} active={isActive}>
+                <span
+                  className={
+                    i <= highlightIndex && playing
+                      ? styles.highlight
+                      : styles.lyricChord
+                  }
+                >
+=======
         {parts.map((p, pIdx) => {
           if (p.isChord) {
             const isActive = playing && pIdx === activeChordPartIndex;
             return (
               <ChordTooltip key={p.id} chordText={p.text} forceVisible={isActive}>
                 <span className={isActive ? styles.highlight : styles.lyricChord}>
+>>>>>>> main
                   {p.text}
                 </span>
               </ChordTooltip>
             );
           }
+<<<<<<< HEAD
+          if (p.text === "\n") {
+            return <br key={p.id} />;
+          }
+          return (
+            <span
+              key={p.id}
+              className={
+                i <= highlightIndex && playing ? styles.highlight : playing ? styles.dimmed : ""
+              }
+            >
+              {p.text}
+=======
 
           if (p.text === "\n") {
             return <br key={p.id} />;
@@ -183,6 +236,7 @@ export default function LyricsViewer({ lyrics, tempo }) {
                   {ch}
                 </span>
               ))}
+>>>>>>> main
             </span>
           );
         })}

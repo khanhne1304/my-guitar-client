@@ -29,6 +29,7 @@ export default function Footer() {
               <li><Link to="/warranty-policy">Chính sách bảo hành</Link></li>
               <li><Link to="/piano-maintenance">Bảo trì đàn piano</Link></li>
               <li><Link to="/warranty">Tra cứu - Kích hoạt bảo hành</Link></li>
+              <li><Link to="/courses">Khóa học guitar</Link></li>
             </ul>
           </div>
 

@@ -1,0 +1,418 @@
+/* ProgressTracker.module.css */
+.progressTracker {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progressTracker__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.progressTracker__header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.progressTracker__sessionStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressTracker__sessionActive {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #10b981;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.progressTracker__sessionIndicator {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.progressTracker__sessionInactive {
+  background: #6b7280;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Main Stats */
+.progressTracker__mainStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.progressTracker__statCard {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.progressTracker__statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.progressTracker__statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progressTracker__statHeader h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.progressTracker__statLevel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.progressTracker__statValue {
+  margin-bottom: 1rem;
+}
+
+.progressTracker__statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1;
+}
+
+.progressTracker__statBar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressTracker__statBarFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progressTracker__statBarFill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progressTracker__statDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Achievements */
+.progressTracker__achievements {
+  margin-bottom: 2rem;
+}
+
+.progressTracker__achievements h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.progressTracker__achievementsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.progressTracker__achievement {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.progressTracker__achievement:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.progressTracker__achievementIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.progressTracker__achievementContent {
+  flex: 1;
+}
+
+.progressTracker__achievementName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 0.25rem;
+}
+
+.progressTracker__achievementDescription {
+  font-size: 0.875rem;
+  color: #a16207;
+  margin-bottom: 0.5rem;
+}
+
+.progressTracker__achievementPoints {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.2);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Lesson Info */
+.progressTracker__lessonInfo {
+  margin-bottom: 2rem;
+  background: #f0f9ff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #bae6fd;
+}
+
+.progressTracker__lessonInfo h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0c4a6e;
+}
+
+.progressTracker__lessonDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.progressTracker__lessonDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.progressTracker__lessonLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+.progressTracker__lessonValue {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0c4a6e;
+}
+
+/* Tips */
+.progressTracker__tips {
+  background: #f0fdf4;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #bbf7d0;
+}
+
+.progressTracker__tips h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #166534;
+}
+
+.progressTracker__tipsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progressTracker__tip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #d1fae5;
+  transition: all 0.3s ease;
+}
+
+.progressTracker__tip:hover {
+  background: #f0fdf4;
+  transform: translateX(4px);
+}
+
+.progressTracker__tipIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.progressTracker__tip span:last-child {
+  font-size: 0.875rem;
+  color: #166534;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .progressTracker {
+    padding: 1.5rem;
+  }
+  
+  .progressTracker__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .progressTracker__mainStats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .progressTracker__statCard {
+    padding: 1rem;
+  }
+  
+  .progressTracker__statNumber {
+    font-size: 2rem;
+  }
+  
+  .progressTracker__achievementsList {
+    grid-template-columns: 1fr;
+  }
+  
+  .progressTracker__lessonDetails {
+    grid-template-columns: 1fr;
+  }
+  
+  .progressTracker__tip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .progressTracker {
+    padding: 1rem;
+  }
+  
+  .progressTracker__header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .progressTracker__statNumber {
+    font-size: 1.75rem;
+  }
+  
+  .progressTracker__achievement {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .progressTracker__achievementIcon {
+    font-size: 1.5rem;
+  }
+}
+
+/* Animation for stat updates */
+.progressTracker__statNumber {
+  transition: all 0.3s ease;
+}
+
+.progressTracker__statBarFill {
+  transition: width 0.5s ease;
+}
+
+/* Loading state for dynamic updates */
+.progressTracker__statCard.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.progressTracker__statCard.loading .progressTracker__statNumber {
+  animation: pulse 1s infinite;
+}
+
+/* Success state for achievements */
+.progressTracker__achievement.new {
+  animation: achievementPop 0.6s ease;
+}
+
+@keyframes achievementPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+

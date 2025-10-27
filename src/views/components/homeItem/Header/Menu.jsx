@@ -80,6 +80,9 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         {renderSubmenu("piano", brands.piano, loading.piano)}
       </div>
       <div className={styles.home__menuItem}>
+<<<<<<< HEAD
+        <Link to="/courses">Khóa học</Link>
+=======
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>
           <button 
@@ -89,6 +92,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
             LUYỆN TẬP HỢP ÂM
           </button>
         </div>
+>>>>>>> main
       </div>
       <div className={styles.home__menuItem}>
         <Link to="/">Công cụ</Link>
