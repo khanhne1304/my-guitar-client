@@ -9,16 +9,24 @@ export const guitarChords = {
     E: { frets: [0, 2, 2, 1, 0, 0] },
     Em: { frets: [0, 2, 2, 0, 0, 0] },
     Em7: { frets: [0, 2, 2, 0, 3, 0] },
+    C7: { frets: [0, 3, 2, 0, 1, 0] },
+    D7: { frets: [0, 0, 2, 1, 2, 0] },
+    E7: { frets: [0, 2, 0, 1, 0, 0] },
+    F7: { frets: [1, 3, 3, 2, 1, 1], barre: { fromString: 6, toString: 1, fret: 1 } },
+    G7: { frets: [3, 2, 0, 0, 0, 1] },
+    B7: { frets: [0, 2, 4, 1, 2, 0] },
+    Fmaj7: { frets: [0, 3, 3, 2, 1, 0] },
     F: { frets: [1, 3, 3, 2, 1, 1], barre: { fromString: 6, toString: 1, fret: 1 } },
     Fm: { frets: [1, 3, 3, 1, 1, 1], barre: { fromString: 6, toString: 1, fret: 1 } },
     "F#": { frets: [2, 4, 4, 3, 2, 2], barre: { fromString: 6, toString: 1, fret: 2 } }, // Gb
     Gb: { frets: [2, 4, 4, 3, 2, 2], barre: { fromString: 6, toString: 1, fret: 2 } }, // alias
     G: { frets: [3, 2, 0, 0, 0, 3] },
-    Gm: { frets: [3, 5, 5, 3, 3, 3], barre: { fromString: 6, toString: 1, fret: 3 } },
+    Gm: { frets: [3, 5, 5, 3, 3, 0], barre: { fromString: 6, toString: 1, fret: 3 } },
     A: { frets: ["x", 0, 2, 2, 2, 0] },
     A7: { frets: ["x", 0, 2, 0, 2, 0] },
     Am: { frets: ["x", 0, 2, 2, 1, 0] },
     Am7: { frets: ["x", 0, 2, 0, 1, 0] },
+    Dm7: { frets: [0, 0, 2, 1, 1, 0] },
     "A#": { frets: ["x", 1, 3, 3, 3, 1], barre: { fromString: 5, toString: 1, fret: 1 } }, // Bb
     Bb: { frets: ["x", 1, 3, 3, 3, 1], barre: { fromString: 5, toString: 1, fret: 1 } },
     "A#m": { frets: ["x", 1, 3, 3, 2, 1], barre: { fromString: 5, toString: 1, fret: 1 } }, // Bbm
@@ -46,13 +54,13 @@ export const guitarChords = {
 
     "Edim": { frets: ["x", "x", 2, 3, 2, 3] },
     // Hợp âm giảm (dim)
-    "A#dim": { frets: ["x", 1, 2, 0, 2, 0] },
-    "Bdim": { frets: ["x", 2, 3, 1, 3, 1] },
-    "C#dim": { frets: ["x", 4, 5, 3, 5, 3] },
-    "D#dim": { frets: ["x", 6, 7, 5, 7, 5] },
-    "E#dim": { frets: ["x", 7, 8, 6, 8, 6] }, // tương đương Fdim
-    "F#dim": { frets: ["x", "x", 4, 5, 4, 5] },
-    "G#dim": { frets: ["x", "x", 6, 7, 6, 7] },
+    "A#dim": { frets: ["x", 1, 2, 3, 2, 0] },
+    "Bdim": { frets: ["x", 2, 0, 4, 0, 1] },
+    "C#dim": { frets: ["x", 4, 2, 0, 2, 0] },
+    "D#dim": { frets: ["x", 6, 7, 8, 7, 0] },
+    "E#dim": { frets: ["x", "x", 1, 0, 2, 1] }, // tương đương Fdim
+    "F#dim": { frets: ["x", "x", 4, 2, 1, 2] },
+    "G#dim": { frets: ["x", "x", 6, 4, 3, 4] },
 };
 
 // Piano

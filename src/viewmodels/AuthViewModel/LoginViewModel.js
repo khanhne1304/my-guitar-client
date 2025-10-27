@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../../services/authService';
 import { setToken, getUser, setUser, mergeUser } from '../../utils/storage';
+import { useAuth } from '../../context/AuthContext';
 import { LoginForm } from '../../models/AuthModels/loginModel';
 
 export function useLoginViewModel() {
   const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
 
   const [form, setForm] = useState(new LoginForm());
   const [err, setErr] = useState('');
@@ -46,6 +48,9 @@ export function useLoginViewModel() {
       }
 
       setUser(merged);
+      
+      // Cập nhật AuthContext
+      authLogin(merged, data.token);
 
       setOk('Đăng nhập thành công! Đang chuyển hướng...');
       setTimeout(() => {

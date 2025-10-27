@@ -1,9 +1,9 @@
 import styles from "./TunerDisplay.module.css";
 
-export default function TunerDisplay({ 
-  noteData, 
-  isRunning, 
-  onStart, 
+export default function TunerDisplay({
+  noteData,
+  isRunning,
+  onStart,
   onStop,
   tunerMode,
   setTunerMode,
@@ -11,7 +11,7 @@ export default function TunerDisplay({
   setSelectedString
 }) {
   const strings = ["E2", "A2", "D3", "G3", "B3", "E4"];
-  const IN_TUNE_TOLERANCE_CENTS = 20; // vùng chấp nhận tổng: ±20 cents
+  const IN_TUNE_TOLERANCE_CENTS = 30; // vùng chấp nhận tổng: ±20 cents
 
   let deviation = noteData?.cents || 0;
   let statusText = isRunning ? "Đang nghe..." : "Chưa bắt đầu";
@@ -59,18 +59,18 @@ export default function TunerDisplay({
       </div>
 
       <h1 className={styles.note}>
-        {tunerMode === "auto" 
-          ? (noteData ? noteData.note : "---") 
+        {tunerMode === "auto"
+          ? (noteData ? noteData.note : "---")
           : selectedString
         }
       </h1>
       <p className={styles.target}>
-        Target: {tunerMode === "auto" 
+        Target: {tunerMode === "auto"
           ? (noteData ? `${noteData.targetFreq.toFixed(2)} Hz` : "--- Hz")
           : `${getTargetFrequency(selectedString)} Hz`
         }
       </p>
-      
+
       {/* Hiển thị trạng thái ổn định */}
       {isRunning && noteData && noteData.isStable && (
         <div className={styles.statusInfo}>
@@ -84,12 +84,13 @@ export default function TunerDisplay({
           {/* Mapping: 1% = 5 cents. Total tolerance ±20c (46%↔54%).
               Green (perfect) ±6c: width 12c ⇒ 2.4% (48.8%↔51.2%).
               Orange (tolerance) 6–20c: each side width 14c ⇒ 2.8%. */}
-          {/* Orange left: 46% → 48.8% */}
-          <div className={`${styles.zone} ${styles.zoneWarn}`} style={{ left: '46%', width: '2.8%' }} />
-          {/* Green center: 48.8% → 51.2% */}
+          {/* Orange left: 44% → 48.8% (rộng 4.8%) */}
+          <div className={`${styles.zone} ${styles.zoneWarn}`} style={{ left: '44%', width: '4.8%' }} />
+          {/* Green center giữ nguyên */}
           <div className={`${styles.zone} ${styles.zoneGood}`} style={{ left: '48.8%', width: '2.4%' }} />
-          {/* Orange right: 51.2% → 54% */}
-          <div className={`${styles.zone} ${styles.zoneWarn}`} style={{ left: '51.2%', width: '2.8%' }} />
+          {/* Orange right: 51.2% → 56% (rộng 4.8%) */}
+          <div className={`${styles.zone} ${styles.zoneWarn}`} style={{ left: '51.2%', width: '4.8%' }} />
+
 
           <div
             className={styles.indicator}
@@ -125,9 +126,8 @@ export default function TunerDisplay({
             {strings.map((s) => (
               <button
                 key={s}
-                className={`${styles.stringBtn} ${
-                  selectedString === s ? styles.active : ""
-                }`}
+                className={`${styles.stringBtn} ${selectedString === s ? styles.active : ""
+                  }`}
                 onClick={() => setSelectedString(s)}
               >
                 {s}

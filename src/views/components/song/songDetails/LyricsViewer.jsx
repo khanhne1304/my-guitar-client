@@ -5,10 +5,15 @@ import styles from "../../../pages/songDetails/SongDetails.module.css";
 
 export default function LyricsViewer({ lyrics, tempo }) {
   const [playing, setPlaying] = useState(false);
-  const [highlightIndex, setHighlightIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
   const [tempoInput, setTempoInput] = useState(String(tempo || 90)); // ✅ lưu dưới dạng string
   const intervalRef = useRef(null);
+<<<<<<< HEAD
   const currentChordIndexRef = useRef(-1);
+=======
+  const [currentChord, setCurrentChord] = useState("");
+  const [stepsPerBeat, setStepsPerBeat] = useState(1);
+>>>>>>> main
 
   // Convert tempoInput -> number an toàn (dùng useMemo để tránh parse mỗi lần render)
   const localTempo = useMemo(() => {
@@ -37,7 +42,54 @@ export default function LyricsViewer({ lyrics, tempo }) {
     return result;
   }, [lyrics]);
 
+  // Timeline từng bước: char và chord
+  const timeline = useMemo(() => {
+    const steps = [];
+    parts.forEach((p, pIdx) => {
+      if (p.isChord) {
+        const chordLabel = p.text.replace(/^\[|\]$/g, "");
+        steps.push({ type: "chord", partIndex: pIdx, chord: chordLabel });
+      } else if (p.text === "\n") {
+        // skip newline khỏi bước
+      } else {
+        const chars = Array.from(p.text);
+        chars.forEach((_, cIdx) => {
+          steps.push({ type: "char", partIndex: pIdx, charIndex: cIdx });
+        });
+      }
+    });
+    return steps;
+  }, [parts]);
+
+  // Số ký tự đã highlight theo part
+  const highlightProgressByPart = useMemo(() => {
+    const progress = new Map();
+    for (let i = 0; i <= stepIndex && i < timeline.length; i++) {
+      const s = timeline[i];
+      if (s.type === "char") {
+        const prev = progress.get(s.partIndex) ?? -1;
+        if (s.charIndex > prev) progress.set(s.partIndex, s.charIndex);
+      }
+    }
+    return progress;
+  }, [stepIndex, timeline]);
+
+  // Chỉ hiển thị tooltip cho hợp âm đang hoạt động (mới nhất tính đến step hiện tại)
+  const activeChordPartIndex = useMemo(() => {
+    if (!timeline.length) return -1;
+    const end = Math.min(stepIndex, timeline.length - 1);
+    for (let i = end; i >= 0; i--) {
+      const s = timeline[i];
+      if (s.type === "chord") return s.partIndex;
+    }
+    return -1;
+  }, [stepIndex, timeline]);
+
   function start() {
+    if (stepIndex >= timeline.length - 1) {
+      setStepIndex(0);
+      setCurrentChord("");
+    }
     setPlaying(true);
   }
 
@@ -49,20 +101,26 @@ export default function LyricsViewer({ lyrics, tempo }) {
   useEffect(() => {
     if (!playing) return;
 
-    const beatDuration = 60000 / localTempo;
-    let idx = highlightIndex;
+    const beatDuration = 60000 / (localTempo * Math.max(1, stepsPerBeat));
+    let idx = stepIndex;
 
     intervalRef.current = setInterval(() => {
-      idx++;
-      setHighlightIndex(idx);
-      if (idx >= parts.length) {
+      idx = idx + 1;
+      if (idx >= timeline.length) {
+        setStepIndex(timeline.length - 1);
         setPlaying(false);
         clearInterval(intervalRef.current);
+        return;
       }
+      const step = timeline[idx];
+      if (step.type === "chord") {
+        setCurrentChord(step.chord);
+      }
+      setStepIndex(idx);
     }, beatDuration);
 
     return () => clearInterval(intervalRef.current);
-  }, [playing, localTempo, parts.length]);
+  }, [playing, localTempo, stepsPerBeat, stepIndex, timeline]);
 
   // Track the latest chord index to trigger tooltip
   useEffect(() => {
@@ -96,16 +154,29 @@ export default function LyricsViewer({ lyrics, tempo }) {
           className={styles.tempoInput}
         />
         <span className={styles.tempoUnit}>BPM</span>
+        <label htmlFor="spbInput" className={styles.tempoLabel} style={{ marginLeft: 8 }}>
+          Steps/Beat:
+        </label>
+        <input
+          id="spbInput"
+          type="number"
+          min={1}
+          max={8}
+          value={stepsPerBeat}
+          onChange={(e) => setStepsPerBeat(Math.max(1, Math.min(8, Number(e.target.value || 1))))}
+          className={styles.tempoInput}
+        />
       </div>
 
       {/* Play/Stop */}
       <button onClick={playing ? stop : start} className={styles.playBtn}>
-        {playing ? <FaStop /> : <FaPlay />}{" "}
-        {playing ? "Dừng" : highlightIndex > 0 ? "Tiếp tục" : "Phát"}
+        {playing ? <FaStop /> : <FaPlay />} {" "}
+        {playing ? "Dừng" : stepIndex > 0 ? "Tiếp tục" : "Phát"}
       </button>
 
       {/* Lyrics */}
       <div className={styles["song-details__lyrics"]}>
+<<<<<<< HEAD
         {parts.map((p, i) => {
           const isActive = playing && i === currentChordIndexRef.current;
           if (p.isChord) {
@@ -118,11 +189,20 @@ export default function LyricsViewer({ lyrics, tempo }) {
                       : styles.lyricChord
                   }
                 >
+=======
+        {parts.map((p, pIdx) => {
+          if (p.isChord) {
+            const isActive = playing && pIdx === activeChordPartIndex;
+            return (
+              <ChordTooltip key={p.id} chordText={p.text} forceVisible={isActive}>
+                <span className={isActive ? styles.highlight : styles.lyricChord}>
+>>>>>>> main
                   {p.text}
                 </span>
               </ChordTooltip>
             );
           }
+<<<<<<< HEAD
           if (p.text === "\n") {
             return <br key={p.id} />;
           }
@@ -134,6 +214,29 @@ export default function LyricsViewer({ lyrics, tempo }) {
               }
             >
               {p.text}
+=======
+
+          if (p.text === "\n") {
+            return <br key={p.id} />;
+          }
+
+          const chars = Array.from(p.text);
+          const lastHighlighted = highlightProgressByPart.get(pIdx) ?? -1;
+          return (
+            <span key={p.id}>
+              {chars.map((ch, cIdx) => (
+                <span
+                  key={cIdx}
+                  className={
+                    playing && cIdx <= lastHighlighted
+                      ? `${styles.highlight} ${styles[`charC${(cIdx % 5) + 1}`]}`
+                      : ""
+                  }
+                >
+                  {ch}
+                </span>
+              ))}
+>>>>>>> main
             </span>
           );
         })}

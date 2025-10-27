@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { usePractice } from "../context/PracticeContext";
 import {
   buildBrandsByCategory,            // fallback khi API lỗi/không có
   fetchBrandsByCategoryFromAPI,     // ✅ ưu tiên dùng API ổn định
@@ -30,12 +31,21 @@ export function useHeaderViewModel(products = []) {
     }
   }, []);
 
+  const { clearCartOnLogout } = useCart();
+  const { resetProgress } = usePractice();
+
   const handleLogout = useCallback(() => {
+    // Xóa giỏ hàng trước khi đăng xuất
+    clearCartOnLogout();
+    
+    // Reset practice progress
+    resetProgress();
+    
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     navigate("/login");
-  }, [navigate]);
+  }, [navigate, clearCartOnLogout, resetProgress]);
 
   // ===== Brand menus (tách khỏi products để tránh chớp tắt) =====
   const [guitarBrands, setGuitarBrands] = useState([]); // [{name, slug}]
