@@ -1,0 +1,279 @@
+/* ReviewManager Styles - đồng bộ với UserManager */
+.container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  font-weight: 600;
+  padding: 16px;
+  color: #666;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.searchForm {
+  display: flex;
+  flex: 1;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #000;
+}
+
+.searchButton {
+  padding: 8px 16px;
+  background: #000;
+  color: #ffd700;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.searchButton:hover {
+  background: #333;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 120px;
+  outline: none;
+}
+
+.filterSelect:focus {
+  border-color: #000;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.noData {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.reviewCard {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userInfo strong {
+  color: #111;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.userEmail {
+  color: #666;
+  font-size: 14px;
+}
+
+.reviewMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.rating {
+  display: flex;
+  gap: 2px;
+}
+
+.starFilled {
+  color: #ffd700;
+  font-size: 16px;
+}
+
+.starEmpty {
+  color: #ddd;
+  font-size: 16px;
+}
+
+.date {
+  color: #666;
+  font-size: 12px;
+}
+
+.productInfo {
+  margin-bottom: 15px;
+  padding: 12px;
+  background-color: #f3f4f6;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.productInfo strong {
+  color: #111;
+  font-weight: 600;
+}
+
+.comment {
+  margin-bottom: 15px;
+}
+
+.comment strong {
+  color: #111;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.comment p {
+  margin: 0;
+  line-height: 1.5;
+  color: #555;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.deleteButton {
+  padding: 6px 14px;
+  background: #000;
+  color: #ffd700;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background: #333;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pageButton {
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #000;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  padding: 10px 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .searchForm {
+    flex-direction: column;
+  }
+  
+  .searchInput {
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  
+  .searchButton {
+    border-radius: 6px;
+  }
+  
+  .reviewHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .reviewMeta {
+    align-items: flex-start;
+  }
+}

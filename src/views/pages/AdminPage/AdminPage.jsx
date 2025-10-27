@@ -4,6 +4,9 @@ import ProductManager from "../../components/admin/ProductManager/ProductManager
 import OrderManager from "../../components/admin/OrderManager/OrderManager";
 import SongManager from "../../components/admin/SongManager/SongManager";
 import UserManager from "../../components/admin/UserManager/UserManager";
+import ReviewManager from "../../components/admin/ReviewManager/ReviewManager";
+import CouponManager from "../../components/admin/CouponManager/CouponManager";
+import NotificationManager from "../../components/admin/NotificationManager/NotificationManager";
 
 export default function AdminPage() {
   return (
@@ -14,6 +17,9 @@ export default function AdminPage() {
         <Route path="products" element={<ProductManager />} />
         <Route path="songs" element={<SongManager />} />
         <Route path="orders" element={<OrderManager />} />
+        <Route path="reviews" element={<ReviewManager />} />
+        <Route path="coupons" element={<CouponManager />} />
+        <Route path="notifications" element={<NotificationManager />} />
       </Route>
     </Routes>
   );

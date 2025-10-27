@@ -59,6 +59,30 @@ export default function AdminSidebar() {
           >
             Quản lý đơn hàng
           </NavLink>
+          <NavLink
+            to="/admin/reviews"
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ""}`
+            }
+          >
+            Quản lý bình luận
+          </NavLink>
+          <NavLink
+            to="/admin/coupons"
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ""}`
+            }
+          >
+            Quản lý khuyến mãi
+          </NavLink>
+          <NavLink
+            to="/admin/notifications"
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ""}`
+            }
+          >
+            Quản lý thông báo
+          </NavLink>
         </nav>
       </div>
 
