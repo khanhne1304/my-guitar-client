@@ -3,10 +3,10 @@ import { apiClient } from './apiClient';
 // Kiểm tra email có tồn tại trong hệ thống không
 export async function checkEmailExists(email) {
   try {
-    const response = await apiClient.post('/auth/check-email', { email });
-    return response.data;
+    const data = await apiClient.post('/auth/check-email', { email });
+    return data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Email không tồn tại trong hệ thống');
+    throw new Error(error.data?.message || 'Email không tồn tại trong hệ thống');
   }
 }
 
@@ -16,64 +16,63 @@ export async function sendOTP(email) {
     // Kiểm tra email có tồn tại trước
     await checkEmailExists(email);
     
-    const response = await apiClient.post('/auth/send-otp', { email });
-    return response.data;
+    const data = await apiClient.post('/auth/send-otp', { email });
+    return data;
   } catch (error) {
     // Nếu lỗi từ checkEmailExists, giữ nguyên message
     if (error.message.includes('không tồn tại')) {
       throw error;
     }
     // Nếu lỗi từ việc gửi OTP
-    throw new Error(error.response?.data?.message || 'Không thể gửi OTP');
+    throw new Error(error.data?.message || 'Không thể gửi OTP');
   }
 }
 
 // Xác thực OTP
 export async function verifyOTP(email, otp) {
   try {
-    const response = await apiClient.post('/auth/verify-otp', { email, otp });
-    return response.data;
+    const data = await apiClient.post('/auth/verify-otp', { email, otp });
+    // API returns { message, data: { verified, email, resetToken } }
+    return data?.data || data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'OTP không hợp lệ');
+    throw new Error(error.data?.message || 'OTP không hợp lệ');
   }
 }
 
 // Gửi OTP cho đăng ký
 export async function sendOTPForRegister(email) {
   try {
-    const response = await apiClient.post('/auth/send-otp-register', { email });
-    return response.data;
+    const data = await apiClient.post('/auth/send-otp-register', { email });
+    return data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Không thể gửi OTP');
+    throw new Error(error.data?.message || 'Không thể gửi OTP');
   }
 }
 
 // Xác thực OTP và hoàn thành đăng ký
 export async function verifyOTPAndRegister(userData, otp) {
   try {
-    const response = await apiClient.post('/auth/verify-otp-register', {
+    const data = await apiClient.post('/auth/verify-otp-register', {
       ...userData,
       otp
     });
-    console.log('otpService - Response:', response);
-    console.log('otpService - Response.data:', response.data);
-    return response.data;
+    console.log('otpService - Response data:', data);
+    return data;
   } catch (error) {
     console.log('otpService - Error:', error);
-    console.log('otpService - Error.response:', error.response);
-    throw new Error(error.response?.data?.message || 'Xác thực OTP thất bại');
+    throw new Error(error.data?.message || 'Xác thực OTP thất bại');
   }
 }
 
 // Đặt lại mật khẩu với token
 export async function resetPasswordWithToken(token, newPassword) {
   try {
-    const response = await apiClient.post('/auth/reset-password-token', {
+    const data = await apiClient.post('/auth/reset-password-token', {
       token,
       newPassword
     });
-    return response.data;
+    return data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Không thể đặt lại mật khẩu');
+    throw new Error(error.data?.message || 'Không thể đặt lại mật khẩu');
   }
 }
