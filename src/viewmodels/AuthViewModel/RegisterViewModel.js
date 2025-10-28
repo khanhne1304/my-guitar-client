@@ -55,9 +55,9 @@ export function useRegisterViewModel() {
       }, otp);
 
       console.log('Frontend result:', result);
-      console.log('Frontend result.user:', result.user);
-      console.log('Frontend result.user.id:', result.user?.id);
-      console.log('Frontend result.user._id:', result.user?._id);
+      console.log('Frontend result.user (safe):', result?.user);
+      console.log('Frontend result.user.id (safe):', result?.user?.id);
+      console.log('Frontend result.user._id (safe):', result?.user?._id);
 
       // 2. Lưu session
       if (!result || !result.user) {

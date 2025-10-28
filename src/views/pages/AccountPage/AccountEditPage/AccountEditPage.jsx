@@ -44,17 +44,6 @@ export default function AccountEditPage() {
                             <input name="phone" value={form.phone} onChange={handleChange} />
                         </div>
 
-                        <div className={styles.field}>
-                            <label>Mật khẩu mới</label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={form.password}
-                                onChange={handleChange}
-                                placeholder="Để trống nếu không đổi"
-                            />
-                        </div>
-
                         <div className={styles.actions}>
                             <button
                                 type="button"
