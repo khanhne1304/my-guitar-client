@@ -24,6 +24,8 @@ export default function Toolbar({ sortBy, onSortChange }) {
           <option value="price-desc">Giá giảm dần</option>
           <option value="name-asc">Tên A-Z</option>
           <option value="name-desc">Tên Z-A</option>
+          <option value="date-desc">Mới nhất</option>
+          <option value="date-asc">Cũ nhất</option>
         </select>
       </div>
     </div>

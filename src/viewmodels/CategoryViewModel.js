@@ -30,6 +30,10 @@ export function useCategoryViewModel() {
         return list.sort((a, b) => a.name.localeCompare(b.name));
       case 'name-desc':
         return list.sort((a, b) => b.name.localeCompare(a.name));
+      case 'date-desc':
+        return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      case 'date-asc':
+        return list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       default:
         return list;
     }
