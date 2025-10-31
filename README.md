@@ -3,11 +3,9 @@
 My Guitar là một nền tảng thương mại điện tử kết hợp công cụ học nhạc, mang đến cho người dùng trải nghiệm toàn diện trong việc mua sắm và học tập nhạc cụ, đặc biệt là guitar.
 Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt hàng, theo dõi đơn hàng, đồng thời luyện tập và khám phá âm nhạc ngay trên cùng một ứng dụng.
 
-Dưới đây là nội dung hoàn chỉnh (phần **giới thiệu + tính năng chính**) bạn có thể **dán trực tiếp vào file `README.md`** trên GitHub:
+## Các tính năng chính
 
-## ⚙️ Tính năng chính
-
-### 👤 Trang người dùng (Client)
+### Trang người dùng (Client)
 
 * **Xác thực người dùng**
   Đăng ký, đăng nhập, quên mật khẩu, đặt lại mật khẩu qua **OTP**.
