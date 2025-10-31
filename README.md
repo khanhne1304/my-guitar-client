@@ -45,6 +45,32 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 * **Quản lý voucher (Coupon)**: tạo, chỉnh sửa và hủy mã giảm giá.
 * **Quản lý người dùng**: xem và cập nhật thông tin cơ bản.
 * **Thông báo hệ thống**: chuông thông báo và trang trung tâm thông báo.
+  
+## Các công nghệ sử dụng
+* **Frontend**
+### User: 
+* **React (CRA + CRACO)** 
+
+* **JavaScript (ES6+)** 
+
+* **CSS Modules và style tùy biến** 
+
+* **Hooks tùy chỉnh (sử dụng services + hooks tự viết)** 
+
+* **Context API (Auth, Cart, Category, Practice, Favorites)**
+
+Router tùy chỉnh (AppRouter)
+* **Backend**
+
+* **Node.js, Express** 
+
+* **MongoDB, Mongoose** 
+
+* **JSON Web Token (JWT)** 
+
+* **Middleware**  xác thực và xử lý lỗi tùy chỉnh 
+
+* **Script seed dữ liệu (Admin, Coupon, Danh mục, Sản phẩm)** 
 
 
 
