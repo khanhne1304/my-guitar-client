@@ -59,7 +59,8 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 
 * **Context API (Auth, Cart, Category, Practice, Favorites)**
 
-Router tùy chỉnh (AppRouter)
+* **Router tùy chỉnh (AppRouter)**
+  
 * **Backend**
 
 * **Node.js, Express** 
