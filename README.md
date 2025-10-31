@@ -47,8 +47,8 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 * **Thông báo hệ thống**: chuông thông báo và trang trung tâm thông báo.
   
 ## Các công nghệ sử dụng
-* **Frontend**
-### User: 
+### Frontend
+#### User: 
 * **React (CRA + CRACO)** 
 
 * **JavaScript (ES6+)** 
@@ -60,8 +60,14 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 * **Context API (Auth, Cart, Category, Practice, Favorites)**
 
 * **Router tùy chỉnh (AppRouter)**
+#### Admin: 
+* **RReact**
+
+* **Trang quản trị riêng (AdminPage)**
+
+* **State management qua Context/ViewModel**
   
-* **Backend**
+### Backend
 
 * **Node.js, Express** 
 
