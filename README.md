@@ -77,7 +77,55 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 
 * **Middleware**  xác thực và xử lý lỗi tùy chỉnh 
 
-* **Script seed dữ liệu (Admin, Coupon, Danh mục, Sản phẩm)** 
+* **Script seed dữ liệu (Admin, Coupon, Danh mục, Sản phẩm)**
+* 
+## Công cụ phát triển
+* **Postman / REST Client để kiểm thử API** 
+
+* **Git & GitHub để quản lý phiên bản mã nguồn**
+## Cấu trũc dự án
+Dự án được chia làm 2 phần là giao diện (client) và máy chủ (server/backend – API)
+
+Nhom16-Source_code/
+├── my-guitar-server/                 # Backend (Node.js, Express, MongoDB)
+│   ├── src/
+│   │   ├── config/                   # Cấu hình (kết nối DB, biến môi trường)
+│   │   ├── controllers/              # Xử lý request/response theo module
+│   │   ├── middlewares/              # Auth JWT, xử lý lỗi
+│   │   ├── models/                   # Schema Mongoose (User, Product, Order, ...)
+│   │   ├── routes/                   # Định tuyến REST API theo tài nguyên
+│   │   ├── services/                 # Logic nghiệp vụ tái sử dụng
+│   │   ├── utils/                    # Tiện ích (lọc/sort/paginate)
+│   │   └── validators/               # Validate dữ liệu đầu vào
+│   ├── scripts/                      # Seed dữ liệu (admin, coupon)
+│   ├── server.js                     # Khởi tạo app, mount middleware & routes
+│   ├── package.json
+│   └── README.md
+└── my-guitar-client/                 # Frontend người dùng (React + CRA + craco)
+    ├── public/                       # Tài nguyên tĩnh (favicon, manifest, logo)
+    ├── src/
+    │   ├── assets/                   # Ảnh/SVG (guitar/piano chord)
+    │   ├── components/               # Component tái sử dụng (OTP, Notification, Practice, Guitar ảo)
+    │   ├── Constants/                # Hằng số hiển thị (cover danh mục)
+    │   ├── context/                  # React Context (Auth, Cart, Category, Favorites, Practice, Address)
+    │   ├── data/                     # Dữ liệu hợp âm, tông
+    │   ├── helpers/                  # Tiện ích nghiệp vụ (địa lý, vận chuyển, bài hát)
+    │   ├── hooks/                    # Custom hooks (products, price, delivery, ...)
+    │   ├── models/                   # Mô hình dữ liệu cho view
+    │   ├── routers/                  # Cấu hình router ứng dụng
+    │   ├── services/                 # Gọi API (auth, user, product, order, cart, ...)
+    │   ├── utils/                    # Tiện ích chung (currency, pricing, storage, validators, audio)
+    │   ├── viewmodels/               # ViewModel cho từng tính năng/trang
+    │   ├── views/
+    │   │   ├── components/           # Bộ UI theo trang
+    │   │   ├── layouts/              # Khung layout
+    │   │   └── pages/                # Trang: Home, Products, Details, Cart, Checkout, Songs, Tools,...
+    │   ├── App.js                    # Entry React app
+    │   ├── index.js                  # Mount React root
+    │   └── index.css                 # Style global
+    ├── craco.config.js               # Cấu hình build (CRA customization)
+    ├── package.json
+    └── README.md
 
 
 
