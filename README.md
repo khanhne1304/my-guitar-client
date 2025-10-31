@@ -138,18 +138,7 @@ Nhom16-Source_code/
 ## Hướng dẫn cài đặt
 ### 1 Tạo một thư mục chứa dự án
 ### 2 Truy cập vào thư mục vừa tạo
-Mở bằng các trình terminal riêng biệt cho Frontend và Backend
-### 3 Client:
-#### Clone repository:
-``` text
-git clone https://github.com/khanhne1304/my-guitar-client.git
-cd my-guitar-client
-```
-#### Cài đặt dependency
-``` text
-npm install
-```
-### 3 Backend:
+Mở bằng các trình terminal riêng biệt cho Frontend và Backe4 Backend:
 #### Clone repository:
 ```text
 gỉt clone: https://github.com/khanhne1304/my-guitar-server.git
