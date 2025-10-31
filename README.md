@@ -83,9 +83,10 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 * **Postman / REST Client để kiểm thử API** 
 
 * **Git & GitHub để quản lý phiên bản mã nguồn**
-## Cấu trũc dự án
+## Cấu trúc dự án
 Dự án được chia làm 2 phần là giao diện (client) và máy chủ (server/backend – API)
 
+```text
 Nhom16-Source_code/
 ├── my-guitar-server/                 # Backend (Node.js, Express, MongoDB)
 │   ├── src/
@@ -126,6 +127,4 @@ Nhom16-Source_code/
     ├── craco.config.js               # Cấu hình build (CRA customization)
     ├── package.json
     └── README.md
-
-
 
