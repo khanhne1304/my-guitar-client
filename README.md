@@ -78,7 +78,7 @@ Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt h�
 * **Middleware**  xác thực và xử lý lỗi tùy chỉnh 
 
 * **Script seed dữ liệu (Admin, Coupon, Danh mục, Sản phẩm)**
-* 
+  
 ## Công cụ phát triển
 * **Postman / REST Client để kiểm thử API** 
 
@@ -127,4 +127,46 @@ Nhom16-Source_code/
     ├── craco.config.js               # Cấu hình build (CRA customization)
     ├── package.json
     └── README.md
-
+``` 
+## Yêu cầu hệ thống
+* Node.js >= 16 (khuyến nghị >= 18) và npm/yarn
+* MongoDB (chạy local hoặc dịch vụ cloud như Atlas)
+* Postman hoặc tương đương (kiểm thử API)
+* Trình duyệt hiện đại (Chrome/Edge/Firefox) để chạy client
+* Trình soạn thảo mã (VS Code khuyến nghị)
+  
+## Hướng dẫn cài đặt
+### 1 Tạo một thư mục chứa dự án
+### 2 Truy cập vào thư mục vừa tạo
+Mở bằng các trình terminal riêng biệt cho Frontend và Backend
+### 3 Client:
+#### Clone repository:
+``` text
+git clone https://github.com/khanhne1304/my-guitar-client.git
+cd my-guitar-client
+```
+#### Cài đặt dependency
+``` text
+npm install
+```
+### 3 Backend:
+#### Clone repository:
+```text
+gỉt clone: https://github.com/khanhne1304/my-guitar-server.git
+cd my-guitar-server
+```
+#### Cài đặt dependency
+``` text
+npm install
+```
+## Chạy dự án
+Mở chương trình trong 2 terminal riêng biệt
+### Terminal 1: Chạy Frontend
+```text
+npm run start
+```
+### Terminal 2: Chạy Backend
+```text
+npm run 
+```
+Sau khi chạy thành công chương trình sẽ có thể truy cập ở http://localhost:3000
