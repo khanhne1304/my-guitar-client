@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# MyGuitar - Ứng dụng bán nhạc cụ trực tuyến
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+My Guitar là một nền tảng thương mại điện tử kết hợp công cụ học nhạc, mang đến cho người dùng trải nghiệm toàn diện trong việc mua sắm và học tập nhạc cụ, đặc biệt là guitar.
+Hệ thống cho phép người dùng dễ dàng duyệt sản phẩm, đặt hàng, theo dõi đơn hàng, đồng thời luyện tập và khám phá âm nhạc ngay trên cùng một ứng dụng.
 
-## Available Scripts
+Dưới đây là nội dung hoàn chỉnh (phần **giới thiệu + tính năng chính**) bạn có thể **dán trực tiếp vào file `README.md`** trên GitHub:
 
-In the project directory, you can run:
+## ⚙️ Tính năng chính
 
-### `npm start`
+### 👤 Trang người dùng (Client)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* **Xác thực người dùng**
+  Đăng ký, đăng nhập, quên mật khẩu, đặt lại mật khẩu qua **OTP**.
+* **Duyệt sản phẩm**
+  Xem danh mục, sản phẩm nổi bật, sản phẩm khuyến mãi và chi tiết sản phẩm.
+* **Tìm kiếm & Lọc nâng cao**
+  Theo từ khóa, danh mục, khoảng giá, sắp xếp và phân trang.
+* **Chi tiết sản phẩm**
+  Hiển thị hình ảnh, thông tin, đánh giá và sản phẩm liên quan.
+* **Giỏ hàng**
+  Thêm, cập nhật số lượng, xóa sản phẩm; lưu giỏ hàng cục bộ (LocalStorage).
+* **Thanh toán (Checkout)**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+  * Xem trước đơn hàng (địa chỉ, phí vận chuyển, voucher).
+  * Hỗ trợ thanh toán khi nhận hàng (**COD**).
+* **Quản lý đơn hàng**
+  Xem lịch sử và theo dõi trạng thái đơn hàng theo thời gian thực.
+* **Tài khoản người dùng**
+  Cập nhật hồ sơ, đổi mật khẩu, quản lý sổ địa chỉ.
+* **Tính năng tương tác**
+  Thêm sản phẩm yêu thích, viết và đọc đánh giá.
+* **Voucher**
+  Tìm kiếm, lưu và áp dụng mã giảm giá khi thanh toán.
+* **Công cụ luyện tập âm nhạc**
 
-### `npm test`
+  *  **Tuner (Máy lên dây)**
+  *  **Metronome (Máy đếm nhịp)**
+  *  **Thư viện & chi tiết hợp âm**
+  *  **Luyện hợp âm và guitar ảo**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Trang quản trị (Admin)
 
-### `npm run build`
+* **Dashboard tổng quan**: giao diện điều khiển trung tâm (`AdminPage`).
+* **Quản lý sản phẩm**: thêm, sửa, xóa, xem chi tiết qua API backend.
+* **Quản lý danh mục & thương hiệu (Category/Brand)**: CRUD đầy đủ.
+* **Quản lý đơn hàng**: xem danh sách, chi tiết, cập nhật trạng thái.
+* **Quản lý voucher (Coupon)**: tạo, chỉnh sửa và hủy mã giảm giá.
+* **Quản lý người dùng**: xem và cập nhật thông tin cơ bản.
+* **Thông báo hệ thống**: chuông thông báo và trang trung tâm thông báo.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
