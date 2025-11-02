@@ -44,6 +44,11 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 required
               />
+              <div className={styles.login__forgotPassword}>
+                <Link to="/forgot-password" className={styles.login__forgotLink}>
+                  Quên mật khẩu?
+                </Link>
+              </div>
               <button
                 type="submit"
                 className={styles.login__btn}

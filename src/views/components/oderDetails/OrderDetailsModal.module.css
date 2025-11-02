@@ -75,7 +75,51 @@
 }
 
 .item {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.itemContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.reviewBtn {
+  padding: 6px 14px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.reviewBtn:hover:not(:disabled) {
+  background: #1565c0;
+  transform: translateY(-1px);
+}
+
+.reviewBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reviewBtn.reviewed {
+  background: #4caf50;
+}
+
+.reviewBtn.reviewed:hover {
+  background: #45a049;
 }
 
 .total {

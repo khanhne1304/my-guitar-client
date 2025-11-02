@@ -7,12 +7,14 @@ import UserManager from "../../components/admin/UserManager/UserManager";
 import ReviewManager from "../../components/admin/ReviewManager/ReviewManager";
 import CouponManager from "../../components/admin/CouponManager/CouponManager";
 import NotificationManager from "../../components/admin/NotificationManager/NotificationManager";
+import StatisticsReport from "../../components/admin/StatisticsReport/StatisticsReport";
 
 export default function AdminPage() {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
-        <Route index element={<Navigate to="products" />} />
+        <Route index element={<Navigate to="statistics" />} />
+        <Route path="statistics" element={<StatisticsReport />} />
         <Route path="users" element={<UserManager />} />
         <Route path="products" element={<ProductManager />} />
         <Route path="songs" element={<SongManager />} />

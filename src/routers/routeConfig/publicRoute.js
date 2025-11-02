@@ -2,6 +2,7 @@
 import Home from "../../views/pages/HomePage/HomePage";
 import Register from "../../views/pages/RegisterPage/RegisterPage";
 import Login from "../../views/pages/LoginPage/LoginPage";
+import ForgotPassword from "../../views/pages/ForgotPasswordPage/ForgotPasswordPage";
 import ProductDetails from "../../views/pages/ProductDetailsPage/ProductDetailsPage";
 import ViewCategory from "../../views/pages/CategoryPage/CategoryPage";
 import Cart from "../../views/pages/CartPage/CartPage";
@@ -26,6 +27,7 @@ const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
   { path: "/products/:slug", element: <ProductDetails /> }, // chi tiết sản phẩm
   { path: "/products", element: <ProductsCategory /> },     // tìm kiếm/lọc sản phẩm theo ?q=&category=&brand=
   { path: "/category/:slug", element: <ViewCategory /> },   // list sản phẩm theo :slug

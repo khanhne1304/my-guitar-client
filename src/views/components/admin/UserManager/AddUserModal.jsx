@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./UserManager.module.css";
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const API_BASE = import.meta?.env?.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:4000';
 
 export default function AddUserModal({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({
