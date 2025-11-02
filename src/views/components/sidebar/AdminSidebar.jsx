@@ -28,6 +28,14 @@ export default function AdminSidebar() {
         <h2 className={styles.title}>Admin</h2>
         <nav className={styles.nav}>
           <NavLink
+            to="/admin/statistics"
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ""}`
+            }
+          >
+            Báo cáo thống kê
+          </NavLink>
+          <NavLink
             to="/admin/users"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.active : ""}`

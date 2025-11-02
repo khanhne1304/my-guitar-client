@@ -264,3 +264,115 @@
     color: currentColor;
 }
 
+/* OTP Section */
+.otpSection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.otpInstruction {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+.otpHint {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+
+.otpInput {
+    padding: 12px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 8px;
+    font-family: monospace;
+    color: #000;
+}
+
+.otpInput:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.resendOTP {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.countdown {
+    color: #666;
+    font-size: 14px;
+}
+
+.resendBtn {
+    background: none;
+    border: none;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.resendBtn:hover {
+    opacity: 0.7;
+}
+
+.resendBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.backBtn {
+    background: none;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    padding: 10px;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.backBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Alert messages */
+.register__alertError {
+    background: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.register__alertSuccess {
+    background: #efe;
+    border: 1px solid #cfc;
+    color: #3c3;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+

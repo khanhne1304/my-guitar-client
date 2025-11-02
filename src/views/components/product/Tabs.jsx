@@ -1,9 +1,10 @@
 // src/components/product/Tabs.jsx
 import { useState } from 'react';
 import styles from '../../pages/ProductDetailsPage/ProductDetailsPage.module.css';
+import ReviewsSection from './ReviewsSection';
 
 export default function Tabs({ prod }) {
-  const [tab, setTab] = useState('desc'); // desc|specs|video
+  const [tab, setTab] = useState('desc'); // desc|specs|video|reviews
 
   return (
     <>
@@ -25,6 +26,12 @@ export default function Tabs({ prod }) {
           onClick={() => setTab('video')}
         >
           Video
+        </button>
+        <button
+          className={`${styles['product-details__tab']} ${tab === 'reviews' ? styles['product-details__tab--active'] : ''}`}
+          onClick={() => setTab('reviews')}
+        >
+          Đánh giá
         </button>
       </div>
 
@@ -69,6 +76,12 @@ export default function Tabs({ prod }) {
               Chưa có video cho sản phẩm này.
             </div>
           )}
+        </section>
+      )}
+
+      {tab === 'reviews' && (
+        <section className={styles['product-details__tab-panel']}>
+          <ReviewsSection product={prod} />
         </section>
       )}
     </>
