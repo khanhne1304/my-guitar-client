@@ -1,4 +1,4 @@
-// RegisterView.jsx
+// RegisterPage.jsx
 import { Link } from 'react-router-dom';
 import styles from './RegisterPage.module.css';
 import BackIcon from '../../components/icons/BackIcon';
@@ -18,7 +18,6 @@ export default function RegisterPage() {
     onChange,
     setAgree,
     handleSubmit,
-
     // OTP related
     step,
     otp,
@@ -27,11 +26,8 @@ export default function RegisterPage() {
     onOtpChange,
     handleResendOTP,
     handleBackToForm,
-
     handleVerifyOTP,
-    handleResendOTP,
     handleCloseOTPModal,
-
   } = useRegisterViewModel();
 
   return (
@@ -51,43 +47,59 @@ export default function RegisterPage() {
           <div className={styles.register__container}>
             {step === 1 ? (
               // Bước 1: Nhập thông tin đăng ký
-              <form
-                className={styles.register__form}
-                onSubmit={handleSubmit}
-                noValidate
-              >
-                <input type="text" name="username" placeholder="Tên tài khoản *"
-                  value={form.username} onChange={onChange} required />
-                <input type="email" name="email" placeholder="Email *"
-                  value={form.email} onChange={onChange} required />
-                <input type="text" name="fullName" placeholder="Họ và tên *"
-                  value={form.fullName} onChange={onChange} required />
-                <input type="text" name="address" placeholder="Địa chỉ *"
-                  value={form.address} onChange={onChange} required />
-                <input type="tel" name="phone" placeholder="Số điện thoại *"
-                  value={form.phone} onChange={onChange} required />
-                <input type="password" name="password" placeholder="Mật khẩu *"
-                  value={form.password} onChange={onChange} required />
-                <input type="password" name="confirm" placeholder="Nhập lại mật khẩu *"
-                  value={form.confirm} onChange={onChange} required />
-
-                <div className={styles.register__terms}>
-                  <input id="agree" type="checkbox"
-                    checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-                  <label htmlFor="agree">
-                    Đồng ý với <strong>Điều khoản</strong> và <strong>Điều kiện</strong>
-                  </label>
-                </div>
-
-                <button type="submit"
-                  className={`${styles.register__btn} ${
-                    !agree || sendingOTP ? styles['register__btn--disabled'] : ''
-                  }`}
-                  disabled={!agree || sendingOTP}
+              <>
+                <form
+                  className={styles.register__form}
+                  onSubmit={handleSubmit}
+                  noValidate
                 >
-                  {sendingOTP ? 'Đang gửi OTP...' : 'Gửi mã OTP'}
-                </button>
-              </form>
+                  <input type="text" name="username" placeholder="Tên tài khoản *"
+                    value={form.username} onChange={onChange} required />
+                  <input type="email" name="email" placeholder="Email *"
+                    value={form.email} onChange={onChange} required />
+                  <input type="text" name="fullName" placeholder="Họ và tên *"
+                    value={form.fullName} onChange={onChange} required />
+                  <input type="text" name="address" placeholder="Địa chỉ *"
+                    value={form.address} onChange={onChange} required />
+                  <input type="tel" name="phone" placeholder="Số điện thoại *"
+                    value={form.phone} onChange={onChange} required />
+                  <input type="password" name="password" placeholder="Mật khẩu *"
+                    value={form.password} onChange={onChange} required />
+                  <input type="password" name="confirm" placeholder="Nhập lại mật khẩu *"
+                    value={form.confirm} onChange={onChange} required />
+
+                  <div className={styles.register__terms}>
+                    <input id="agree" type="checkbox"
+                      checked={agree} onChange={(e) => setAgree(e.target.checked)} />
+                    <label htmlFor="agree">
+                      Đồng ý với <strong>Điều khoản</strong> và <strong>Điều kiện</strong>
+                    </label>
+                  </div>
+
+                  <button type="submit"
+                    className={`${styles.register__btn} ${
+                      !agree || sendingOTP ? styles['register__btn--disabled'] : ''
+                    }`}
+                    disabled={!agree || sendingOTP}
+                  >
+                    {sendingOTP ? 'Đang gửi OTP...' : 'Gửi mã OTP'}
+                  </button>
+                </form>
+
+                <div className={styles.register__divider} />
+
+                <div className={styles.register__social}>
+                  <p className={styles.register__socialTitle}>Đăng ký bằng</p>
+                  <button type="button" className={`${styles.register__btnSocial} ${styles.facebook}`} disabled>
+                    <FacebookIcon className={styles.register__icon} />
+                    <span>Facebook (sắp có)</span>
+                  </button>
+                  <button type="button" className={`${styles.register__btnSocial} ${styles.google}`} disabled>
+                    <GoogleIcon className={styles.register__icon} />
+                    <span>Google (sắp có)</span>
+                  </button>
+                </div>
+              </>
             ) : (
               // Bước 2: Nhập OTP
               <form
@@ -95,7 +107,6 @@ export default function RegisterPage() {
                 onSubmit={handleSubmit}
                 noValidate
               >
-
                 <div className={styles.otpSection}>
                   <p className={styles.otpInstruction}>
                     Mã OTP đã được gửi đến email <strong>{form.email}</strong>
@@ -151,28 +162,6 @@ export default function RegisterPage() {
                   </button>
                 </div>
               </form>
-            )}
-                {loading ? 'Đang gửi OTP...' : 'Đăng ký'}
-              </button>
-            </form>
-
-
-            {step === 1 && (
-              <>
-                <div className={styles.register__divider} />
-
-                <div className={styles.register__social}>
-                  <p className={styles.register__socialTitle}>Đăng ký bằng</p>
-                  <button type="button" className={`${styles.register__btnSocial} ${styles.facebook}`} disabled>
-                    <FacebookIcon className={styles.register__icon} />
-                    <span>Facebook (sắp có)</span>
-                  </button>
-                  <button type="button" className={`${styles.register__btnSocial} ${styles.google}`} disabled>
-                    <GoogleIcon className={styles.register__icon} />
-                    <span>Google (sắp có)</span>
-                  </button>
-                </div>
-              </>
             )}
           </div>
 
