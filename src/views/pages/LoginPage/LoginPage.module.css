@@ -45,7 +45,6 @@
 .login__container {
     display: flex;
     flex-direction: column;
-    /* dọc hoàn toàn */
     gap: 16px;
     width: 100%;
 }
@@ -67,7 +66,7 @@
     background: #fff;
 }
 
-
+/* Quên mật khẩu */
 .login__forgotPassword {
     text-align: right;
     margin-top: -4px;
@@ -84,23 +83,6 @@
 
 .login__forgotLink:hover {
     opacity: 0.7;
-
-/* Quên mật khẩu */
-.login__forgotPassword {
-    text-align: right;
-    margin: 8px 0 0 0;
-}
-
-.login__forgotLink {
-    color: #666;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.login__forgotLink:hover {
-    color: #000;
-
     text-decoration: underline;
 }
 
@@ -120,7 +102,10 @@
     background: #333;
 }
 
-/* ...giữ nguyên toàn bộ các rule trước đó... */
+.login__btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
 /* Separator: —— ĐĂNG NHẬP BẰNG —— */
 .login__separator {
@@ -143,7 +128,7 @@
     background: rgba(0, 0, 0, .35);
 }
 
-/* 👇 Footnote “Chưa có tài khoản? Đăng ký ngay” */
+/* Footnote "Chưa có tài khoản? Đăng ký ngay" */
 .login__footnote {
     text-align: center;
     font-size: 14px;
@@ -162,7 +147,6 @@
     text-decoration: underline;
 }
 
-
 /* Social buttons */
 .login__btnSocial {
     padding: 10px;
@@ -171,7 +155,6 @@
     color: #fff;
     font-weight: 700;
     cursor: pointer;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -199,6 +182,11 @@
 
 .google:hover {
     background: #c23b31;
+}
+
+.login__btnSocial:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Nút Back */
@@ -253,6 +241,7 @@
     border-radius: 6px;
     margin-bottom: 16px;
     font-size: 14px;
+    text-align: center;
 }
 
 .login__alertSuccess {
@@ -263,6 +252,7 @@
     border-radius: 6px;
     margin-bottom: 16px;
     font-size: 14px;
+    text-align: center;
 }
 
 /* Mobile */

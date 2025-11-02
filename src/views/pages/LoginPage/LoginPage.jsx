@@ -1,7 +1,6 @@
-// LoginView.jsx
+// LoginPage.jsx
 import { Link } from 'react-router-dom';
 import styles from './LoginPage.module.css';
-
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
@@ -19,7 +18,7 @@ export default function LoginPage() {
             <span>Về trang chủ</span>
           </Link>
 
-          <h1 className={styles.login__title}>Đăng nhập</h1>
+          <h1 className={styles.login__title}>ĐĂNG NHẬP</h1>
 
           {err && <div className={styles.login__alertError}>{err}</div>}
           {ok && <div className={styles.login__alertSuccess}>{ok}</div>}
@@ -56,11 +55,6 @@ export default function LoginPage() {
               >
                 {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
               </button>
-              <div className={styles.login__forgotPassword}>
-                <Link to="/forgot-password" className={styles.login__forgotLink}>
-                  Quên mật khẩu?
-                </Link>
-              </div>
             </form>
 
             <div className={styles.login__separator}>

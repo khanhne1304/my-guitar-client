@@ -1,4 +1,4 @@
-import styles from "..//AccountPage.module.css";
+import styles from "../AccountPage.module.css";
 import ChangePasswordModal from "../ChangePassword/ChangePasswordModal";
 import Header from "../../../components/homeItem/Header/Header";
 import Footer from "../../../components/homeItem/Footer/Footer";
