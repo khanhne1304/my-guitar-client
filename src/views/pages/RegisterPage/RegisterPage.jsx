@@ -4,6 +4,7 @@ import styles from './RegisterPage.module.css';
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
+import OTPModal from '../../../components/OTPModal/OTPModal';
 import { useRegisterViewModel } from '../../../viewmodels/AuthViewModel/RegisterViewModel';
 
 export default function RegisterPage() {
@@ -13,9 +14,11 @@ export default function RegisterPage() {
     loading,
     err,
     ok,
+    showOTPModal,
     onChange,
     setAgree,
     handleSubmit,
+
     // OTP related
     step,
     otp,
@@ -24,6 +27,11 @@ export default function RegisterPage() {
     onOtpChange,
     handleResendOTP,
     handleBackToForm,
+
+    handleVerifyOTP,
+    handleResendOTP,
+    handleCloseOTPModal,
+
   } = useRegisterViewModel();
 
   return (
@@ -87,6 +95,7 @@ export default function RegisterPage() {
                 onSubmit={handleSubmit}
                 noValidate
               >
+
                 <div className={styles.otpSection}>
                   <p className={styles.otpInstruction}>
                     Mã OTP đã được gửi đến email <strong>{form.email}</strong>
@@ -143,6 +152,10 @@ export default function RegisterPage() {
                 </div>
               </form>
             )}
+                {loading ? 'Đang gửi OTP...' : 'Đăng ký'}
+              </button>
+            </form>
+
 
             {step === 1 && (
               <>
@@ -171,6 +184,14 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+
+      <OTPModal
+        isOpen={showOTPModal}
+        onClose={handleCloseOTPModal}
+        email={form.email}
+        onVerifyOTP={handleVerifyOTP}
+        onResendOTP={handleResendOTP}
+      />
     </div>
   );
 }

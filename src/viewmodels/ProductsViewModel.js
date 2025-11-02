@@ -12,8 +12,8 @@ export function useProductsViewModel() {
   const brandSlug = searchParams.get('brand') || '';
   const sortBy = searchParams.get('sortBy') || '';
 
-  // Gọi API sản phẩm với params hiện tại
-  const { products, loading, err } = useProducts({ q, categorySlug, brandSlug, sortBy });
+  // Gọi API sản phẩm với params hiện tại (lấy nhiều item để phân trang phía client)
+  const { products, loading, err } = useProducts({ q, categorySlug, brandSlug, sortBy, limit: 1000 });
 
   // Xác định khi nào đang ở chế độ tìm kiếm/lọc
   const isFiltered = Boolean(q || categorySlug || brandSlug);

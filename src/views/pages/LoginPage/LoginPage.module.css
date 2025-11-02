@@ -67,6 +67,7 @@
     background: #fff;
 }
 
+
 .login__forgotPassword {
     text-align: right;
     margin-top: -4px;
@@ -83,6 +84,23 @@
 
 .login__forgotLink:hover {
     opacity: 0.7;
+
+/* Quên mật khẩu */
+.login__forgotPassword {
+    text-align: right;
+    margin: 8px 0 0 0;
+}
+
+.login__forgotLink {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.login__forgotLink:hover {
+    color: #000;
+
     text-decoration: underline;
 }
 

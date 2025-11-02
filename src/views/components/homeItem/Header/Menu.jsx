@@ -1,12 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 import { useCategory } from "../../../../context/CategoryContext";
-import { useAuth } from "../../../../context/AuthContext";
 
 export default function Menu({ brands, loading, loadBrandsFor }) {
   const { selectCategory, selectBrand } = useCategory();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   const handleCategoryClick = (categorySlug) => {
     selectCategory(categorySlug);
@@ -21,16 +19,6 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       brand: brandSlug,
     });
     navigate(`/products?${params.toString()}`);
-  };
-
-  const handlePracticeClick = (e) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
-      alert('Vui lòng đăng nhập để sử dụng tính năng luyện tập!');
-      navigate('/login');
-      return;
-    }
-    navigate('/tools/chord-practice');
   };
 
   const renderSubmenu = (slug, list, isLoading) => (
@@ -82,12 +70,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       <div className={styles.home__menuItem}>
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>
-          <button 
-            className={styles.home__submenuItem}
-            onClick={handlePracticeClick}
-          >
-            LUYỆN TẬP HỢP ÂM
-          </button>
+          <Link to="/tools/chord-practice">LUYỆN TẬP HỢP ÂM</Link>
         </div>
       </div>
       <div className={styles.home__menuItem}>

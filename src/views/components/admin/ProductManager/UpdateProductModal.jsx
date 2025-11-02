@@ -57,6 +57,7 @@ export default function UpdateProductModal({ isOpen, onClose, product, onSuccess
         stock: Number(formData.stock),
         images: [{ url: formData.imageUrl || DEFAULT_IMAGE, alt: formData.name }],
         description: formData.description,
+        categorySlug: formData.type,
       };
 
       await productService.update(product._id, payload);

@@ -40,6 +40,8 @@ export default function AddProductModal({ onClose, onSuccess }) {
           },
         ],
         attributes: { type },
+        // Gửi kèm categorySlug dựa theo loại để backend map đúng Category
+        categorySlug: type,
       };
 
       await productService.create(payload);

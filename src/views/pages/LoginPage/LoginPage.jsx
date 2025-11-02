@@ -56,6 +56,11 @@ export default function LoginPage() {
               >
                 {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
               </button>
+              <div className={styles.login__forgotPassword}>
+                <Link to="/forgot-password" className={styles.login__forgotLink}>
+                  Quên mật khẩu?
+                </Link>
+              </div>
             </form>
 
             <div className={styles.login__separator}>
