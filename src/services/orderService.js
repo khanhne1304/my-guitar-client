@@ -135,5 +135,27 @@ export async function checkoutOrderApi(viewPayload) {
   }
 }
 
+// ✅ Xác nhận đã nhận hàng (chỉ cho user, chỉ khi status = delivered)
+export async function confirmReceivedApi(orderId) {
+  try {
+    const data = await apiClient.post(`/orders/${orderId}/confirm-received`);
+    return data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || 'Không thể xác nhận nhận hàng.';
+    throw new Error(msg);
+  }
+}
+
+// ✅ Hủy đơn hàng với lý do (chỉ cho user sở hữu và khi chưa delivered/completed)
+export async function cancelOrderApi(orderId, reason) {
+  try {
+    const data = await apiClient.post(`/orders/${orderId}/cancel`, { reason });
+    return data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || 'Không thể hủy đơn hàng.';
+    throw new Error(msg);
+  }
+}
+
 // (Optional) Export để test riêng phần mapping
 export const __test__ = { mapCheckoutToOrderDoc };

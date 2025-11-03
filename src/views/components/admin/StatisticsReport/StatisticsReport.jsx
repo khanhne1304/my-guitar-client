@@ -47,7 +47,8 @@ export default function StatisticsReport() {
     const labels = {
       pending: 'Chờ xử lý',
       paid: 'Đã thanh toán',
-      shipped: 'Đã giao hàng',
+      shipped: 'Đang giao hàng',
+      delivered: 'Đã giao',
       completed: 'Hoàn thành',
       cancelled: 'Đã hủy'
     };
@@ -59,6 +60,7 @@ export default function StatisticsReport() {
       pending: styles.statusPending,
       paid: styles.statusPaid,
       shipped: styles.statusShipped,
+      delivered: styles.statusDelivered,
       completed: styles.statusCompleted,
       cancelled: styles.statusCancelled
     };

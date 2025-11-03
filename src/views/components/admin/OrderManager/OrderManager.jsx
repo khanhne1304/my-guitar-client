@@ -72,12 +72,24 @@ export default function OrderManager() {
                         ? styles.paid
                         : o.status === "shipped"
                           ? styles.shipped
-                          : o.status === "completed"
-                            ? styles.completed
-                            : styles.cancelled
+                          : o.status === "delivered"
+                            ? styles.delivered
+                            : o.status === "completed"
+                              ? styles.completed
+                              : styles.cancelled
                   }
                 >
-                  {o.status}
+                  {(() => {
+                    const labels = {
+                      pending: 'Chờ xử lý',
+                      paid: 'Đã thanh toán',
+                      shipped: 'Đang giao',
+                      delivered: 'Đã giao',
+                      completed: 'Hoàn tất',
+                      cancelled: 'Đã hủy',
+                    };
+                    return labels[o.status] || o.status;
+                  })()}
                 </td>
                 <td>{new Date(o.createdAt).toLocaleString("vi-VN")}</td>
                 <td>

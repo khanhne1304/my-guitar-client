@@ -5,14 +5,20 @@ import ReviewModal from "../review/ReviewModal";
 import { getReviewsApi } from "../../../services/reviewService";
 import { useAuth } from "../../../context/AuthContext";
 import { getUser } from "../../../utils/storage";
+import { confirmReceivedApi, cancelOrderApi } from "../../../services/orderService";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 
 export default function OrderDetailsModal({ open, onClose, order, onReviewSuccess }) {
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productReviews, setProductReviews] = useState({});
   const [loadingReviews, setLoadingReviews] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const { user: authUser } = useAuth();
   const currentUser = authUser || getUser();
+  const toast = useToast();
+  const confirm = useConfirm();
 
   useEffect(() => {
     if (open && order && order.status === 'completed') {
@@ -52,10 +58,23 @@ export default function OrderDetailsModal({ open, onClose, order, onReviewSucces
 
   if (!open || !order) return null;
 
+  const getStatusLabel = (status) => {
+    const labels = {
+      pending: 'Chờ xử lý',
+      paid: 'Đã thanh toán',
+      shipped: 'Đang giao',
+      delivered: 'Đã giao',
+      completed: 'Hoàn tất',
+      cancelled: 'Đã hủy',
+    };
+    return labels[status] || status;
+  };
+
   const statusClass = {
     pending: styles.statusPending,
     paid: styles.statusPaid,
     shipped: styles.statusShipped,
+    delivered: styles.statusDelivered,
     completed: styles.statusCompleted,
     cancelled: styles.statusCancelled,
   }[order.status] || styles.statusPending;
@@ -85,6 +104,71 @@ export default function OrderDetailsModal({ open, onClose, order, onReviewSucces
     return productId && productReviews[productId];
   };
 
+  const handleConfirmReceived = async () => {
+    if (!order || order.status !== 'delivered') return;
+    
+    const confirmed = await confirm.confirm('Bạn có chắc chắn đã nhận được hàng?');
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setConfirming(true);
+      await confirmReceivedApi(order._id);
+      toast.success('Đã xác nhận nhận hàng thành công!');
+      if (onReviewSuccess) {
+        onReviewSuccess(); // Refresh danh sách đơn hàng
+      }
+      onClose();
+    } catch (err) {
+      toast.error(err.message || 'Không thể xác nhận nhận hàng');
+    } finally {
+      setConfirming(false);
+    }
+  };
+
+  const canConfirmReceived = order?.status === 'delivered';
+  const canCancel = ['pending', 'paid', 'shipped'].includes(order?.status);
+
+  const handleCancelOrder = async () => {
+    if (!order || !canCancel) return;
+
+    // Lý do hủy (chọn nhanh hoặc nhập tay)
+    const reasons = [
+      'Đặt nhầm sản phẩm',
+      'Đổi ý không mua nữa',
+      'Thời gian giao lâu',
+      'Muốn đổi phương thức thanh toán',
+      'Khác...'
+    ];
+
+    // Hộp chọn lý do đơn giản: dùng prompt nhiều bước (tối giản, không dùng alert)
+    // Gợi ý: có thể nâng cấp thành modal riêng nếu cần UI đẹp hơn
+    const choice = window.prompt(
+      `Chọn lý do (1-${reasons.length}) hoặc nhập lý do chi tiết:\n` +
+      reasons.map((r, i) => `${i + 1}. ${r}`).join('\n')
+    );
+    if (!choice) return;
+
+    let reason = choice;
+    const index = Number(choice);
+    if (!Number.isNaN(index) && index >= 1 && index <= reasons.length) {
+      reason = reasons[index - 1];
+    }
+
+    const ok = await confirm.confirm('Bạn chắc chắn muốn hủy đơn hàng này?');
+    if (!ok) return;
+
+    try {
+      await cancelOrderApi(order._id, reason);
+      toast.success('Đã hủy đơn hàng thành công');
+      if (onReviewSuccess) onReviewSuccess();
+      onClose();
+    } catch (err) {
+      toast.error(err.message || 'Không thể hủy đơn hàng');
+    }
+  };
+
   return (
     <div className={styles.backdrop} onClick={onClose}>
       <div
@@ -95,7 +179,7 @@ export default function OrderDetailsModal({ open, onClose, order, onReviewSucces
         <div className={styles.modalHeader}>
           <h3>Chi tiết đơn hàng</h3>
           <span className={`${styles.statusBadge} ${statusClass}`}>
-            {order.status}
+            {getStatusLabel(order.status)}
           </span>
           <button className={styles.closeBtn} onClick={onClose}>
             <FaTimes />
@@ -159,6 +243,23 @@ export default function OrderDetailsModal({ open, onClose, order, onReviewSucces
 
         {/* Footer */}
         <div className={styles.modalFooter}>
+          {canCancel && (
+            <button
+              className={styles.cancelOrderBtn}
+              onClick={handleCancelOrder}
+            >
+              Hủy đơn hàng
+            </button>
+          )}
+          {canConfirmReceived && (
+            <button
+              className={styles.confirmBtn}
+              onClick={handleConfirmReceived}
+              disabled={confirming}
+            >
+              {confirming ? 'Đang xác nhận...' : '✓ Đã nhận được hàng'}
+            </button>
+          )}
           <button className={styles.closeFooterBtn} onClick={onClose}>
             Đóng
           </button>

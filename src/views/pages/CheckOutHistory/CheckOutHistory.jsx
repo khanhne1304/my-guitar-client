@@ -14,17 +14,20 @@ export default function CheckOutHistory() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
 
-  useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const data = await getMyOrdersApi();
-        setOrders(data || []);
-      } catch (e) {
-        setError(e.message || "Không thể tải đơn hàng");
-      } finally {
-        setLoading(false);
-      }
+  async function fetchOrders() {
+    try {
+      setLoading(true);
+      const data = await getMyOrdersApi();
+      setOrders(data || []);
+      setError("");
+    } catch (e) {
+      setError(e.message || "Không thể tải đơn hàng");
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchOrders();
   }, []);
 
@@ -36,6 +39,18 @@ export default function CheckOutHistory() {
   const handleCloseModal = () => {
     setSelectedOrder(null);
     setModalOpen(false);
+  };
+
+  const getStatusLabel = (status) => {
+    const labels = {
+      pending: 'Chờ xử lý',
+      paid: 'Đã thanh toán',
+      shipped: 'Đang giao',
+      delivered: 'Đã giao',
+      completed: 'Hoàn tất',
+      cancelled: 'Đã hủy',
+    };
+    return labels[status] || status;
   };
 
   const normalized = (s) => (s || "").toString().toLowerCase().trim();
@@ -76,6 +91,7 @@ export default function CheckOutHistory() {
             <option value="pending">Chờ xử lý</option>
             <option value="paid">Đã thanh toán</option>
             <option value="shipped">Đang giao</option>
+            <option value="delivered">Đã giao</option>
             <option value="completed">Hoàn tất</option>
             <option value="cancelled">Đã hủy</option>
           </select>
@@ -105,7 +121,7 @@ export default function CheckOutHistory() {
                     styles[`status--${order.status}`]
                   }`}
                 >
-                  {order.status}
+                  {getStatusLabel(order.status)}
                 </span>
               </div>
               <div className={styles.history__body}>
@@ -145,6 +161,7 @@ export default function CheckOutHistory() {
         open={modalOpen}
         onClose={handleCloseModal}
         order={selectedOrder}
+        onReviewSuccess={fetchOrders}
       />
     </div>
   );
