@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toneChords } from "../data/toneChords";
+import { useAuth } from "../context/AuthContext";
 
 /**
  * ViewModel luyện tập hợp âm theo nhịp với mic detection (onset-based)
@@ -71,9 +72,11 @@ export default function useRhythmPracticeVM() {
   const countdownEndTimeRef = useRef(0);
   const lastCountedBarIndexRef = useRef(0);
 
-  // Progress persistence
+  // Progress persistence (per-user)
   const [progressMap, setProgressMap] = useState({}); // { tone: { progression: bestAccuracy } }
-  const STORAGE_KEY = 'rhythmPracticeProgress_v1';
+  const [isProgressLoaded, setIsProgressLoaded] = useState(false);
+  const { user } = useAuth();
+  const getStorageKey = useCallback(() => `rhythmPracticeProgress_${user?.id || 'guest'}`, [user?.id]);
   const [passNotice, setPassNotice] = useState(null); // { tone, progression, accuracy }
 
   // Utilities
@@ -98,16 +101,20 @@ export default function useRhythmPracticeVM() {
   // Load & Save progress
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setProgressMap(JSON.parse(raw));
-    } catch {}
-  }, []);
+      const raw = localStorage.getItem(getStorageKey());
+      setProgressMap(raw ? JSON.parse(raw) : {});
+    } catch {
+      setProgressMap({});
+    }
+    setIsProgressLoaded(true);
+  }, [getStorageKey]);
 
   useEffect(() => {
+    if (!isProgressLoaded) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progressMap));
+      localStorage.setItem(getStorageKey(), JSON.stringify(progressMap));
     } catch {}
-  }, [progressMap]);
+  }, [progressMap, isProgressLoaded, getStorageKey]);
 
   const markProgress = useCallback((tone, progression, acc) => {
     const prevBest = (progressMap[tone]?.[progression]) || 0;
@@ -195,16 +202,18 @@ export default function useRhythmPracticeVM() {
     attemptsRef.current = 0;
     cycleFinalizedRef.current = false;
 
-    // Phách đầu tiên luôn đúng và được tính là đã đánh
+    // Phách đầu tiên được tính là đã đánh (đúng sẽ tính khi bạn đánh vào đúng đầu phách)
     if (totalReq > 0) {
       const firstId = scheduledSlotsRef.current[0].id;
-      matchedSlotIdsRef.current.add(firstId);
       countedAttemptIdsRef.current.add(firstId);
-      setHitsCorrect(1);
-      hitsCorrectRef.current = 1;
       setAttemptsCount(1);
       attemptsRef.current = 1;
       lastCountedBarIndexRef.current = 0;
+    }
+
+    // Lên lịch click track đúng theo startAt nếu đang bật
+    if (clickEnabled && audioContextRef.current) {
+      scheduleClickTrack(startAt);
     }
   }, [bpm, timeSig, computeProgression]);
 
@@ -235,9 +244,8 @@ export default function useRhythmPracticeVM() {
     let best = null;
     let bestAbs = Infinity;
     for (const s of slots) {
-      // Bỏ qua các phách đã chốt (đã tính đúng hoặc đã chốt sai)
+      // Bỏ qua các phách đã chốt là đúng; phách đã chốt (đã đánh) vẫn có thể nhận Đúng nếu trong phách
       if (matchedSlotIdsRef.current.has(s.id)) continue;
-      if (countedAttemptIdsRef.current.has(s.id)) continue;
       const dt = now - s.time;
       const abs = Math.abs(dt);
       if (abs < bestAbs) {
@@ -506,15 +514,15 @@ export default function useRhythmPracticeVM() {
       clearInterval(clickScheduleTimerRef.current);
       clickScheduleTimerRef.current = null;
     }
-    if (clickEnabled) {
+    // Chỉ schedule qua effect nếu đã có barStartTime (vòng đã được tạo) và chưa có interval
+    if (clickEnabled && barStartTimeRef.current && !clickScheduleTimerRef.current) {
       const ctx = audioContextRef.current;
-      const beatDur = beatDurationRef.current;
-      const barStart = barStartTimeRef.current || ctx.currentTime;
+      const beatDur = 60 / bpm; // dùng BPM hiện tại để chính xác
+      const barStart = barStartTimeRef.current;
       const now = ctx.currentTime;
-      // Tính thời điểm bắt đầu trùng lưới beat hiện hành (next beat trên cùng grid với slots)
       const beatsSinceStart = Math.max(0, (now - barStart) / beatDur);
       const nextBeatIndex = Math.ceil(beatsSinceStart);
-      const alignedStart = barStart + nextBeatIndex * beatDur + 0.02; // +20ms an toàn
+      const alignedStart = barStart + nextBeatIndex * beatDur + 0.02;
       scheduleClickTrack(alignedStart);
     }
   }, [clickEnabled, bpm, timeSig, clickVolume, isRunning, scheduleClickTrack]);

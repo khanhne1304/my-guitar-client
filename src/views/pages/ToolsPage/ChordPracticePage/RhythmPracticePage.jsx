@@ -122,11 +122,29 @@ export default function RhythmPracticePage() {
               </label>
               <label className={styles.formLabel}>
                 Tiến trình hợp âm
-                <select className={styles.field} value={vm.progressionPreset} onChange={(e) => vm.setProgressionPreset(e.target.value)} disabled={vm.isRunning}>
-                  <option value="I-V-vi-IV">I–V–vi–IV</option>
-                  <option value="I-IV-V-I">I–IV–V–I</option>
-                  <option value="vi-IV-I-V">vi–IV–I–V</option>
-                </select>
+                {(() => {
+                  const toneProg = vm.getToneProgress(vm.selectedTone);
+                  const isCurrentDone = (toneProg?.[vm.progressionPreset] || 0) >= vm.COMPLETION_THRESHOLD;
+                  return (
+                    <select
+                      className={styles.field}
+                      value={vm.progressionPreset}
+                      onChange={(e) => vm.setProgressionPreset(e.target.value)}
+                      disabled={vm.isRunning}
+                      style={isCurrentDone ? { borderColor: '#10b981', boxShadow: '0 0 0 3px rgba(16,185,129,0.2)' } : undefined}
+                    >
+                      {vm.PROGRESSION_PRESETS.map((p) => {
+                        const acc = toneProg?.[p] || 0;
+                        const done = acc >= vm.COMPLETION_THRESHOLD;
+                        return (
+                          <option key={p} value={p} style={done ? { backgroundColor: '#d1fae5' } : undefined}>
+                            {p} {done ? '✔' : ''}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  );
+                })()}
               </label>
 
 
