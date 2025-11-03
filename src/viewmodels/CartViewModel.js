@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { getUser } from '../utils/storage';
-import { useDeliveryTime } from '../hooks/useDeliveryTime';
 import { CartState } from '../models/cartModel';
 
 export function useCartViewModel() {
@@ -23,20 +22,7 @@ export function useCartViewModel() {
   const [invoice, setInvoice] = useState(false);
   const [agree, setAgree] = useState(false);
 
-  const {
-    shipMode,
-    setShipMode,
-    dayOption,
-    setDayOption,
-    customDate,
-    setCustomDate,
-    timeSlot,
-    setTimeSlot,
-    confirmed,
-    setConfirmed,
-    confirm,
-    payload,
-  } = useDeliveryTime();
+  // Bỏ chọn thời gian giao hàng: giao diện chỉ hiển thị ETA tự động
 
   // Tạm thời tắt để tránh conflict với CartContext
   // useEffect(() => {
@@ -111,19 +97,8 @@ export function useCartViewModel() {
     }
   };
 
-  const confirmTime = () => {
-    if (!confirm()) {
-      alert('Vui lòng chọn ngày/giờ hợp lệ.');
-      return;
-    }
-  };
-
   const handleCheckout = () => {
-    if (shipMode === 'schedule' && !confirmed) {
-      alert('Vui lòng xác nhận thời gian giao trước khi thanh toán');
-      return;
-    }
-    localStorage.setItem('deliveryTime', JSON.stringify(payload));
+    // Không còn yêu cầu xác nhận thời gian giao
     localStorage.setItem('orderNote', note);
     localStorage.setItem('needInvoice', JSON.stringify(invoice));
     navigate('/checkout');
@@ -134,17 +109,6 @@ export function useCartViewModel() {
     setNote,
     setInvoice,
     setAgree,
-    shipMode,
-    setShipMode,
-    dayOption,
-    setDayOption,
-    customDate,
-    setCustomDate,
-    timeSlot,
-    setTimeSlot,
-    confirmed,
-    setConfirmed,
-    confirmTime,
     handleCheckout,
     handleInc,
     handleDec,

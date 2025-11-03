@@ -7,7 +7,6 @@ import EmptyCart from '../../components/cart/EmptyCart';
 import CartList from '../../components/cart/CartList';
 import NoteBox from '../../components/cart/NoteBox';
 import InvoiceCheck from '../../components/cart/InvoiceCheck';
-import DeliveryTimeBox from '../../components/cart/DeliveryTimeBox';
 import SummaryBox from '../../components/cart/SummaryBox';
 
 import { useCartViewModel } from '../../../viewmodels/CartViewModel';
@@ -86,27 +85,13 @@ export default function CartPage() {
               <aside className={styles['cart__right']}>
                 <h3 className={styles['cart__box-title']}>Thông tin đơn hàng</h3>
 
-                <DeliveryTimeBox
-                  shipMode={vm.shipMode}
-                  setShipMode={vm.setShipMode}
-                  dayOption={vm.dayOption}
-                  setDayOption={vm.setDayOption}
-                  customDate={vm.customDate}
-                  setCustomDate={vm.setCustomDate}
-                  timeSlot={vm.timeSlot}
-                  setTimeSlot={vm.setTimeSlot}
-                  confirmed={vm.confirmed}
-                  setConfirmed={vm.setConfirmed}
-                  onConfirm={vm.confirmTime}
-                  rootClassName={styles['cart__ship-time-box']}
-                  headerClassName={styles['cart__ship-header']}
-                  timeRowClassName={styles['cart__time-row']}
-                  colClassName={styles['cart__col']}
-                  inlineClassName={styles['cart__inline']}
-                  confirmBtnClassName={styles['cart__confirm-btn']}
-                  okClassName={styles['cart__confirm-ok']}
-                  warnClassName={styles['cart__confirm-warn']}
-                />
+                <div className={styles['cart__ship-time-box']}>
+                  <div className={styles['cart__ship-header']}>THỜI GIAN GIAO HÀNG</div>
+                  <p className={styles['cart__caption']}>
+                    - Khu vực gần: dự kiến 1-2 ngày làm việc.<br/>
+                    - Khu vực xa: thời gian giao tùy theo số km và đơn vị vận chuyển.
+                  </p>
+                </div>
 
                 <SummaryBox
                   subtotal={state.subtotal}

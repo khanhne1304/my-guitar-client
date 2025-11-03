@@ -144,6 +144,11 @@
   color: #3730a3;
 }
 
+.statusDelivered {
+  background: #fed7aa;
+  color: #9a3412;
+}
+
 .statusCompleted {
   background: #d1fae5;
   color: #065f46;

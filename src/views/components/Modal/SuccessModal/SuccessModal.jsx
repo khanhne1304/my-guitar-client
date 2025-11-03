@@ -8,7 +8,7 @@ export default function SuccessModal({ open, onClose, onContinue }) {
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.icon}>✅</div>
-        <h2 className={styles.title}>Thanh toán thành công!</h2>
+        <h2 className={styles.title}>Đặt hàng thành công!</h2>
         <p className={styles.text}>
           Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xác nhận.
         </p>

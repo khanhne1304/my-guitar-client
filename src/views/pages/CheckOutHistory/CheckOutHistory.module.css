@@ -94,6 +94,11 @@
     color: #004085;
 }
 
+.status--delivered {
+    background: #ffe0b2;
+    color: #e65100;
+}
+
 .status--completed {
     background: #e2f0d9;
     color: #155724;
