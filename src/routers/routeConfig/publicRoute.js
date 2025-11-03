@@ -23,6 +23,7 @@ import AddressPage from "../../views/pages/AddressPage/AddressPage";
 import ChordDetailPage from "../../views/pages/ChordDetailPage";
 import ChordPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticePage";
 import ChordPracticeDetailPage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticeDetailPage";
+import RhythmPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/RhythmPracticePage";
 import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
 const publicRoutes = [
   { path: "/", element: <Home /> },
@@ -46,6 +47,7 @@ const publicRoutes = [
   { path: "/tools/chords/:chordName", element: <ChordDetailPage /> },
   { path: "/tools/chord-practice", element: <ChordPracticePage /> },
   { path: "/tools/chord-practice/:id", element: <ChordPracticeDetailPage /> },
+  { path: "/tools/chord-practice/rhythm", element: <RhythmPracticePage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},

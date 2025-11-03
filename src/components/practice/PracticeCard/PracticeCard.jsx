@@ -11,7 +11,11 @@ export default function PracticeCard({ title, description, completed, total, col
 
   const handleCardClick = () => {
     // Click toàn bộ thẻ sẽ mở trang chi tiết, không lật thẻ
-    navigate(`/tools/chord-practice/${id}`);
+    if (id === 3) {
+      navigate(`/tools/chord-practice/rhythm`);
+    } else {
+      navigate(`/tools/chord-practice/${id}`);
+    }
   };
 
   return (

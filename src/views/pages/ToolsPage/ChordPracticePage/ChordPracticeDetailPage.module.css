@@ -87,12 +87,22 @@
   gap: 24px;
 }
 
+/* Compact 5-column stats row for RhythmPractice */
+.progressStats5 {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
 .statItem {
   text-align: center;
   padding: 20px;
   background: #ffd700;
   border-radius: 12px;
   border: 2px solid #000;
+}
+
+.statItemCompact {
+  padding: 16px;
 }
 
 .statNumber {
@@ -103,10 +113,18 @@
   margin-bottom: 8px;
 }
 
+.statNumberCompact {
+  font-size: 2rem;
+}
+
 .statLabel {
   font-size: 1rem;
   color: #000;
   font-weight: 600;
+}
+
+.statLabelCompact {
+  font-size: 0.9rem;
 }
 
 .content {
@@ -128,6 +146,82 @@
   font-size: 1.1rem;
   color: #666;
   line-height: 1.6;
+}
+
+/* Rhythm practice: shared themed form styles */
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.formLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.field {
+  padding: 12px 16px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.controls {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.hintText {
+  color: #6b7280;
+}
+
+.hudGrid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.hudItem {
+  background: #f3f4f6;
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid #000;
+}
+
+.hudItemTitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.hudItemValue {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 6px 10px;
+  background: #ffd700;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-weight: 700;
 }
 
 /* Tone selector styles */

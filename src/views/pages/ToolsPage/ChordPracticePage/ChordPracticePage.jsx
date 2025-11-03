@@ -32,12 +32,6 @@ export default function ChordPracticePage() {
       color: "#ffd700"
     },
     {
-      id: 2,
-      title: "Luyện tập chuyển hợp âm",
-      description: "Thực hành chuyển đổi giữa các hợp âm",
-      color: "#ffd700"
-    },
-    {
       id: 3,
       title: "Luyện tập theo nhịp",
       description: "Chơi hợp âm theo nhịp điệu",
