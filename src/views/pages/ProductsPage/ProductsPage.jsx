@@ -84,49 +84,6 @@ export default function ProductsPage() {
                 <div>{err}</div>
               ) : (
                 <Fragment>
-                  <div className={styles['products-page__pagination']}>
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canPrev}
-                      onClick={() => gotoPage(1)}
-                      aria-label="Trang đầu"
-                    >
-                      «
-                    </button>
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canPrev}
-                      onClick={() => gotoPage(page - 1)}
-                      aria-label="Trang trước"
-                    >
-                      ‹
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                      <button
-                        key={p}
-                        className={`${styles['products-page__pagenum']} ${p === page ? styles['is-active'] : ''}`}
-                        onClick={() => gotoPage(p)}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canNext}
-                      onClick={() => gotoPage(page + 1)}
-                      aria-label="Trang sau"
-                    >
-                      ›
-                    </button>
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canNext}
-                      onClick={() => gotoPage(totalPages)}
-                      aria-label="Trang cuối"
-                    >
-                      »
-                    </button>
-                  </div>
                   <ProductGrid items={pagedProducts} emptyText="Không tìm thấy sản phẩm phù hợp." />
                   <div className={styles['products-page__pagination']}>
                     <button
@@ -195,49 +152,6 @@ export default function ProductsPage() {
                 <div>{err}</div>
               ) : (
                 <Fragment>
-                  <div className={styles['products-page__pagination']}>
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canPrev}
-                      onClick={() => gotoPage(1)}
-                      aria-label="Trang đầu"
-                    >
-                      «
-                    </button>
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canPrev}
-                      onClick={() => gotoPage(page - 1)}
-                      aria-label="Trang trước"
-                    >
-                      ‹
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                      <button
-                        key={p}
-                        className={`${styles['products-page__pagenum']} ${p === page ? styles['is-active'] : ''}`}
-                        onClick={() => gotoPage(p)}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canNext}
-                      onClick={() => gotoPage(page + 1)}
-                      aria-label="Trang sau"
-                    >
-                      ›
-                    </button>
-                    <button
-                      className={styles['products-page__pagebtn']}
-                      disabled={!canNext}
-                      onClick={() => gotoPage(totalPages)}
-                      aria-label="Trang cuối"
-                    >
-                      »
-                    </button>
-                  </div>
                   <ProductGrid items={pagedProducts} emptyText="Hiện chưa có sản phẩm." />
                   <div className={styles['products-page__pagination']}>
                     <button

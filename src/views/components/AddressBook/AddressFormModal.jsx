@@ -24,11 +24,94 @@ export default function AddressFormModal({ address, onSubmit, onClose }) {
 
   // Load provinces on mount
   useEffect(() => {
-    fetch("https://provinces.open-api.vn/api/p/")
-      .then((res) => res.json())
+    fetch("https://provinces.open-api.vn/api/p/", {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(setProvinces)
-      .catch(() => setProvinces([]));
+      .catch((error) => {
+        console.error('Error loading provinces:', error);
+        setProvinces([]);
+      });
   }, []);
+
+  // Load districts when city is set (when editing address)
+  useEffect(() => {
+    if (formData.city && provinces.length > 0) {
+      const province = provinces.find((p) => p.name === formData.city);
+      if (province) {
+        const loadDistricts = async () => {
+          try {
+            const res = await fetch(
+              `https://provinces.open-api.vn/api/p/${province.code}?depth=2`,
+              {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                  'Accept': 'application/json',
+                },
+              }
+            );
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const data = await res.json();
+            setDistricts(data.districts || []);
+          } catch (error) {
+            console.error('Error loading districts:', error);
+            setDistricts([]);
+          }
+        };
+        loadDistricts();
+      }
+    } else if (!formData.city) {
+      setDistricts([]);
+      setWards([]);
+    }
+  }, [formData.city, provinces]);
+
+  // Load wards when district is set (when editing address)
+  useEffect(() => {
+    if (formData.district && districts.length > 0) {
+      const district = districts.find((d) => d.name === formData.district);
+      if (district) {
+        const loadWards = async () => {
+          try {
+            const res = await fetch(
+              `https://provinces.open-api.vn/api/d/${district.code}?depth=2`,
+              {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                  'Accept': 'application/json',
+                },
+              }
+            );
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const data = await res.json();
+            setWards(data.wards || []);
+          } catch (error) {
+            console.error('Error loading wards:', error);
+            setWards([]);
+          }
+        };
+        loadWards();
+      }
+    } else if (!formData.district) {
+      setWards([]);
+    }
+  }, [formData.district, districts]);
 
   // Load districts when city changes
   const handleCityChange = async (provinceCode) => {
@@ -43,12 +126,23 @@ export default function AddressFormModal({ address, onSubmit, onClose }) {
     if (provinceCode) {
       try {
         const res = await fetch(
-          `https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`
+          `https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`,
+          {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+              'Accept': 'application/json',
+            },
+          }
         );
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
         const data = await res.json();
         setDistricts(data.districts || []);
       } catch (error) {
         console.error('Error loading districts:', error);
+        setDistricts([]);
       }
     }
   };
@@ -63,12 +157,23 @@ export default function AddressFormModal({ address, onSubmit, onClose }) {
     if (districtCode) {
       try {
         const res = await fetch(
-          `https://provinces.open-api.vn/api/d/${districtCode}?depth=2`
+          `https://provinces.open-api.vn/api/d/${districtCode}?depth=2`,
+          {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+              'Accept': 'application/json',
+            },
+          }
         );
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
         const data = await res.json();
         setWards(data.wards || []);
       } catch (error) {
         console.error('Error loading wards:', error);
+        setWards([]);
       }
     }
   };
