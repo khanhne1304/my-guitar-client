@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './VirtualGuitarNeck.module.css';
 
-const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName, animate = true }) => {
+const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName, animate = true, highlightString = null, highlightStringFingerMap = null }) => {
   const { frets, barre } = chordData;
   const numStrings = 6;
   const numFrets = 5;
@@ -43,6 +43,7 @@ const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName, animate = true
       2: '#4ecdc4', // Ngón giữa - xanh lá
       3: '#45b7d1', // Ngón áp út - xanh dương
       4: '#f9ca24', // Ngón út - vàng
+      5: '#ff9f1c', // Ngón cái - cam
     };
     return colors[fingerNumber] || '#d1d5db'; // Màu xám cho ngón không sử dụng
   };
@@ -191,6 +192,10 @@ const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName, animate = true
           {Array.from({ length: numStrings }, (_, i) => {
             const stringNumber = numStrings - i;
             const x = getStringPosition(stringNumber) + leftPad;
+            const hl = highlightString === stringNumber;
+            const fingerForString = hl && highlightStringFingerMap ? highlightStringFingerMap[stringNumber] : null;
+            const strokeColor = hl ? (fingerForString ? getFingerColor(fingerForString) : '#ffd700') : '#333';
+            const strokeW = hl ? 4 : (stringNumber === 1 || stringNumber === 6 ? 3 : 2);
             return (
               <line
                 key={`string-${stringNumber}`}
@@ -198,9 +203,8 @@ const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName, animate = true
                 y1={headstockHeight}
                 x2={x}
                 y2={neckHeight + headstockHeight}
-                stroke="#333"
-                strokeWidth={stringNumber === 1 || stringNumber === 6 ? 3 : 2}
-                className={styles.string}
+                className={`${styles.string} ${hl ? styles.stringActive : ''}`}
+                style={{ stroke: strokeColor, strokeWidth: strokeW }}
               />
             );
           })}

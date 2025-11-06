@@ -12,6 +12,7 @@ export default function IndependencePage() {
   const navigate = useNavigate();
   const audioCtxRef = useRef(null);
   const tickTimerRef = useRef(null);
+  const boundaryHandledRef = useRef(false);
 
   const [bpm, setBpm] = useState(80);
   const [subdivision, setSubdivision] = useState(4); // 16th = 4 nốt mỗi phách
@@ -63,6 +64,7 @@ export default function IndependencePage() {
     setCurrentString(1);
     setCurrentDigit(0);
     setStepIndex(0);
+    boundaryHandledRef.current = false;
     // Count-in 1 bar
     let countIn = subdivision * 1;
     let localStep = -countIn; // âm để count-in
@@ -79,10 +81,16 @@ export default function IndependencePage() {
     }, beatIntervalMs);
   };
 
-  // Cuối mỗi phách, tăng chữ số; nếu quay về 1 (nextDigit=0) thì chuyển dây ngay lập tức
+  // Cuối mỗi phách, tăng chữ số; nếu quay về 1 (nextDigit=0) thì chuyển dây ngay lập tức.
+  // Dùng boundaryHandledRef để tránh double-run ở StrictMode.
   useEffect(() => {
     if (!isRunning) return;
-    if (stepIndex !== subdivision - 1) return;
+    if (stepIndex !== subdivision - 1) {
+      boundaryHandledRef.current = false;
+      return;
+    }
+    if (boundaryHandledRef.current) return;
+    boundaryHandledRef.current = true;
     setCurrentDigit((prev) => {
       const next = (prev + 1) % 4;
       if (next === 0) {
@@ -120,8 +128,8 @@ export default function IndependencePage() {
           </button>
 
           <div className={styles.header}>
-            <h1 className={styles.title}>Độc lập ngón (1-2-3-4)</h1>
-            <p className={styles.description}>Luyện các hoán vị 1-2-3-4 theo 16th notes với nhịp click.</p>
+            <h1 className={styles.title}>Luyện tập chạy ngón</h1>
+            <p className={styles.description}>Luyện tập chạy ngón.</p>
           </div>
 
           <div className={styles.progressSection}>

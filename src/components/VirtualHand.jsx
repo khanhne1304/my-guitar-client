@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './VirtualHand.module.css';
 
-const VirtualHand = ({ fingerMapping, chordData }) => {
+const VirtualHand = ({ fingerMapping, chordData, activeFingersOverride = null }) => {
   const { frets, barre } = chordData;
   
   // Lấy màu sắc cho ngón tay
@@ -11,12 +11,16 @@ const VirtualHand = ({ fingerMapping, chordData }) => {
       2: '#4ecdc4', // Ngón giữa - xanh lá
       3: '#45b7d1', // Ngón áp út - xanh dương
       4: '#f9ca24', // Ngón út - vàng
+      5: '#ff9f1c', // Ngón cái - cam
     };
     return colors[fingerNumber] || '#e0c2a5'; // Màu da người cho ngón không sử dụng
   };
 
   // Phân tích các ngón tay đang được sử dụng
   const getActiveFingers = () => {
+    if (Array.isArray(activeFingersOverride) && activeFingersOverride.length) {
+      return Array.from(new Set(activeFingersOverride.filter((n) => [1,2,3,4,5].includes(n)))).sort();
+    }
     const activeFingers = new Set();
     
     // Kiểm tra barre

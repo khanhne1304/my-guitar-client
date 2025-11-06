@@ -32,6 +32,8 @@ import IndependencePage from "../../views/pages/ToolsPage/FingerPracticePage/Lef
 import LegatoPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPage";
 import StretchShiftPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/StretchShiftPage";
 import BarrePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/BarrePage";
+import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/ArpeggioPage";
+import StrummingPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/StrummingPage";
 import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
 const publicRoutes = [
   { path: "/", element: <Home /> },
@@ -63,6 +65,8 @@ const publicRoutes = [
   { path: "/tools/finger-practice/left/stretch-shift", element: <StretchShiftPage /> },
   { path: "/tools/finger-practice/left/barre", element: <BarrePage /> },
   { path: "/tools/finger-practice/right", element: <RightHandPracticePage /> },
+  { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
+  { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
   { path: "/tools/finger-practice/both", element: <BothHandsPracticePage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/admin/*", element: <AdminPage /> },

@@ -5,7 +5,7 @@ import styles from "../ChordPracticePage/ChordPracticeDetailPage.module.css";
 export default function LeftHandPracticePage() {
   const navigate = useNavigate();
   const items = [
-    { name: "Độc lập ngón (1-2-3-4)", to: "/tools/finger-practice/left/independence" },
+    { name: "Luyện tập chạy ngón", to: "/tools/finger-practice/left/independence" },
     { name: "Legato (HO/PO/Trill)", to: "/tools/finger-practice/left/legato" },
     { name: "Stretch & dịch vị trí", to: "/tools/finger-practice/left/stretch-shift" },
     { name: "Barre & giữ lực", to: "/tools/finger-practice/left/barre" }
