@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './VirtualGuitarNeck.module.css';
 
-const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName }) => {
+const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName, animate = true }) => {
   const { frets, barre } = chordData;
   const numStrings = 6;
   const numFrets = 5;
@@ -50,11 +50,17 @@ const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName }) => {
   // Tạo animation cho các nốt
   useEffect(() => {
     if (!chordData || !fingerMapping) return;
-    
+    if (!animate) {
+      // Không dùng animation: luôn hiển thị ngay
+      setShowAnimation(true);
+      setAnimatedNotes([]);
+      return;
+    }
+
     // Reset state
     setShowAnimation(false);
     setAnimatedNotes([]);
-    
+
     // Tạo danh sách nốt cần animation
     const notesToAnimate = [];
     frets.forEach((fret, index) => {
@@ -62,29 +68,27 @@ const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName }) => {
         const stringNumber = numStrings - index;
         const fingerNumber = fingerMapping[index];
         const isBarreNote = isInBarre(stringNumber, fret);
-        
+
         if (!isBarreNote && fingerNumber) {
           notesToAnimate.push({
             id: `note-${index}`,
             stringNumber,
             fret,
             fingerNumber,
-            delay: 0 // Tất cả nốt bay vào cùng lúc
+            delay: 0
           });
         }
       }
     });
-    
-    // Set notes trước, sau đó mới bắt đầu animation
+
     setAnimatedNotes(notesToAnimate);
-    
-    // Bắt đầu animation sau delay để ngăn đàn trống trơn
+
     const timer = setTimeout(() => {
       setShowAnimation(true);
-    }, 300); // Delay 300ms để ngăn đàn trống trơn trước
-    
+    }, 50);
+
     return () => clearTimeout(timer);
-  }, [chordData, fingerMapping, chordName]);
+  }, [chordData, fingerMapping, chordName, animate]);
 
   return (
     <div className={styles.container}>
@@ -290,15 +294,10 @@ const VirtualGuitarNeck = ({ chordData, fingerMapping, chordName }) => {
                 // Nốt trong barre - không vẽ thêm gì vì đã có barre
                 return null;
               } else {
-                // Nốt bình thường với animation
+                // Nốt bình thường
                 const noteData = animatedNotes.find(note => note.id === `note-${index}`);
-                const shouldAnimate = showAnimation && noteData;
-                
-                // Chỉ render nốt khi animation bắt đầu
-                if (!shouldAnimate) {
-                  return null;
-                }
-                
+                const showNow = !animate || showAnimation || !!noteData;
+                if (!showNow) return null;
                 return (
                   <g key={`note-${index}`}>
                     <circle

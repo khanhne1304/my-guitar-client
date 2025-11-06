@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./PracticeCard.module.css";
 
-export default function PracticeCard({ title, description, completed, total, color, id }) {
+export default function PracticeCard({ title, description, completed, total, color, id, to }) {
   const navigate = useNavigate();
   
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
@@ -10,7 +10,12 @@ export default function PracticeCard({ title, description, completed, total, col
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   const handleCardClick = () => {
-    // Click toàn bộ thẻ sẽ mở trang chi tiết, không lật thẻ
+    // Cho phép override đích điều hướng
+    if (to) {
+      navigate(to);
+      return;
+    }
+    // Click toàn bộ thẻ sẽ mở trang chi tiết, không lật thẻ (mặc định hợp âm)
     if (id === 3) {
       navigate(`/tools/chord-practice/rhythm`);
     } else {
