@@ -76,6 +76,10 @@ const VirtualHand = ({ fingerMapping, chordData, activeFingersOverride = null })
         info.name = 'Ngón út';
         info.description = 'Các nốt ở vị trí cao nhất';
         break;
+      case 5:
+        info.name = 'Ngón cái';
+        info.description = 'Gảy dây bass, chặn/dập dây phụ';
+        break;
       default:
         info.name = 'Không sử dụng';
         info.description = 'Ngón tay không được sử dụng trong hợp âm này';
@@ -191,7 +195,7 @@ const VirtualHand = ({ fingerMapping, chordData, activeFingersOverride = null })
       {/* Thông tin chi tiết về các ngón tay */}
       <div className={styles.fingerDetails}>
         <h4>Chi tiết ngón tay:</h4>
-        {[1, 2, 3, 4].map((fingerNumber) => {
+        {[5, 1, 2, 3].map((fingerNumber) => {
           const isActive = isFingerActive(fingerNumber);
           const fingerInfo = getFingerInfo(fingerNumber);
           

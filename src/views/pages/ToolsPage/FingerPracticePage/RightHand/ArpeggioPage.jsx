@@ -4,6 +4,8 @@ import Header from "../../../../components/homeItem/Header/Header";
 import styles from "../../ChordPracticePage/ChordPracticeDetailPage.module.css";
 import VirtualGuitarNeck from "../../../../../components/VirtualGuitarNeck";
 import VirtualHand from "../../../../../components/VirtualHand";
+import { toneChords } from "../../../../../data/toneChords";
+import { extendedGuitarChords } from "../../../../../data/allChord";
 
 export default function ArpeggioPage() {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ export default function ArpeggioPage() {
   const [pattern, setPattern] = useState("CUSTOM_A"); // CUSTOM_A, CUSTOM_B, UP, DOWN, UP_DOWN, INOUT
   const [lowString, setLowString] = useState(6);
   const [highString, setHighString] = useState(1);
+  const [selectedTone, setSelectedTone] = useState(Object.keys(toneChords)[0] || "C / Am");
+  const [selectedChord, setSelectedChord] = useState((toneChords[Object.keys(toneChords)[0]] || [])[0] || "C");
   const [isRunning, setIsRunning] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [seqIdx, setSeqIdx] = useState(0);
@@ -41,16 +45,48 @@ export default function ArpeggioPage() {
     return Math.max(25, Math.round(beatMs / Math.max(1, subdivision)));
   }, [bpm, subdivision]);
 
+  // Cập nhật chord theo tone
+  useEffect(() => {
+    const chords = toneChords[selectedTone] || [];
+    if (!chords.includes(selectedChord)) {
+      setSelectedChord(chords[0] || "C");
+    }
+  }, [selectedTone]);
+
+  // Xác định dải dây theo hợp âm đã chọn
+  useEffect(() => {
+    const shape = extendedGuitarChords[selectedChord];
+    if (!shape || !Array.isArray(shape.frets)) return;
+    const used = [];
+    shape.frets.forEach((f, idx) => {
+      const stringNumber = 6 - idx; // idx 0 -> dây 6, idx 5 -> dây 1
+      // Bỏ các dây tắt (x hoặc X), nhận cả open string (0) và số > 0
+      if (f !== 'x' && f !== 'X' && f !== null && f !== undefined) {
+        used.push(stringNumber);
+      }
+    });
+    if (used.length) {
+      const lo = Math.min(...used);
+      const hi = Math.max(...used);
+      setHighString(lo);
+      setLowString(hi);
+    }
+  }, [selectedChord]);
+
   const buildSequence = useMemo(() => {
     const lo = Math.min(lowString, highString);
     const hi = Math.max(lowString, highString);
     const up = Array.from({ length: hi - lo + 1 }, (_, i) => hi - i); // 6..1 hi→lo visual top-down
     const down = [...up].reverse();
     switch (pattern) {
-      case "CUSTOM_A":
-        return [6,3,2,3,1,3,2,3];
-      case "CUSTOM_B":
-        return [6,3,2,1];
+      case "CUSTOM_A": {
+        const B = lowString; // dây bass theo hợp âm
+        return [B,3,2,3,1,3,2,3];
+      }
+      case "CUSTOM_B": {
+        const B = lowString;
+        return [B,3,2,1];
+      }
       case "UP":
         return up;
       case "DOWN":
@@ -90,7 +126,7 @@ export default function ArpeggioPage() {
   useEffect(() => () => stop(), []);
 
   const currentString = buildSequence[seqIdx] ?? 1;
-  const stringToFinger = useMemo(() => ({ 6: 5, 3: 1, 2: 2, 1: 3 }), []);
+  const stringToFinger = useMemo(() => ({ [lowString]: 5, 3: 1, 2: 2, 1: 3 }), [lowString]);
   const currentFinger = stringToFinger[currentString] ?? null;
 
   return (
@@ -116,31 +152,31 @@ export default function ArpeggioPage() {
                   <input className={styles.field} type="number" min="30" max="240" value={bpm} onChange={(e) => setBpm(parseInt(e.target.value || "0", 10))} />
                 </label>
                 <label className={styles.formLabel}>
-                  Subdivision
-                  <select className={styles.field} value={subdivision} onChange={(e) => setSubdivision(parseInt(e.target.value, 10))}>
-                    <option value={1}>Quarter</option>
-                    <option value={2}>8th</option>
-                    <option value={4}>16th</option>
+                  Tone
+                  <select className={styles.field} value={selectedTone} onChange={(e) => setSelectedTone(e.target.value)}>
+                    {Object.keys(toneChords).map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className={styles.formLabel}>
+                  Hợp âm
+                  <select className={styles.field} value={selectedChord} onChange={(e) => setSelectedChord(e.target.value)}>
+                    {(toneChords[selectedTone] || []).map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
                   </select>
                 </label>
                 <label className={styles.formLabel}>
                   Pattern
                   <select className={styles.field} value={pattern} onChange={(e) => setPattern(e.target.value)}>
-                    <option value="CUSTOM_A">6-3-2-3-1-3-2-3</option>
-                    <option value="CUSTOM_B">6-3-2-1</option>
+                    <option value="CUSTOM_A">B-3-2-3-1-3-2-3</option>
+                    <option value="CUSTOM_B">B-3-2-1</option>
                     <option value="UP">Lên (low→high)</option>
                     <option value="DOWN">Xuống (high→low)</option>
                     <option value="UP_DOWN">Lên rồi xuống</option>
                     <option value="INOUT">Trong–ngoài (ping‑pong)</option>
                   </select>
-                </label>
-                <label className={styles.formLabel}>
-                  Dây thấp nhất
-                  <input className={styles.field} type="number" min="1" max="6" value={highString} onChange={(e) => setHighString(parseInt(e.target.value || "1", 10))} />
-                </label>
-                <label className={styles.formLabel}>
-                  Dây cao nhất
-                  <input className={styles.field} type="number" min="1" max="6" value={lowString} onChange={(e) => setLowString(parseInt(e.target.value || "6", 10))} />
                 </label>
               </div>
 
