@@ -50,6 +50,17 @@
   stroke-width: 2;
 }
 
+.stringActive {
+  stroke-width: 4;
+  animation: stringPulse 0.25s ease-out 1;
+}
+
+@keyframes stringPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
 .string:first-child,
 .string:last-child {
   stroke-width: 3;
