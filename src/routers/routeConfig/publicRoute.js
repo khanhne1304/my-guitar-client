@@ -30,6 +30,7 @@ import RightHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePag
 import BothHandsPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/BothHandsPracticePage";
 import IndependencePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/IndependencePage";
 import LegatoPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPage";
+import LegatoPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPracticePage";
 import StretchShiftPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/StretchShiftPage";
 import BarrePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/BarrePage";
 import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/ArpeggioPage";
@@ -62,6 +63,7 @@ const publicRoutes = [
   { path: "/tools/finger-practice/left", element: <LeftHandPracticePage /> },
   { path: "/tools/finger-practice/left/independence", element: <IndependencePage /> },
   { path: "/tools/finger-practice/left/legato", element: <LegatoPage /> },
+  { path: "/tools/finger-practice/left/legato/practice/:lessonId", element: <LegatoPracticePage /> },
   { path: "/tools/finger-practice/left/stretch-shift", element: <StretchShiftPage /> },
   { path: "/tools/finger-practice/left/barre", element: <BarrePage /> },
   { path: "/tools/finger-practice/right", element: <RightHandPracticePage /> },

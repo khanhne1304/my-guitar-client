@@ -1,0 +1,12 @@
+.radarChart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.radarChart canvas {
+  max-width: 100%;
+  height: auto;
+}
+

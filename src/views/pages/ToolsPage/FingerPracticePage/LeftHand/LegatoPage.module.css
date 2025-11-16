@@ -1,0 +1,239 @@
+.legatoPage {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 40px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.backButton {
+  background: #000;
+  color: #ffd700;
+  border: 2px solid #000;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 32px;
+}
+
+.backButton:hover {
+  background: #333;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 16px;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.levelSection {
+  margin-bottom: 48px;
+}
+
+.levelTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #ffd700;
+}
+
+.lessonsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.lessonCard {
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lessonCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.lessonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.lessonTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+  flex: 1;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  font-size: 0.9rem;
+}
+
+.starFilled {
+  color: #ffd700;
+}
+
+.starEmpty {
+  color: #ddd;
+}
+
+.lessonDescription {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.detailedDescription {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #ffd700;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.detailHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000;
+  margin: 16px 0 8px 0;
+}
+
+.detailHeading:first-child {
+  margin-top: 0;
+}
+
+.detailText {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+.detailStep {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+  margin: 6px 0;
+  padding-left: 8px;
+}
+
+.detailBullet {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+  margin: 6px 0;
+  padding-left: 16px;
+  position: relative;
+}
+
+.detailBullet::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.lessonInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoLabel {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.infoValue {
+  font-size: 1rem;
+  color: #000;
+  font-weight: 700;
+}
+
+.startButton {
+  width: 100%;
+  padding: 14px 24px;
+  background: #ffd700;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.startButton:hover {
+  background: #ffed4e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.startButton:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+
+  .lessonsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .lessonCard {
+    padding: 20px;
+  }
+}
+
