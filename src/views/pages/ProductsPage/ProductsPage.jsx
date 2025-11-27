@@ -6,7 +6,7 @@ import CategoryGrid from '../../components/Catalog/CategoryGrid';
 import ProductGrid from '../../components/home/ProductGrid';
 import { useProductsViewModel } from '../../../viewmodels/ProductsViewModel';
 import { useMemo, useState, useEffect, Fragment } from 'react';
-
+import ChatWidget from "../../components/chat/ChatWidget";
 export default function ProductsPage() {
   const { products, categories, handleSelect, isFiltered, q, loading, err } = useProductsViewModel();
   const [sortBy, setSortBy] = useState('default');
@@ -204,6 +204,7 @@ export default function ProductsPage() {
       </main>
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
