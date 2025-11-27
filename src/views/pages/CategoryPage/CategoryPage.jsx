@@ -6,7 +6,7 @@ import Footer from '../../components/homeItem/Footer/Footer';
 import Breadcrumb from '../../components/Category/Breadcrumb';
 import Toolbar from '../../components/Category/Toolbar';
 import CategoryGrid from '../../components/Category/CategoryGrid';
-
+import ChatWidget from "../../components/chat/ChatWidget";
 import { useCategoryViewModel } from '../../../viewmodels/CategoryViewModel';
 
 export default function CategoryView() {
@@ -51,6 +51,7 @@ export default function CategoryView() {
       </main>
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
