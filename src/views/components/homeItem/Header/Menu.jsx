@@ -72,6 +72,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         <div className={styles.home__submenu}>
           <Link to="/tools/chord-practice">LUYỆN TẬP HỢP ÂM</Link>
           <Link to="/tools/finger-practice">LUYỆN TẬP NGÓN TAY</Link>
+          <Link to="/tools/ai-practice">LUYỆN TẬP VỚI AI</Link>
         </div>
       </div>
       <div className={styles.home__menuItem}>
