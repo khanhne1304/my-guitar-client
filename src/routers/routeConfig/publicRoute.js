@@ -36,6 +36,7 @@ import BarrePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/B
 import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/ArpeggioPage";
 import StrummingPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/StrummingPage";
 import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
+import ChatbotPage from "../../views/pages/ChatbotPage/ChatbotPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -76,6 +77,7 @@ const publicRoutes = [
   { path: "/songs/:slug", element: <SongDetails /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
+  { path: "/chatbot", element: <ChatbotPage /> },
 ];
 
 export default publicRoutes;
