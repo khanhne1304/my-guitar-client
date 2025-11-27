@@ -8,7 +8,7 @@ import Section from "../../components/home/Section";
 import ProductGrid from "../../components/home/ProductGrid";
 import { useHomeViewModel } from "../../../viewmodels/HomeViewModel";
 import { useCategory } from "../../../context/CategoryContext";
-
+import ChatWidget from "../../components/chat/ChatWidget";
 export default function HomePage() {
   const {
     products,
@@ -87,6 +87,7 @@ export default function HomePage() {
       </main>
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
