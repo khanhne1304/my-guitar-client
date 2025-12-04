@@ -11,6 +11,12 @@ export class CheckoutForm {
     this.district = '';
     this.method = 'cod';
     this.note = '';
+    this.visaCard = {
+      cardNumber: '',
+      cardHolder: '',
+      expiryDate: '',
+      cvv: '',
+    };
   }
 }
 
