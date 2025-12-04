@@ -27,9 +27,9 @@ import RhythmPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/Rh
 import FingerPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/FingerPracticePage";
 import LeftHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHandPracticePage";
 import RightHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/RightHandPracticePage";
-import BothHandsPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/BothHandsPracticePage";
 import IndependencePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/IndependencePage";
 import LegatoPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPage";
+import LegatoPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPracticePage";
 import StretchShiftPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/StretchShiftPage";
 import BarrePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/BarrePage";
 import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/ArpeggioPage";
@@ -64,12 +64,12 @@ const publicRoutes = [
   { path: "/tools/finger-practice/left", element: <LeftHandPracticePage /> },
   { path: "/tools/finger-practice/left/independence", element: <IndependencePage /> },
   { path: "/tools/finger-practice/left/legato", element: <LegatoPage /> },
+  { path: "/tools/finger-practice/left/legato/practice/:lessonId", element: <LegatoPracticePage /> },
   { path: "/tools/finger-practice/left/stretch-shift", element: <StretchShiftPage /> },
   { path: "/tools/finger-practice/left/barre", element: <BarrePage /> },
   { path: "/tools/finger-practice/right", element: <RightHandPracticePage /> },
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
-  { path: "/tools/finger-practice/both", element: <BothHandsPracticePage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/tools/ai-practice", element: <AIPracticePage /> },
   { path: "/admin/*", element: <AdminPage /> },

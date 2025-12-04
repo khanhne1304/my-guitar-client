@@ -1,0 +1,127 @@
+.tabDisplay {
+  width: 100%;
+}
+
+.noTab {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.tabContainer {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 20px 0;
+}
+
+.stringLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 40px;
+}
+
+.stringLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000;
+  width: 30px;
+  text-align: center;
+}
+
+.tabContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stringLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  min-height: 40px;
+}
+
+.fretNumbers {
+  display: flex;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.fretNumber {
+  font-size: 0.9rem;
+  color: #666;
+  width: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.stringNotes {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
+  position: relative;
+}
+
+.fretCell {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.note .fretNumber {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.technique {
+  font-size: 0.7rem;
+  color: #ffd700;
+  font-weight: 700;
+  background: #000;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .tabContainer {
+    gap: 8px;
+  }
+
+  .fretNumbers {
+    min-width: 150px;
+  }
+
+  .fretCell {
+    width: 24px;
+  }
+}
+

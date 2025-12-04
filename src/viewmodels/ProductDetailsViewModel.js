@@ -6,7 +6,7 @@ import { useProducts } from '../hooks/useProducts';
 import { usePrice } from '../hooks/usePrice';
 import { useRelatedProducts } from '../hooks/useRelatedProduct'; // ✅ Đổi sang file mới chuẩn API
 
-const FILE_BASE = import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
+const FILE_BASE = process.env.REACT_APP_FILE_BASE_URL || 'http://localhost:4000';
 const ensureAbsolute = (u) =>
   !u ? '' : /^https?:|^data:/.test(u) ? u : `${FILE_BASE}${u.startsWith('/') ? '' : '/'}${u}`;
 

@@ -5,7 +5,7 @@ import UpdateUserModal from "./UpdateUserModal";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { apiClient } from "../../../../services/apiClient";
 
-const API_BASE = import.meta?.env?.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:4000';
+const API_BASE = (process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api').replace('/api', '') || 'http://localhost:4000';
 
 export default function UserManager() {
   const [users, setUsers] = useState([]);
