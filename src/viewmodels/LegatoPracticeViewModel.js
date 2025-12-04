@@ -254,7 +254,7 @@ export default function useLegatoPracticeViewModel(lesson) {
       };
       
       // Call backend API for scoring
-      const apiUrl = import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
       const response = await fetch(`${apiUrl}/legato/analyze`, {
         method: 'POST',
         headers: {
@@ -398,7 +398,7 @@ export default function useLegatoPracticeViewModel(lesson) {
     }
     
     try {
-      const apiUrl = import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
       const response = await fetch(`${apiUrl}/legato/save`, {
         method: 'POST',
         headers: {
@@ -421,7 +421,7 @@ export default function useLegatoPracticeViewModel(lesson) {
     if (!user?.token) return;
     
     try {
-      const apiUrl = import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
       const response = await fetch(`${apiUrl}/legato/history?limit=20`, {
         headers: {
           'Authorization': `Bearer ${user.token}`

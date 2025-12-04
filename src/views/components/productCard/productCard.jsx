@@ -20,7 +20,7 @@ export default function ProductCard({
   onView,
 }) {
   const FILE_BASE =
-    import.meta?.env?.VITE_FILE_BASE_URL || 'http://localhost:4000';
+    process.env.REACT_APP_FILE_BASE_URL || 'http://localhost:4000';
 
   const ensureAbsolute = (u) => {
     if (!u) return '';

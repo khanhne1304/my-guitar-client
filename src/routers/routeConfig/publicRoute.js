@@ -27,7 +27,6 @@ import RhythmPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/Rh
 import FingerPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/FingerPracticePage";
 import LeftHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHandPracticePage";
 import RightHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/RightHandPracticePage";
-import BothHandsPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/BothHandsPracticePage";
 import IndependencePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/IndependencePage";
 import LegatoPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPage";
 import LegatoPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPracticePage";
@@ -71,7 +70,6 @@ const publicRoutes = [
   { path: "/tools/finger-practice/right", element: <RightHandPracticePage /> },
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
-  { path: "/tools/finger-practice/both", element: <BothHandsPracticePage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
   { path: "/tools/ai-practice", element: <AIPracticePage /> },
   { path: "/admin/*", element: <AdminPage /> },

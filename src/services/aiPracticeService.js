@@ -32,6 +32,17 @@ export const aiPracticeService = {
     const response = await apiClient.get(`/ai/practice/history${query}`);
     return response?.data;
   },
+
+  async fetchAudioFiles(params = {}) {
+    const search = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === undefined || value === null || value === '') return;
+      search.set(key, value);
+    });
+    const query = search.toString() ? `?${search.toString()}` : '';
+    const response = await apiClient.get(`/ai/practice/audios${query}`);
+    return response?.data;
+  },
 };
 
 export default aiPracticeService;

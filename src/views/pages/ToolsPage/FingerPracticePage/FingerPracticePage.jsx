@@ -47,12 +47,6 @@ export default function FingerPracticePage() {
       description: "Alternate/economy, tremolo, crossing, strumming",
       color: "#ffd700",
       to: "/tools/finger-practice/right"
-    },
-    {
-      title: "Phối hợp hai tay",
-      description: "Đồng bộ nốt, cross-string sync, polyrhythm",
-      color: "#ffd700",
-      to: "/tools/finger-practice/both"
     }
   ];
 

@@ -4,8 +4,8 @@ import { chatService } from "../../../services/chatService";
 import { Link } from "react-router-dom";
 
 export default function ChatWidget() {
-	const FACEBOOK_URL = import.meta?.env?.VITE_FACEBOOK_URL || "https://www.facebook.com/phan.le.chi.khanh";
-	const ZALO_URL = import.meta?.env?.VITE_ZALO_URL || " https://zalo.me/0901801325";
+	const FACEBOOK_URL = process.env.REACT_APP_FACEBOOK_URL || "https://www.facebook.com/phan.le.chi.khanh";
+	const ZALO_URL = process.env.REACT_APP_ZALO_URL || " https://zalo.me/0901801325";
 	const [open, setOpen] = useState(false);
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]); // [{ role: 'user'|'assistant', content: string, items?: [] }]

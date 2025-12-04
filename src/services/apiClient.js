@@ -2,7 +2,7 @@
 import { getToken } from '../utils/storage';
 
 const BASE_URL =
-  import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:4000/api';
+  process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
   
 async function request(path, { method = 'GET', headers = {}, body } = {}) {
   // 👇 Lấy token từ localStorage

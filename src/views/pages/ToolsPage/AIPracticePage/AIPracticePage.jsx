@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../../../components/homeItem/Header/Header";
 import styles from "./AIPracticePage.module.css";
 import { aiPracticeService } from "../../../../services/aiPracticeService";
+import AudioSelector from "./AudioSelector";
 
 const ALLOWED_TYPES = [
   "audio/mpeg",
@@ -54,6 +55,8 @@ export default function AIPracticePage() {
 
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [showAudioSelector, setShowAudioSelector] = useState(false);
+  const [selectedAudioFromList, setSelectedAudioFromList] = useState(null);
 
   const inputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -240,12 +243,38 @@ export default function AIPracticePage() {
     setAnalysis(null);
     setProgress(0);
     setIsAnalyzing(false);
+    setSelectedAudioFromList(null);
     if (isRecording) {
       stopRecording();
     }
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl("");
     if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const handleSelectAudioFromList = async (audio) => {
+    try {
+      setError("");
+      setAnalysis(null);
+      setProgress(0);
+      setSelectedAudioFromList(audio);
+
+      // Tải file từ Cloudinary URL
+      const response = await fetch(audio.cloudinaryUrl);
+      const blob = await response.blob();
+      const audioFile = new File([blob], audio.originalFilename || 'audio.webm', {
+        type: audio.metadata?.mimetype || 'audio/webm',
+      });
+
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      setFile(audioFile);
+      setShowAudioSelector(false);
+    } catch (err) {
+      setError("Không thể tải file audio từ server.");
+      console.error(err);
+    }
   };
 
   return (
@@ -294,10 +323,20 @@ export default function AIPracticePage() {
               >
                 {isRecording ? "Dừng thu âm" : "Thu âm bằng micro"}
               </button>
+              <button
+                className={styles.secondaryBtn}
+                type="button"
+                onClick={() => setShowAudioSelector(true)}
+                disabled={isAnalyzing}
+              >
+                Chọn từ danh sách đã upload
+              </button>
               <span className={styles.recordingHint}>
                 {isRecording
                   ? `Đang thu: ${new Date(recordingTime * 1000).toISOString().substr(14, 5)}`
-                  : "Thu trực tiếp nếu bạn không có file sẵn"}
+                  : selectedAudioFromList
+                  ? `Đã chọn: ${selectedAudioFromList.originalFilename}`
+                  : "Thu trực tiếp hoặc chọn từ danh sách"}
               </span>
             </div>
 
@@ -389,6 +428,14 @@ export default function AIPracticePage() {
           )}
         </div>
       </main>
+
+      {showAudioSelector && (
+        <AudioSelector
+          onSelectAudio={handleSelectAudioFromList}
+          selectedAudioId={selectedAudioFromList?.id}
+          onClose={() => setShowAudioSelector(false)}
+        />
+      )}
     </>
   );
 }
