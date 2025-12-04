@@ -8,10 +8,7 @@ export const STORES = [
     inventory: {
       "guitar-acoustic-yamaha-f310": 7,
       "guitar-electric-fender-stratocaster": 2,
-      "piano-digital-roland-fp30x": 1,
-      "piano-acoustic-kawai-gl10": 0,
       "guitar-acoustic-taylor-214ce": 4,
-      "piano-digital-yamaha-p125": 3,
     },
   },
   {
@@ -22,10 +19,7 @@ export const STORES = [
     inventory: {
       "guitar-acoustic-yamaha-f310": 3,
       "guitar-electric-fender-stratocaster": 0,
-      "piano-digital-roland-fp30x": 2,
-      "piano-acoustic-kawai-gl10": 1,
       "guitar-acoustic-taylor-214ce": 1,
-      "piano-digital-yamaha-p125": 0,
     },
   },
   {
@@ -36,10 +30,7 @@ export const STORES = [
     inventory: {
       "guitar-acoustic-yamaha-f310": 0,
       "guitar-electric-fender-stratocaster": 1,
-      "piano-digital-roland-fp30x": 0,
-      "piano-acoustic-kawai-gl10": 1,
       "guitar-acoustic-taylor-214ce": 2,
-      "piano-digital-yamaha-p125": 2,
     },
   },
 ];

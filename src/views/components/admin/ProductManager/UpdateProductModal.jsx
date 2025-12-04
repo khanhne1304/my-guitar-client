@@ -91,7 +91,6 @@ export default function UpdateProductModal({ isOpen, onClose, product, onSuccess
             <label>Loại sản phẩm *</label>
             <select name="type" value={formData.type} onChange={handleChange}>
               <option value="guitar">Guitar</option>
-              <option value="piano">Piano</option>
             </select>
           </div>
 

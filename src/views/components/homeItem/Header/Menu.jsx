@@ -55,18 +55,6 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         </button>
         {renderSubmenu("guitar", brands.guitar, loading.guitar)}
       </div>
-      <div
-        className={styles.home__menuItem}
-        onMouseEnter={() => loadBrandsFor("piano")}
-      >
-        <button 
-          className={styles.home__menuLink}
-          onClick={() => handleCategoryClick("piano")}
-        >
-          Piano
-        </button>
-        {renderSubmenu("piano", brands.piano, loading.piano)}
-      </div>
       <div className={styles.home__menuItem}>
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>

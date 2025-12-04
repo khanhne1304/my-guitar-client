@@ -49,7 +49,6 @@ export function useHeaderViewModel(products = []) {
 
   // ===== Brand menus (tách khỏi products để tránh chớp tắt) =====
   const [guitarBrands, setGuitarBrands] = useState([]); // [{name, slug}]
-  const [pianoBrands, setPianoBrands] = useState([]);   // [{name, slug}]
 
   useEffect(() => {
     let alive = true;
@@ -57,14 +56,10 @@ export function useHeaderViewModel(products = []) {
     (async () => {
       try {
         // Ưu tiên gọi API by-category (ổn định)
-        const [g, p] = await Promise.all([
-          fetchBrandsByCategoryFromAPI("guitar"),
-          fetchBrandsByCategoryFromAPI("piano"),
-        ]);
+        const g = await fetchBrandsByCategoryFromAPI("guitar");
 
         if (!alive) return;
         setGuitarBrands(Array.isArray(g) ? g : []);
-        setPianoBrands(Array.isArray(p) ? p : []);
       } catch {
         // Fallback: nếu API không khả dụng → suy từ products (nếu có)
         if (!alive) return;
@@ -75,15 +70,9 @@ export function useHeaderViewModel(products = []) {
             name: n,
             slug: n,
           }));
-          const piano = Array.from(grouped?.piano ?? []).map((n) => ({
-            name: n,
-            slug: n,
-          }));
           setGuitarBrands(guitar);
-          setPianoBrands(piano);
         } else {
           setGuitarBrands([]);
-          setPianoBrands([]);
         }
       }
     })();
@@ -146,7 +135,6 @@ export function useHeaderViewModel(products = []) {
       brandFilter,
       // Brand mảng object {name, slug}
       guitarBrands,
-      pianoBrands,
     },
     actions: {
       setKeyword,

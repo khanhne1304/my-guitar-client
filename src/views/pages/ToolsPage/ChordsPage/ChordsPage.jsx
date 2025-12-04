@@ -4,7 +4,6 @@ import Footer from "../../../components/homeItem/Footer/Footer";
 import { Link } from "react-router-dom";
 
 import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
-import PianoChordSVG from "../../../../assets/SVG/pianoChord/PianoChordSVG";
 import SpeakerIcon from "../../../../components/SpeakerIcon";
 import chordAudioPlayer from "../../../../utils/chordAudio";
 
@@ -47,7 +46,6 @@ export default function ChordsPage() {
                 className={styles.chords__select}
               >
                 <option value="Guitar">Guitar</option>
-                <option value="Piano">Piano</option>
               </select>
             </label>
 
@@ -85,14 +83,10 @@ export default function ChordsPage() {
                   className={styles.chords__link}
                 >
                   <div className={styles.chords__item}>
-                    {instrument === "Guitar" ? (
-                      <GuitarChordSVG chord={chord} />
-                    ) : (
-                      <PianoChordSVG chord={chord} />
-                    )}
+                    <GuitarChordSVG chord={chord} />
                     <div className={styles.chords__name}>{chord}</div>
                     <div className={styles.chords__detailHint}>
-                      {instrument === "Guitar" ? "👆 Xem chi tiết ngón tay" : "👆 Xem chi tiết"}
+                      👆 Xem chi tiết ngón tay
                     </div>
                   </div>
                 </Link>
