@@ -78,13 +78,36 @@
   margin-top: 12px;
   border-radius: 10px;
   overflow: hidden;
-  background: #000;
+  background: #f2f2f2;
+  padding: 12px;
 }
 
-.video {
+.audio {
   width: 100%;
-  max-height: 420px;
   display: block;
+}
+
+.recordingActions {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.secondaryBtn {
+  background: #fffef2;
+  border: 1px solid #ffd700;
+  color: #2d2d2d;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.recordingHint {
+  color: #555;
+  font-size: 14px;
 }
 
 .actions {
@@ -92,6 +115,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .primaryBtn {
@@ -120,9 +144,24 @@
 
 .disabled,
 .primaryBtn:disabled,
-.ghostBtn:disabled {
+.ghostBtn:disabled,
+.secondaryBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.saveToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #444;
+}
+
+.saveToggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: #ffd700;
 }
 
 .progressWrap {

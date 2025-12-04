@@ -1,33 +1,102 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../../../components/homeItem/Header/Header";
 import styles from "./AIPracticePage.module.css";
+import { aiPracticeService } from "../../../../services/aiPracticeService";
 
-const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg", "video/quicktime"]; // mp4, webm, ogg, mov
-const MAX_SIZE_MB = 500; // giới hạn kích thước file (MB)
+const ALLOWED_TYPES = [
+  "audio/mpeg",
+  "audio/wav",
+  "audio/webm",
+  "audio/ogg",
+  "audio/mp4",
+];
+const MAX_SIZE_MB = 200; // giới hạn kích thước file (MB)
+
+const LEVEL_LABELS = {
+  0: "Người mới",
+  1: "Trung cấp",
+  2: "Nâng cao",
+};
+
+const REGRESSION_LABELS = {
+  pitch_accuracy: "Độ chính xác cao độ",
+  timing_accuracy: "Độ chính xác nhịp",
+  timing_stability: "Độ ổn định nhịp",
+  tempo_deviation_percent: "Độ lệch tempo (%)",
+  chord_cleanliness_score: "Độ sạch hợp âm",
+  overall_score: "Điểm tổng quan",
+};
+
+const REGRESSION_MAX_SCORES = {
+  pitch_accuracy: 100,
+  timing_accuracy: 100,
+  timing_stability: 100,
+  tempo_deviation_percent: 100,
+  chord_cleanliness_score: 100,
+  overall_score: 100,
+};
+
+const formatNumber = (value, digits = 1) => {
+  if (value === null || value === undefined || Number.isNaN(value)) return "--";
+  return Number(value).toFixed(digits);
+};
 
 export default function AIPracticePage() {
   const [file, setFile] = useState(null);
-  const [videoUrl, setVideoUrl] = useState("");
+  const [audioUrl, setAudioUrl] = useState("");
   const [error, setError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [analysis, setAnalysis] = useState(null);
+  const [saveResult, setSaveResult] = useState(true);
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
 
   const inputRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordingIntervalRef = useRef(null);
+  const recordedChunksRef = useRef([]);
 
   useEffect(() => {
     return () => {
-      if (videoUrl) URL.revokeObjectURL(videoUrl);
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
-  }, [videoUrl]);
+  }, [audioUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+    };
+  }, []);
 
   const fileInfo = useMemo(() => {
     if (!file) return null;
     const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
     return { name: file.name, sizeMB, type: file.type };
   }, [file]);
+
+  const regressionEntries = useMemo(() => {
+    if (!analysis?.scores?.regression) return [];
+    return Object.keys(REGRESSION_LABELS)
+      .map((key) => [key, analysis.scores.regression[key]])
+      .filter(([, value]) => value !== undefined && value !== null);
+  }, [analysis]);
+
+  const overallScore = analysis?.scores?.regression?.overall_score ?? null;
+  const levelClass = analysis?.scores?.classification?.level_class;
+  const levelLabel =
+    levelClass === null || levelClass === undefined
+      ? "Chưa xác định"
+      : LEVEL_LABELS[levelClass] || `Level ${levelClass}`;
+  const classificationProbabilities = analysis?.scores?.classification?.probabilities ?? null;
 
   const onSelectFile = (incoming) => {
     setError("");
@@ -38,7 +107,7 @@ export default function AIPracticePage() {
     const isAllowed = ALLOWED_TYPES.includes(incoming.type);
     const sizeMB = incoming.size / (1024 * 1024);
     if (!isAllowed) {
-      setError("Định dạng không hỗ trợ. Vui lòng chọn MP4, WEBM, OGG hoặc MOV.");
+      setError("Định dạng không hỗ trợ. Vui lòng chọn MP3, WAV, WEBM, OGG hoặc M4A.");
       return;
     }
     if (sizeMB > MAX_SIZE_MB) {
@@ -46,9 +115,9 @@ export default function AIPracticePage() {
       return;
     }
 
-    if (videoUrl) URL.revokeObjectURL(videoUrl);
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
     const url = URL.createObjectURL(incoming);
-    setVideoUrl(url);
+    setAudioUrl(url);
     setFile(incoming);
   };
 
@@ -77,39 +146,92 @@ export default function AIPracticePage() {
     setIsDragging(false);
   };
 
-  const handleAnalyze = () => {
+  const startRecording = async () => {
+    if (isRecording) return;
+    if (!navigator?.mediaDevices?.getUserMedia) {
+      setError("Trình duyệt không hỗ trợ ghi âm trực tiếp.");
+      return;
+    }
+    try {
+      setError("");
+      setAnalysis(null);
+      setProgress(0);
+      recordedChunksRef.current = [];
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        const blob = new Blob(recordedChunksRef.current, { type: "audio/webm" });
+        const audioFile = new File([blob], `recording-${Date.now()}.webm`, { type: blob.type });
+        onSelectFile(audioFile);
+        setIsRecording(false);
+        setRecordingTime(0);
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current);
+          recordingIntervalRef.current = null;
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    } catch (err) {
+      setError("Không thể truy cập micro. Vui lòng kiểm tra quyền.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (!mediaRecorderRef.current) return;
+    if (mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    if (recordingIntervalRef.current) {
+      clearInterval(recordingIntervalRef.current);
+      recordingIntervalRef.current = null;
+    }
+  };
+
+  const handleAnalyze = async () => {
     if (!file || isAnalyzing) return;
+    setError("");
     setIsAnalyzing(true);
-    setProgress(0);
+    setProgress(5);
     setAnalysis(null);
 
-    // Giả lập tiến trình phân tích
-    const totalMs = 2000 + Math.random() * 1500;
-    const start = Date.now();
-    const tick = () => {
-      const elapsed = Date.now() - start;
-      const pct = Math.min(99, Math.floor((elapsed / totalMs) * 100));
-      setProgress(pct);
-      if (elapsed < totalMs) {
-        requestAnimationFrame(tick);
-      } else {
-        setProgress(100);
-        // Kết quả mẫu (mock)
-        setAnalysis({
-          skillLevel: "Trung cấp",
-          score: 72,
-          techniques: ["Strumming", "Arpeggio", "Hammer-on", "Pull-off"],
-          chords: ["C", "G", "Am", "F", "Dm7"],
-          insights: [
-            "Giữ nhịp ổn định, đôi lúc hơi nhanh ở cuối câu.",
-            "Âm bass rõ nhưng hợp âm đảo chưa đều.",
-            "Đổi hợp âm khá mượt, cần luyện thêm ở tốc độ cao.",
-          ],
-        });
-        setIsAnalyzing(false);
+    try {
+      setProgress(20);
+      const result = await aiPracticeService.uploadAudioClip({
+        file,
+        lessonId: "ai-practice-demo",
+        lessonTitle: "AI Practice Demo",
+        level: "intermediate",
+        saveResult,
+      });
+
+      if (!result?.scores) {
+        throw new Error("Máy chủ không trả về kết quả phân tích.");
       }
-    };
-    requestAnimationFrame(tick);
+
+      setProgress(90);
+      setAnalysis(result);
+      setProgress(100);
+    } catch (err) {
+      setError(err?.message || "Không thể phân tích âm thanh.");
+      setProgress(0);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const handleReset = () => {
@@ -118,8 +240,11 @@ export default function AIPracticePage() {
     setAnalysis(null);
     setProgress(0);
     setIsAnalyzing(false);
-    if (videoUrl) URL.revokeObjectURL(videoUrl);
-    setVideoUrl("");
+    if (isRecording) {
+      stopRecording();
+    }
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -130,8 +255,8 @@ export default function AIPracticePage() {
         <div className={styles.container}>
           <h1 className={styles.title}>Luyện tập với AI</h1>
           <p className={styles.subtitle}>
-            Tải lên video luyện tập từ máy tính. Hệ thống sẽ phân tích kỹ thuật, hợp âm
-            và đưa ra đánh giá trình độ. (Giao diện demo – AI sẽ được tích hợp sau)
+            Thu âm hoặc tải lên file âm thanh luyện tập. Hệ thống sẽ phân tích kỹ thuật, hợp
+            âm và đưa ra đánh giá trình độ. (Giao diện demo – AI sẽ được tích hợp sau)
           </p>
 
           <section
@@ -144,13 +269,13 @@ export default function AIPracticePage() {
               <input
                 ref={inputRef}
                 type="file"
-                accept="video/*"
+                accept="audio/*"
                 className={styles.hiddenInput}
                 onChange={handleFileInputChange}
               />
               <div className={styles.dropContent}>
-                <strong>Chọn hoặc kéo-thả video vào đây</strong>
-                <span>Hỗ trợ: MP4, WEBM, OGG, MOV • Tối đa {MAX_SIZE_MB} MB</span>
+                <strong>Chọn hoặc kéo-thả file âm thanh vào đây</strong>
+                <span>Hỗ trợ: MP3, WAV, WEBM, OGG, M4A • Tối đa {MAX_SIZE_MB} MB</span>
                 {fileInfo && (
                   <span className={styles.fileMeta}>
                     Đã chọn: {fileInfo.name} • {fileInfo.sizeMB} MB
@@ -161,14 +286,24 @@ export default function AIPracticePage() {
 
             {error && <div className={styles.error}>{error}</div>}
 
-            {videoUrl && (
+            <div className={styles.recordingActions}>
+              <button
+                className={styles.secondaryBtn}
+                type="button"
+                onClick={isRecording ? stopRecording : startRecording}
+              >
+                {isRecording ? "Dừng thu âm" : "Thu âm bằng micro"}
+              </button>
+              <span className={styles.recordingHint}>
+                {isRecording
+                  ? `Đang thu: ${new Date(recordingTime * 1000).toISOString().substr(14, 5)}`
+                  : "Thu trực tiếp nếu bạn không có file sẵn"}
+              </span>
+            </div>
+
+            {audioUrl && (
               <div className={styles.preview}>
-                <video
-                  className={styles.video}
-                  src={videoUrl}
-                  controls
-                  preload="metadata"
-                />
+                <audio className={styles.audio} src={audioUrl} controls preload="metadata" />
               </div>
             )}
 
@@ -178,7 +313,7 @@ export default function AIPracticePage() {
                 disabled={!file || isAnalyzing}
                 onClick={handleAnalyze}
               >
-                {isAnalyzing ? "Đang phân tích..." : "Phân tích video"}
+                {isAnalyzing ? "Đang phân tích..." : "Phân tích âm thanh"}
               </button>
               <button
                 className={styles.ghostBtn}
@@ -187,6 +322,15 @@ export default function AIPracticePage() {
               >
                 Làm mới
               </button>
+              <label className={styles.saveToggle}>
+                <input
+                  type="checkbox"
+                  checked={saveResult}
+                  onChange={(e) => setSaveResult(e.target.checked)}
+                  disabled={isAnalyzing}
+                />
+                Lưu kết quả vào lịch sử (cần đăng nhập)
+              </label>
             </div>
 
             {isAnalyzing && (
@@ -205,42 +349,41 @@ export default function AIPracticePage() {
                 <div className={styles.card}>
                   <h3>Đánh giá tổng quan</h3>
                   <div className={styles.scoreRow}>
-                    <div className={styles.scoreBadge}>{analysis.score}</div>
+                    <div className={styles.scoreBadge}>{formatNumber(overallScore ?? 0, 0)}</div>
                     <div>
-                      <div className={styles.level}>{analysis.skillLevel}</div>
+                      <div className={styles.level}>{levelLabel}</div>
                       <div className={styles.note}>
-                        Điểm số được ước lượng dựa trên: độ ổn định nhịp, độ sạch âm, đổi hợp âm, kiểm soát tay.
+                        File: {analysis.file?.originalname || analysis.metadata?.originalFilename || "Không xác định"}
+                      </div>
+                      <div className={styles.note}>
+                        Kích thước: {analysis.file?.size ? `${(analysis.file.size / (1024 * 1024)).toFixed(1)} MB` : "--"}
                       </div>
                     </div>
                   </div>
+                  {classificationProbabilities && (
+                    <div className={styles.tags} style={{ marginTop: 12 }}>
+                      {classificationProbabilities.map((prob, idx) => (
+                        <span key={idx} className={styles.tag}>
+                          {LEVEL_LABELS[idx] || `Level ${idx}`} • {(prob * 100).toFixed(1)}%
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className={styles.card}>
-                  <h3>Kỹ thuật phát hiện</h3>
-                  <div className={styles.tags}>
-                    {analysis.techniques.map((t) => (
-                      <span key={t} className={styles.tag}>{t}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.card}>
-                  <h3>Hợp âm sử dụng</h3>
-                  <div className={styles.tags}>
-                    {analysis.chords.map((c) => (
-                      <span key={c} className={`${styles.tag} ${styles.chord}`}>{c}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.card}>
-                  <h3>Gợi ý cải thiện</h3>
+                  <h3>Điểm mô hình</h3>
                   <ul className={styles.insights}>
-                    {analysis.insights.map((s, i) => (
-                      <li key={i}>{s}</li>
+                    {regressionEntries.map(([key, value]) => (
+                      <li key={key}>
+                        <strong>{REGRESSION_LABELS[key] || key}:</strong>{" "}
+                        {formatNumber(value, key === "tempo_deviation_percent" ? 2 : 1)} /{" "}
+                        {REGRESSION_MAX_SCORES[key] ?? 100}
+                      </li>
                     ))}
                   </ul>
                 </div>
+
               </div>
             </section>
           )}

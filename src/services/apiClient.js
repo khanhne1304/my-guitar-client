@@ -12,14 +12,20 @@ async function request(path, { method = 'GET', headers = {}, body } = {}) {
     ? { Authorization: `Bearer ${token}` }
     : {};
 
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
+
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       ...authHeaders, // 👈 Đính kèm token vào request
       ...headers,
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: body
+      ? isFormData
+        ? body
+        : JSON.stringify(body)
+      : undefined,
     credentials: 'include', // nếu bạn cần cookie cho cross-origin
   });
 
