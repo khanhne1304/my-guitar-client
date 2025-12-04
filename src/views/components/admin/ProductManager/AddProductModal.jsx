@@ -86,7 +86,6 @@ export default function AddProductModal({ onClose, onSuccess }) {
             <label>Loại sản phẩm *</label>
             <select value={type} onChange={(e) => setType(e.target.value)} required>
               <option value="guitar">Guitar</option>
-              <option value="piano">Piano</option>
             </select>
           </div>
 

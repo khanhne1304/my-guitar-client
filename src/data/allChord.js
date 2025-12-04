@@ -1,4 +1,4 @@
-// Tổng hợp toàn bộ hợp âm Guitar & Piano cơ bản
+// Tổng hợp toàn bộ hợp âm Guitar cơ bản
 export const guitarChords = {
     C: { frets: [0, 3, 2, 0, 1, 0] },
     Cm: { frets: ["x", 3, 5, 5, 4, 3], barre: { fromString: 5, toString: 1, fret: 3 } },
@@ -63,54 +63,6 @@ export const guitarChords = {
     "G#dim": { frets: ["x", "x", 6, 4, 3, 4] },
 };
 
-// Piano
-export const pianoChords = {
-    C: ["C", "E", "G"],
-    "Abm": ["G#", "B", "D#"],   // Abm = G#m
-    "Fdim": ["F", "G#", "B"],
-    "Cb": ["B", "D#", "F#"],    // enharmonic với B major
-    "Ab": ["G#", "C", "D#"],
-    "Gdim": ["G", "A#", "C#"],
-    "F#m": ["F#", "A", "C#"],
-    "G#m": ["G#", "B", "D#"],
-    "Edim": ["E", "G", "A#"],   // A# ≡ Bb
-    Cm: ["C", "D#", "G"],
-    D: ["D", "F#", "A"],
-    Dm: ["D", "F", "A"],
-    "Adim": ["A", "C", "D#"],
-    "Ddim": ["D", "F", "G#"],
-    "Cdim": ["C", "D#", "F#"],
-    "Dbm": ["C#", "E", "G#"],   // enharmonic Dbm = C#m
-    "Fb": ["E", "G#", "B"],     // Fb ≡ E
-    "Bbdim": ["A#", "C#", "E"], // Bb ≡ A#, Fb ≡ E
-    "D#": ["D#", "G", "A#"], Eb: ["D#", "G", "A#"],
-    E: ["E", "G#", "B"],
-    Em: ["E", "G", "B"],
-    F: ["F", "A", "C"],
-    Fm: ["F", "G#", "C"],
-    "F#": ["F#", "A#", "C#"], Gb: ["F#", "A#", "C#"],
-    G: ["G", "B", "D"],
-    Gm: ["G", "A#", "D"],
-    A: ["A", "C#", "E"],
-    Am: ["A", "C", "E"],
-    "A#": ["A#", "D", "F"], Bb: ["A#", "D", "F"],
-    "A#m": ["A#", "C#", "F"], Bbm: ["A#", "C#", "F"],
-    B: ["B", "D#", "F#"],
-    Bm: ["B", "D", "F#"],
-    "C#": ["C#", "F", "G#"], Db: ["C#", "F", "G#"],
-    "C#m": ["C#", "E", "G#"],
-    "D#m": ["D#", "F#", "A#"], Ebm: ["D#", "F#", "A#"],
-
-    // dim
-    "A#dim": ["A#", "C#", "E"],
-    "Bdim": ["B", "D", "F"],
-    "C#dim": ["C#", "E", "G"],
-    "D#dim": ["D#", "F#", "A"],
-    "E#dim": ["E#", "G#", "B"], // tương đương Fdim
-    "F#dim": ["F#", "A", "C"],
-    "G#dim": ["G#", "B", "D"],
-};
-
 // Helper: mở rộng các hợp âm 7 và slash A/B bằng alias về dạng cơ bản
 function extendSeventhAndSlash(dict) {
   const bases = Object.keys(dict);
@@ -133,4 +85,3 @@ function extendSeventhAndSlash(dict) {
 }
 
 export const extendedGuitarChords = extendSeventhAndSlash(guitarChords);
-export const extendedPianoChords = extendSeventhAndSlash(pianoChords);

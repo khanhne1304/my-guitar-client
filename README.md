@@ -105,7 +105,7 @@ Nhom16-Source_code/
 └── my-guitar-client/                 # Frontend người dùng (React + CRA + craco)
     ├── public/                       # Tài nguyên tĩnh (favicon, manifest, logo)
     ├── src/
-    │   ├── assets/                   # Ảnh/SVG (guitar/piano chord)
+    │   ├── assets/                   # Ảnh/SVG (guitar chord)
     │   ├── components/               # Component tái sử dụng (OTP, Notification, Practice, Guitar ảo)
     │   ├── Constants/                # Hằng số hiển thị (cover danh mục)
     │   ├── context/                  # React Context (Auth, Cart, Category, Favorites, Practice, Address)

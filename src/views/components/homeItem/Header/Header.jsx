@@ -37,7 +37,6 @@ export default function Header() {
   useEffect(() => {
     // Chỉ load một lần khi component mount
     loadBrandsFor("guitar");
-    loadBrandsFor("piano");
   }, []); // Bỏ dependency loadBrandsFor để tránh re-render
 
   // Search state
