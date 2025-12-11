@@ -130,7 +130,10 @@ export default function Footer() {
             <h5 className={styles.footer__chipTitle}>CÁCH THỨC THANH TOÁN</h5>
             <div className={styles.footer__chips}>
               <span className={styles.chip}>VISA</span>
+              <span className={styles.chip}>MasterCard</span>
               <span className={styles.chip}>COD</span>
+              <span className={styles.chip}>napas</span>
+              <span className={styles.chip}>123Pay</span>
             </div>
 
             <h5 className={styles.footer__chipTitle}>CHỨNG NHẬN</h5>

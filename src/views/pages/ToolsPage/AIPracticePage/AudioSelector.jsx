@@ -32,6 +32,7 @@ export default function AudioSelector({ onSelectAudio, selectedAudioId, onClose 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filterLesson, setFilterLesson] = useState('');
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     loadAudios();
@@ -43,9 +44,18 @@ export default function AudioSelector({ onSelectAudio, selectedAudioId, onClose 
       setError('');
       const params = {};
       if (filterLesson) params.lessonId = filterLesson;
+      
+      console.log('📋 Đang tải danh sách audio với params:', params);
       const result = await aiPracticeService.fetchAudioFiles({ ...params, includeMetadata: 'true' });
-      setAudios(result?.data?.audios || []);
+      console.log('📦 Response từ API:', result);
+      
+      // Response structure: { success: true, data: { audios: [...], count: ... } }
+      const audios = result?.data?.audios || result?.audios || [];
+      console.log(`✅ Tìm thấy ${audios.length} audio files`);
+      
+      setAudios(audios);
     } catch (err) {
+      console.error('❌ Lỗi khi tải danh sách audio:', err);
       setError(err?.message || 'Không thể tải danh sách audio.');
     } finally {
       setLoading(false);
@@ -58,6 +68,31 @@ export default function AudioSelector({ onSelectAudio, selectedAudioId, onClose 
     }
     if (onClose) {
       onClose();
+    }
+  };
+
+  const handleDelete = async (audioId, e) => {
+    e.stopPropagation();
+    
+    if (!window.confirm('Bạn có chắc chắn muốn xóa audio này? Hành động này không thể hoàn tác.')) {
+      return;
+    }
+
+    try {
+      setDeletingId(audioId);
+      setError('');
+      
+      console.log(`🗑️ Đang xóa audio ${audioId}`);
+      await aiPracticeService.deleteAudioFile(audioId);
+      console.log(`✅ Đã xóa audio ${audioId} thành công`);
+      
+      // Xóa audio khỏi danh sách
+      setAudios((prev) => prev.filter((audio) => audio.id !== audioId));
+    } catch (err) {
+      console.error('❌ Lỗi khi xóa audio:', err);
+      setError(err?.message || 'Không thể xóa audio.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -143,15 +178,25 @@ export default function AudioSelector({ onSelectAudio, selectedAudioId, onClose 
                     />
                   )}
                 </div>
-                <button
-                  className={styles.selectBtn}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelect(audio);
-                  }}
-                >
-                  Chọn
-                </button>
+                <div className={styles.actions}>
+                  <button
+                    className={styles.selectBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelect(audio);
+                    }}
+                  >
+                    Chọn
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={(e) => handleDelete(audio.id, e)}
+                    disabled={deletingId === audio.id}
+                    title="Xóa audio"
+                  >
+                    {deletingId === audio.id ? 'Đang xóa...' : '🗑️'}
+                  </button>
+                </div>
               </div>
             ))
           )}

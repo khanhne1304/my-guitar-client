@@ -8,6 +8,21 @@ function appendFormFields(formData, fields = {}) {
 }
 
 export const aiPracticeService = {
+  // Phân tích audio chỉ để tính điểm, không upload
+  async analyzeAudioClip({ file }) {
+    if (!file) {
+      throw new Error('File audio là bắt buộc.');
+    }
+    const formData = new FormData();
+    formData.append('audio', file);
+
+    const response = await apiClient.post('/ai/practice/analyze', formData, {
+      headers: {},
+    });
+    return response?.data;
+  },
+
+  // Upload audio lên Cloudinary và lưu kết quả
   async uploadAudioClip({ file, ...fields }) {
     if (!file) {
       throw new Error('File audio là bắt buộc.');
@@ -41,7 +56,17 @@ export const aiPracticeService = {
     });
     const query = search.toString() ? `?${search.toString()}` : '';
     const response = await apiClient.get(`/ai/practice/audios${query}`);
-    return response?.data;
+    // apiClient trả về { success: true, data: { audios: [...], count: ... } }
+    // Trả về response để component có thể truy cập cả success và data
+    return response;
+  },
+
+  async deleteAudioFile(audioId) {
+    if (!audioId) {
+      throw new Error('Audio ID là bắt buộc.');
+    }
+    const response = await apiClient.delete(`/ai/practice/audios/${audioId}`);
+    return response;
   },
 };
 

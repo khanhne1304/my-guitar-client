@@ -23,18 +23,52 @@ const REGRESSION_LABELS = {
   pitch_accuracy: "Độ chính xác cao độ",
   timing_accuracy: "Độ chính xác nhịp",
   timing_stability: "Độ ổn định nhịp",
-  tempo_deviation_percent: "Độ lệch tempo (%)",
+  tempo_deviation_percent: "Độ lệch tempo",
   chord_cleanliness_score: "Độ sạch hợp âm",
-  overall_score: "Điểm tổng quan",
+  overall_score: "Điểm tổng thể",
+};
+
+const REGRESSION_DESCRIPTIONS = {
+  pitch_accuracy: "Đánh giá mức độ chính xác về cao độ của các nốt nhạc được chơi",
+  timing_accuracy: "Đánh giá mức độ chính xác về thời điểm đánh các nốt nhạc",
+  timing_stability: "Đánh giá độ nhất quán về nhịp điệu trong suốt bài tập",
+  tempo_deviation_percent: "Đo lường mức độ biến thiên của tempo (phần trăm)",
+  chord_cleanliness_score: "Đánh giá chất lượng hợp âm (không buzz, đủ dây, không nhiễu)",
+  overall_score: "Điểm tổng hợp từ tất cả các tiêu chí",
 };
 
 const REGRESSION_MAX_SCORES = {
   pitch_accuracy: 100,
   timing_accuracy: 100,
   timing_stability: 100,
-  tempo_deviation_percent: 100,
+  tempo_deviation_percent: 15, // Phần trăm, không phải điểm
   chord_cleanliness_score: 100,
   overall_score: 100,
+};
+
+// Hàm lấy màu dựa trên điểm số
+const getScoreColor = (key, value) => {
+  if (key === "tempo_deviation_percent") {
+    // Với tempo deviation, giá trị càng thấp càng tốt
+    if (value <= 3) return "#4caf50"; // Xanh lá - rất tốt
+    if (value <= 7) return "#ff9800"; // Cam - trung bình
+    return "#f44336"; // Đỏ - cần cải thiện
+  }
+  
+  // Với các điểm số khác, giá trị càng cao càng tốt
+  if (value >= 80) return "#4caf50"; // Xanh lá - tốt
+  if (value >= 60) return "#ff9800"; // Cam - trung bình
+  return "#f44336"; // Đỏ - cần cải thiện
+};
+
+// Hàm tính phần trăm cho progress bar
+const getScorePercentage = (key, value) => {
+  const max = REGRESSION_MAX_SCORES[key] || 100;
+  if (key === "tempo_deviation_percent") {
+    // Với tempo deviation, đảo ngược: giá trị thấp = phần trăm cao
+    return Math.max(0, Math.min(100, ((max - value) / max) * 100));
+  }
+  return Math.max(0, Math.min(100, (value / max) * 100));
 };
 
 const formatNumber = (value, digits = 1) => {
@@ -49,9 +83,10 @@ export default function AIPracticePage() {
   const [isDragging, setIsDragging] = useState(false);
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [progress, setProgress] = useState(0);
   const [analysis, setAnalysis] = useState(null);
-  const [saveResult, setSaveResult] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
 
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -211,19 +246,29 @@ export default function AIPracticePage() {
     setIsAnalyzing(true);
     setProgress(5);
     setAnalysis(null);
+    setIsSaved(false);
 
     try {
       setProgress(20);
-      const result = await aiPracticeService.uploadAudioClip({
+      // Chỉ phân tích, không upload
+      const response = await aiPracticeService.analyzeAudioClip({
         file,
-        lessonId: "ai-practice-demo",
-        lessonTitle: "AI Practice Demo",
-        level: "intermediate",
-        saveResult,
       });
 
+      // Xử lý response từ backend (có thể là response.data hoặc response trực tiếp)
+      const result = response?.data || response;
+      
       if (!result?.scores) {
         throw new Error("Máy chủ không trả về kết quả phân tích.");
+      }
+
+      // Đảm bảo có đầy đủ regression scores và classification
+      if (!result.scores.regression) {
+        throw new Error("Thiếu dữ liệu đánh giá từ mô hình regression.");
+      }
+      
+      if (result.scores.classification === undefined) {
+        throw new Error("Thiếu dữ liệu phân loại từ mô hình classification.");
       }
 
       setProgress(90);
@@ -237,12 +282,47 @@ export default function AIPracticePage() {
     }
   };
 
+  const handleSaveResult = async () => {
+    if (!file || !analysis || isSaving || isSaved) return;
+    setError("");
+    setIsSaving(true);
+
+    try {
+      // Upload và lưu kết quả
+      const response = await aiPracticeService.uploadAudioClip({
+        file,
+        lessonId: "ai-practice-demo",
+        lessonTitle: "AI Practice Demo",
+        level: "intermediate",
+      });
+
+      const result = response?.data || response;
+      
+      if (result?.saved) {
+        setIsSaved(true);
+        // Cập nhật analysis với thông tin đã lưu
+        setAnalysis({
+          ...analysis,
+          saved: result.saved,
+        });
+      } else {
+        throw new Error("Không thể lưu kết quả.");
+      }
+    } catch (err) {
+      setError(err?.message || "Không thể lưu kết quả.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleReset = () => {
     setError("");
     setFile(null);
     setAnalysis(null);
     setProgress(0);
     setIsAnalyzing(false);
+    setIsSaving(false);
+    setIsSaved(false);
     setSelectedAudioFromList(null);
     if (isRecording) {
       stopRecording();
@@ -361,15 +441,6 @@ export default function AIPracticePage() {
               >
                 Làm mới
               </button>
-              <label className={styles.saveToggle}>
-                <input
-                  type="checkbox"
-                  checked={saveResult}
-                  onChange={(e) => setSaveResult(e.target.checked)}
-                  disabled={isAnalyzing}
-                />
-                Lưu kết quả vào lịch sử (cần đăng nhập)
-              </label>
             </div>
 
             {isAnalyzing && (
@@ -384,13 +455,48 @@ export default function AIPracticePage() {
 
           {analysis && (
             <section className={styles.results}>
+              {/* Nút lưu kết quả */}
+              {!isSaved && (
+                <div className={styles.saveResultBar}>
+                  <div className={styles.saveResultInfo}>
+                    <span>Kết quả phân tích chưa được lưu. Bạn có muốn lưu lại không?</span>
+                  </div>
+                  <button
+                    className={styles.saveBtn}
+                    onClick={handleSaveResult}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? "Đang lưu..." : "Lưu kết quả"}
+                  </button>
+                </div>
+              )}
+              {isSaved && (
+                <div className={styles.savedIndicator}>
+                  <span>✓ Đã lưu kết quả vào lịch sử</span>
+                </div>
+              )}
               <div className={styles.grid}>
+                {/* Card tổng quan */}
                 <div className={styles.card}>
                   <h3>Đánh giá tổng quan</h3>
                   <div className={styles.scoreRow}>
-                    <div className={styles.scoreBadge}>{formatNumber(overallScore ?? 0, 0)}</div>
+                    <div 
+                      className={styles.scoreBadge}
+                      style={{ 
+                        backgroundColor: getScoreColor("overall_score", overallScore ?? 0) + "20",
+                        color: getScoreColor("overall_score", overallScore ?? 0),
+                        borderColor: getScoreColor("overall_score", overallScore ?? 0)
+                      }}
+                    >
+                      {formatNumber(overallScore ?? 0, 0)}
+                    </div>
                     <div>
-                      <div className={styles.level}>{levelLabel}</div>
+                      <div 
+                        className={styles.level}
+                        style={{ color: getScoreColor("overall_score", overallScore ?? 0) }}
+                      >
+                        {levelLabel}
+                      </div>
                       <div className={styles.note}>
                         File: {analysis.file?.originalname || analysis.metadata?.originalFilename || "Không xác định"}
                       </div>
@@ -402,7 +508,14 @@ export default function AIPracticePage() {
                   {classificationProbabilities && (
                     <div className={styles.tags} style={{ marginTop: 12 }}>
                       {classificationProbabilities.map((prob, idx) => (
-                        <span key={idx} className={styles.tag}>
+                        <span 
+                          key={idx} 
+                          className={styles.tag}
+                          style={{
+                            backgroundColor: idx === levelClass ? getScoreColor("overall_score", overallScore ?? 0) + "20" : "#f5f5f5",
+                            color: idx === levelClass ? getScoreColor("overall_score", overallScore ?? 0) : "#666"
+                          }}
+                        >
                           {LEVEL_LABELS[idx] || `Level ${idx}`} • {(prob * 100).toFixed(1)}%
                         </span>
                       ))}
@@ -410,17 +523,68 @@ export default function AIPracticePage() {
                   )}
                 </div>
 
+                {/* Card chi tiết các tiêu chí */}
                 <div className={styles.card}>
-                  <h3>Điểm mô hình</h3>
-                  <ul className={styles.insights}>
-                    {regressionEntries.map(([key, value]) => (
-                      <li key={key}>
-                        <strong>{REGRESSION_LABELS[key] || key}:</strong>{" "}
-                        {formatNumber(value, key === "tempo_deviation_percent" ? 2 : 1)} /{" "}
-                        {REGRESSION_MAX_SCORES[key] ?? 100}
-                      </li>
-                    ))}
-                  </ul>
+                  <h3>Chi tiết đánh giá</h3>
+                  <div className={styles.scoreDetails}>
+                    {regressionEntries
+                      .filter(([key]) => key !== "overall_score") // Tách overall_score ra card riêng
+                      .map(([key, value]) => {
+                        const percentage = getScorePercentage(key, value);
+                        const color = getScoreColor(key, value);
+                        const isTempoDeviation = key === "tempo_deviation_percent";
+                        
+                        return (
+                          <div key={key} className={styles.scoreItem}>
+                            <div className={styles.scoreHeader}>
+                              <div className={styles.scoreTitle}>
+                                <strong>{REGRESSION_LABELS[key] || key}</strong>
+                                <span className={styles.scoreValue} style={{ color }}>
+                                  {isTempoDeviation 
+                                    ? `${formatNumber(value, 2)}%`
+                                    : `${formatNumber(value, 1)}/${REGRESSION_MAX_SCORES[key] ?? 100}`
+                                  }
+                                </span>
+                              </div>
+                              <div className={styles.scoreDescription}>
+                                {REGRESSION_DESCRIPTIONS[key] || ""}
+                              </div>
+                            </div>
+                            <div className={styles.progressBarContainer}>
+                              <div 
+                                className={styles.progressBarFill}
+                                style={{ 
+                                  width: `${percentage}%`,
+                                  backgroundColor: color
+                                }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+
+                {/* Card giải thích */}
+                <div className={styles.card}>
+                  <h3>Giải thích điểm số</h3>
+                  <div className={styles.explanation}>
+                    <div className={styles.explanationItem}>
+                      <span className={styles.explanationDot} style={{ backgroundColor: "#4caf50" }} />
+                      <span><strong>Tốt (80-100 điểm):</strong> Kỹ thuật tốt, cần duy trì</span>
+                    </div>
+                    <div className={styles.explanationItem}>
+                      <span className={styles.explanationDot} style={{ backgroundColor: "#ff9800" }} />
+                      <span><strong>Trung bình (60-79 điểm):</strong> Đạt cơ bản, cần luyện tập thêm</span>
+                    </div>
+                    <div className={styles.explanationItem}>
+                      <span className={styles.explanationDot} style={{ backgroundColor: "#f44336" }} />
+                      <span><strong>Cần cải thiện (&lt;60 điểm):</strong> Cần luyện tập nhiều hơn</span>
+                    </div>
+                    <div className={styles.explanationNote}>
+                      <strong>Lưu ý:</strong> Độ lệch tempo được đánh giá ngược lại (giá trị thấp = tốt)
+                    </div>
+                  </div>
                 </div>
 
               </div>

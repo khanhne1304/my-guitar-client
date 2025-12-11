@@ -52,7 +52,7 @@ export function useCheckoutViewModel() {
   const order = new CheckoutOrder({ orderId, subtotal, shipFee, total });
 
   // ===== PAYMENT =====
-  const payIsOnline = ['onpay-visa'].includes(form.method);
+  const payIsOnline = ['onpay-atm', 'onpay-visa'].includes(form.method);
   const [showQR, setShowQR] = useState(false);
   const [paid, setPaid] = useState(false);
 
@@ -168,40 +168,6 @@ export function useCheckoutViewModel() {
       return;
     }
 
-    // Validate Visa card info if payment method is Visa
-    if (form.method === 'onpay-visa') {
-      const { visaCard } = form;
-      if (!visaCard.cardNumber || !visaCard.cardHolder || !visaCard.expiryDate || !visaCard.cvv) {
-        alert('Vui lòng nhập đầy đủ thông tin thẻ Visa!');
-        return;
-      }
-      
-      // Validate card number (16 digits, starts with 4)
-      const cardNumber = visaCard.cardNumber.replace(/\s/g, '');
-      if (cardNumber.length !== 16 || !cardNumber.startsWith('4')) {
-        alert('Số thẻ Visa không hợp lệ!');
-        return;
-      }
-      
-      // Validate expiry date format
-      if (!/^\d{2}\/\d{2}$/.test(visaCard.expiryDate)) {
-        alert('Ngày hết hạn không hợp lệ!');
-        return;
-      }
-      
-      // Validate CVV (3 digits)
-      if (visaCard.cvv.length !== 3 || !/^\d+$/.test(visaCard.cvv)) {
-        alert('CVV không hợp lệ!');
-        return;
-      }
-      
-      // Validate card holder name
-      if (!visaCard.cardHolder.trim() || !/^[a-zA-ZÀ-ỹ\s]+$/.test(visaCard.cardHolder)) {
-        alert('Tên chủ thẻ không hợp lệ!');
-        return;
-      }
-    }
-
     // Validate payment
     if (payIsOnline) {
       if (!showQR) {
@@ -243,7 +209,6 @@ export function useCheckoutViewModel() {
       },
       payment: {
         method: form.method,
-        visaCard: form.method === 'onpay-visa' ? form.visaCard : undefined,
       },
       pricing: {
         total,

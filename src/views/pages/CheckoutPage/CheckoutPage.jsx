@@ -72,10 +72,6 @@ export default function CheckoutPage() {
                     vm.setPaid(false);
                     vm.setShowQR(false);
                   }}
-                  cardInfo={vm.form.visaCard}
-                  onCardInfoChange={(cardInfo) => {
-                    vm.setForm({ ...vm.form, visaCard: cardInfo });
-                  }}
                 />
               </div>
 
