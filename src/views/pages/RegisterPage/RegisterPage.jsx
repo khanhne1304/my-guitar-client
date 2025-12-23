@@ -6,6 +6,7 @@ import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
 import OTPModal from '../../../components/OTPModal/OTPModal';
 import { useRegisterViewModel } from '../../../viewmodels/AuthViewModel/RegisterViewModel';
+import { apiClient } from '../../../services/apiClient';
 
 export default function RegisterPage() {
   const {
@@ -29,6 +30,11 @@ export default function RegisterPage() {
     handleVerifyOTP,
     handleCloseOTPModal,
   } = useRegisterViewModel();
+
+  const onLoginWithFacebook = () => {
+    const startUrl = apiClient.ensureAbsolute('/api/auth/facebook?state=register');
+    window.location.href = startUrl;
+  };
 
   return (
     <div className={styles.registerPage}>
@@ -90,9 +96,9 @@ export default function RegisterPage() {
 
                 <div className={styles.register__social}>
                   <p className={styles.register__socialTitle}>Đăng ký bằng</p>
-                  <button type="button" className={`${styles.register__btnSocial} ${styles.facebook}`} disabled>
+                  <button type="button" className={`${styles.register__btnSocial} ${styles.facebook}`} onClick={onLoginWithFacebook}>
                     <FacebookIcon className={styles.register__icon} />
-                    <span>Facebook (sắp có)</span>
+                    <span>Đăng ký với Facebook</span>
                   </button>
                   <button type="button" className={`${styles.register__btnSocial} ${styles.google}`} disabled>
                     <GoogleIcon className={styles.register__icon} />

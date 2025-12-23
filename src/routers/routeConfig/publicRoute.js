@@ -38,10 +38,12 @@ import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/Pr
 import ChatbotPage from "../../views/pages/ChatbotPage/ChatbotPage";
 import CompareSongPage from "../../views/pages/ToolsPage/CompareSongPage/CompareSongPage";
 import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
+import AuthCallback from "../../views/pages/AuthCallback/AuthCallback";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
+  { path: "/auth/callback", element: <AuthCallback /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
   { path: "/products/:slug", element: <ProductDetails /> }, // chi tiết sản phẩm

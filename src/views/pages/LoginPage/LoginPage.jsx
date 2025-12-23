@@ -1,13 +1,29 @@
 // LoginPage.jsx
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import styles from './LoginPage.module.css';
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
 import { useLoginViewModel } from '../../../viewmodels/AuthViewModel/LoginViewModel';
+import { apiClient } from '../../../services/apiClient';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function LoginPage() {
   const { form, err, ok, loading, onChange, onSubmit } = useLoginViewModel();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // Nếu đã đăng nhập rồi mà vẫn vào trang /login, tự động chuyển về trang chủ
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+  const onLoginWithFacebook = () => {
+    const startUrl = apiClient.ensureAbsolute('/api/auth/facebook');
+    window.location.href = startUrl;
+  };
 
   return (
     <div className={styles.loginPage}>
@@ -64,10 +80,10 @@ export default function LoginPage() {
             <button
               type="button"
               className={`${styles.login__btnSocial} ${styles.facebook}`}
-              disabled
+              onClick={onLoginWithFacebook}
             >
               <FacebookIcon className={styles.login__icon} />
-              <span>Facebook (sắp có)</span>
+              <span>Đăng nhập với Facebook</span>
             </button>
             <button
               type="button"

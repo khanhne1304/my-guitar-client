@@ -5,7 +5,7 @@ import Footer from "../../../components/homeItem/Footer/Footer";
 import { useAccountEditViewModel } from "../../../../viewmodels/AccountEditViewModel";
 import { useState } from "react";
 export default function AccountEditPage() {
-    const { form, loading, saving, error, handleChange, handleSubmit, navigate } =
+    const { form, loading, saving, error, handleChange, handleSubmit, navigate, returnTo } =
         useAccountEditViewModel();
     const [showChangePassword, setShowChangePassword] = useState(false);
     if (loading) return <p className={styles.loading}>Đang tải...</p>;
@@ -45,27 +45,48 @@ export default function AccountEditPage() {
                         </div>
 
                         <div className={styles.actions}>
-                            <button
-                                type="button"
-                                className={styles.cancelBtn}
-                                onClick={() => navigate("/account")}
-                            >
-                                Hủy
-                            </button>
-                            <button
-                                type="submit"
-                                className={styles.submitBtn}
-                                disabled={saving}
-                            >
-                                {saving ? "Đang lưu..." : "Lưu thay đổi"}
-                            </button>
-                            <button
-                                type="button"
-                                className={styles.submitBtn}
-                                onClick={() => setShowChangePassword(true)}
-                            >
-                                Đổi mật khẩu
-                            </button>
+                            {returnTo !== "/account" ? (
+                                <>
+                                    <button
+                                        type="button"
+                                        className={styles.cancelBtn}
+                                        onClick={() => navigate(returnTo)}
+                                    >
+                                        Bỏ qua
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className={styles.submitBtn}
+                                        disabled={saving}
+                                    >
+                                        {saving ? "Đang lưu..." : "Lưu thay đổi"}
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        type="button"
+                                        className={styles.cancelBtn}
+                                        onClick={() => navigate("/account")}
+                                    >
+                                        Hủy
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className={styles.submitBtn}
+                                        disabled={saving}
+                                    >
+                                        {saving ? "Đang lưu..." : "Lưu thay đổi"}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={styles.submitBtn}
+                                        onClick={() => setShowChangePassword(true)}
+                                    >
+                                        Đổi mật khẩu
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </form>
                 </div>
