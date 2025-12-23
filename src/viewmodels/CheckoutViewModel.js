@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useDeliveryState } from '../hooks/useDeliveryState';
 import { useStoresEligibility } from '../hooks/useStoresEligibility';
-import { STORES } from '../../src/views/components/Data/stores';
+import { listStores } from '../services/storeService';
 import { getUser } from '../utils/storage';
 import { CheckoutForm, CheckoutOrder } from '../models/checkoutModel';
 import { checkoutOrderApi } from '../services/orderService';
@@ -32,10 +32,17 @@ export function useCheckoutViewModel() {
   const discount = useMemo(() => couponInfo?.discount || 0, [couponInfo]);
 
   // ===== STORE PICKUP =====
-  const { eligibleStores } = useStoresEligibility(cartItems, STORES);
+  const [stores, setStores] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const data = await listStores();
+      setStores(data || []);
+    })();
+  }, []);
+  const { eligibleStores } = useStoresEligibility(cartItems, stores);
   const [storeId, setStoreId] = useState('');
   const pickedStore = useMemo(
-    () => eligibleStores.find((s) => s.id === storeId),
+    () => eligibleStores.find((s) => (s._id || s.id) === storeId),
     [eligibleStores, storeId]
   );
 

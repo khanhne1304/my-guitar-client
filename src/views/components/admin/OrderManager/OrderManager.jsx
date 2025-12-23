@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { adminListOrdersApi } from "../../../../services/orderService";
 import styles from "./OrderManager.module.css";
 import UpdateOrderModal from "./UpdateOrderModal";
+import OrderDetailsModal from "./OrderDetailsModal";
 export default function OrderManager() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editOrder, setEditOrder] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [detailOrder, setDetailOrder] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const fetchOrders = async () => {
     try {
       setLoading(true);
@@ -25,6 +28,10 @@ export default function OrderManager() {
   const handleEdit = (o) => {
     setEditOrder(o);
     setShowEditModal(true);
+  };
+  const handleShowDetails = (o) => {
+    setDetailOrder(o);
+    setShowDetailModal(true);
   };
 
   return (
@@ -100,9 +107,9 @@ export default function OrderManager() {
                 <td>
                   <button
                     className={styles.editBtn}
-                    onClick={() => handleEdit(o)}
+                    onClick={() => handleShowDetails(o)}
                   >
-                    Chỉnh sửa
+                    Chi tiết đơn hàng
                   </button>
                 </td>
 
@@ -117,6 +124,21 @@ export default function OrderManager() {
           onClose={() => setShowEditModal(false)}
           order={editOrder}
           onSuccess={fetchOrders}
+        />
+      )}
+      {showDetailModal && (
+        <OrderDetailsModal
+          isOpen={showDetailModal}
+          onClose={() => setShowDetailModal(false)}
+          order={detailOrder}
+          onEdit={(ord) => {
+            // Đóng chi tiết trước, sau đó mới mở modal cập nhật để tránh chồng 2 modal
+            setShowDetailModal(false);
+            setTimeout(() => {
+              setEditOrder(ord);
+              setShowEditModal(true);
+            }, 0);
+          }}
         />
       )}
     </div>
