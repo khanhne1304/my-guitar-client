@@ -107,10 +107,17 @@ export function CartProvider({ children }) {
       console.log('Loading cart for authenticated user...');
       const data = await getMyCart(token);
       const serverItems = (data?.items || []).map(normalizeApiItem);
-      
-      // CHỈ load từ server, KHÔNG merge với local
-      setItems(serverItems);
-      setStoredCart(serverItems);
+
+      // Nếu server trả rỗng mà local đang có dữ liệu (vừa thêm, server chưa đồng bộ),
+      // thì giữ nguyên local để tránh "mất giỏ" sau F5.
+      const localSnapshot = getStoredCart() || [];
+      if (serverItems.length === 0 && localSnapshot.length > 0) {
+        console.log('Server cart empty, keep local snapshot to avoid losing cart on refresh.');
+      } else {
+        // Ưu tiên server nếu có dữ liệu
+        setItems(serverItems);
+        setStoredCart(serverItems);
+      }
       
       console.log('Loaded cart from server:', serverItems);
     } catch (e) {

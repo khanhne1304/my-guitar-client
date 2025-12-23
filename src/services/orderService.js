@@ -51,8 +51,8 @@ function mapCheckoutToOrderDoc(payload) {
     };
   } else if (payload?.shipping?.mode === 'pickup' && store) {
     shippingAddress = {
-      fullName: store.fullName || buyerName || '',
-      phone: buyerPhone || '',
+      fullName: store.name || store.fullName || buyerName || '',
+      phone: buyerPhone || store.phone || '',
       city: store.city || '',
       district: store.district || '',
       address: store.address || '',
