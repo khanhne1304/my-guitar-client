@@ -24,6 +24,10 @@ export default function LoginPage() {
     const startUrl = apiClient.ensureAbsolute('/api/auth/facebook');
     window.location.href = startUrl;
   };
+  const onLoginWithGoogle = () => {
+    const startUrl = apiClient.ensureAbsolute('/api/auth/google');
+    window.location.href = startUrl;
+  };
 
   return (
     <div className={styles.loginPage}>
@@ -88,10 +92,10 @@ export default function LoginPage() {
             <button
               type="button"
               className={`${styles.login__btnSocial} ${styles.google}`}
-              disabled
+              onClick={onLoginWithGoogle}
             >
               <GoogleIcon className={styles.login__icon} />
-              <span>Google (sắp có)</span>
+              <span>Đăng nhập với Google</span>
             </button>
 
             <div className={styles.login__footnote}>

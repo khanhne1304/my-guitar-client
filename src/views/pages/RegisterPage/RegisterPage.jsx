@@ -35,6 +35,10 @@ export default function RegisterPage() {
     const startUrl = apiClient.ensureAbsolute('/api/auth/facebook?state=register');
     window.location.href = startUrl;
   };
+  const onLoginWithGoogle = () => {
+    const startUrl = apiClient.ensureAbsolute('/api/auth/google?state=register');
+    window.location.href = startUrl;
+  };
 
   return (
     <div className={styles.registerPage}>
@@ -100,9 +104,9 @@ export default function RegisterPage() {
                     <FacebookIcon className={styles.register__icon} />
                     <span>Đăng ký với Facebook</span>
                   </button>
-                  <button type="button" className={`${styles.register__btnSocial} ${styles.google}`} disabled>
+                  <button type="button" className={`${styles.register__btnSocial} ${styles.google}`} onClick={onLoginWithGoogle}>
                     <GoogleIcon className={styles.register__icon} />
-                    <span>Google (sắp có)</span>
+                    <span>Đăng ký với Google</span>
                   </button>
                 </div>
               </>
