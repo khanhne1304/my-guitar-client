@@ -171,9 +171,10 @@ export default function CompareTwoSongsPage() {
         referenceSongId: selectedReferenceSong._id || selectedReferenceSong.id,
       });
 
+      // Service đã extract data từ response, nên response chính là data object
       const result = response?.data || response;
       
-      if (!result?.comparison) {
+      if (!result || !result.comparison) {
         throw new Error("Máy chủ không trả về kết quả đánh giá.");
       }
 
@@ -181,7 +182,9 @@ export default function CompareTwoSongsPage() {
       setComparison(result);
       setProgress(100);
     } catch (err) {
-      setError(err?.message || "Không thể đánh giá kỹ thuật chơi.");
+      console.error("❌ Lỗi khi so sánh bài hát:", err);
+      const errorMessage = err?.response?.data?.message || err?.message || "Không thể đánh giá kỹ thuật chơi. Vui lòng thử lại.";
+      setError(errorMessage);
       setProgress(0);
     } finally {
       setIsComparing(false);
