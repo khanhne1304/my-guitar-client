@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import styles from "./CheckOutHistory.module.css";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
-import { getMyOrdersApi } from "../../../services/orderService";
+import { getMyOrdersApi, confirmReceivedApi } from "../../../services/orderService";
 import OrderDetailsModal from "../../components/oderDetails/OrderDetailsModal";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 
 export default function CheckOutHistory() {
   const [orders, setOrders] = useState([]);
@@ -13,6 +15,9 @@ export default function CheckOutHistory() {
   const [modalOpen, setModalOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
+  const [confirmingOrderId, setConfirmingOrderId] = useState(null);
+  const toast = useToast();
+  const confirm = useConfirm();
 
   async function fetchOrders() {
     try {
@@ -39,6 +44,27 @@ export default function CheckOutHistory() {
   const handleCloseModal = () => {
     setSelectedOrder(null);
     setModalOpen(false);
+  };
+
+  const handleConfirmReceived = async (order, e) => {
+    e.stopPropagation(); // Ngăn mở modal khi click nút
+    if (!order || order.status !== 'delivered') return;
+    
+    const confirmed = await confirm.confirm('Bạn có chắc chắn đã nhận được hàng?');
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setConfirmingOrderId(order._id);
+      await confirmReceivedApi(order._id);
+      toast.success('Đã xác nhận nhận hàng thành công!');
+      fetchOrders(); // Refresh danh sách đơn hàng
+    } catch (err) {
+      toast.error(err.message || 'Không thể xác nhận nhận hàng');
+    } finally {
+      setConfirmingOrderId(null);
+    }
   };
 
   const getStatusLabel = (status) => {
@@ -150,6 +176,17 @@ export default function CheckOutHistory() {
                   </p>
                 )}
               </div>
+              {order.status === 'delivered' && (
+                <div className={styles.history__actions}>
+                  <button
+                    className={styles.confirmReceivedBtn}
+                    onClick={(e) => handleConfirmReceived(order, e)}
+                    disabled={confirmingOrderId === order._id}
+                  >
+                    {confirmingOrderId === order._id ? 'Đang xác nhận...' : '✓ Đã nhận được hàng'}
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -41,6 +41,7 @@ async function request(path, { method = 'GET', headers = {}, body } = {}) {
     const err = new Error(message);
     err.status = res.status;
     err.data = data;
+    err.response = { status: res.status, data };
     throw err;
   }
 

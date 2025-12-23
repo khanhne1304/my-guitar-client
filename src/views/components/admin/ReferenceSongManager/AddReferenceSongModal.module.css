@@ -1,0 +1,181 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form input,
+.form textarea,
+.form select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form input:focus,
+.form textarea:focus,
+.form select:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.fileLabel {
+  margin-bottom: 8px;
+}
+
+.dropzone {
+  border: 2px dashed #cfcfcf;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fefefe;
+}
+
+.dropzone:hover,
+.dropActive {
+  border-color: #ffd700;
+  background: #fffef2;
+}
+
+.dropContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropContent strong {
+  font-weight: 700;
+  color: #111;
+}
+
+.dropContent span {
+  font-size: 13px;
+  color: #666;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.audioWrapper {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.audioPreview {
+  width: 100%;
+  outline: none;
+  display: block;
+  height: 40px;
+}
+
+.audioPreview::-webkit-media-controls-panel {
+  background-color: #f5f5f5;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.half {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancelBtn,
+.submitBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.submitBtn {
+  background: #000;
+  color: #ffd700;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #333;
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
