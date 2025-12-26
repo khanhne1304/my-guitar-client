@@ -12,12 +12,12 @@ export default function PickupStoreList({ stores, cartItems, storeId, setStoreId
   return (
     <div className={styles['checkout__store-list']}>
       {stores.map((s) => (
-        <label key={s.id} className={styles['checkout__store-item']}>
+        <label key={s._id || s.id} className={styles['checkout__store-item']}>
           <input
             type="radio"
             name="store"
-            value={s.id}
-            checked={storeId === s.id}
+            value={s._id || s.id}
+            checked={storeId === (s._id || s.id)}
             onChange={(e) => setStoreId(e.target.value)}
           />
           <div className={styles['checkout__store-content']}>
@@ -27,7 +27,7 @@ export default function PickupStoreList({ stores, cartItems, storeId, setStoreId
             <div className={styles['checkout__store-stock']}>
               {cartItems.map((it) => (
                 <span key={it._id} className={styles['checkout__tag']}>
-                  {it.sku || it.name}: {s.inventory[it.slug] || 0} sp
+                  {it.sku || it.name}: {(s.inventory || {})[it.slug] || 0} sp
                 </span>
               ))}
             </div>

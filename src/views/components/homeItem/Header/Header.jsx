@@ -7,10 +7,13 @@ import Menu from "./Menu";
 import SearchBox from "./SearchBox";
 import AuthButtons from "./AuthButtons";
 import { useBrands } from "../../../../hooks/useBrands";
+import { useAuth } from "../../../../context/AuthContext";
+import { clearSession } from "../../../../utils/storage";
 
 export default function Header() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { logout } = useAuth();
 
   // User state
   const [user, setUser] = useState(null);
@@ -26,8 +29,9 @@ export default function Header() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // Xoá session lưu trữ và cập nhật AuthContext
+    clearSession();
+    logout();
     setUser(null);
     navigate("/login");
   };

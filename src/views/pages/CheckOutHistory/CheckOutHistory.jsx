@@ -165,9 +165,19 @@ export default function CheckOutHistory() {
                   <b>Thanh toán:</b> {order.paymentMethod}
                 </p>
                 {order?.shippingAddress && (
-                  <p>
-                    <b>Người nhận:</b> {order.shippingAddress.fullName} — {order.shippingAddress.phone}
-                  </p>
+                  (() => {
+                    const addr = order.shippingAddress || {};
+                    const isPickup = !addr.city && !addr.district;
+                    return isPickup ? (
+                      <p>
+                        <b>Địa chỉ cơ sở nhận:</b> {addr.address}
+                      </p>
+                    ) : (
+                      <p>
+                        <b>Người nhận:</b> {addr.fullName} — {addr.phone}
+                      </p>
+                    );
+                  })()
                 )}
                 {order.items?.length > 0 && (
                   <p className={styles.history__itemsPreview}>

@@ -14,12 +14,11 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  transition: transform 0.3s ease;
+  /* Bỏ hiệu ứng phóng to khi hover */
+  transition: none;
 }
 
-.productCard__media:hover img {
-  transform: scale(1.05);
-}
+/* Bỏ rule hover phóng to ảnh */
 
 .productCard__label {
   position: absolute;
@@ -61,6 +60,8 @@
   background: #3a3a3a;
   color: #fff;
   padding: 12px 14px;
+  /* Đảm bảo chiều cao đồng nhất giữa các thẻ */
+  min-height: 64px;
 }
 
 
@@ -70,7 +71,7 @@
   font-weight: 800;
   letter-spacing: .2px;
   font-size: 0.95rem;         /* ↓ giảm kích cỡ tên sản phẩm */
-  white-space: nowrap;
+  white-space: nowrap;         /* luôn 1 dòng */
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -80,7 +81,7 @@
   display: flex;
   gap: 8px;                   /* ↓ bớt khoảng cách giữa 2 giá */
   align-items: baseline;
-  white-space: nowrap;
+  white-space: nowrap;        /* tránh xuống dòng làm tăng chiều cao */
 }
 
 .productCard__price {

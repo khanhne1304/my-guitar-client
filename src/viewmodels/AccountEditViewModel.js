@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUserProfileApi, updateUserProfileApi } from "../services/userService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function useAccountEditViewModel() {
   const [form, setForm] = useState({
@@ -15,6 +15,9 @@ export function useAccountEditViewModel() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const returnTo = searchParams.get("returnTo") || "/account";
 
   useEffect(() => {
     (async () => {
@@ -48,7 +51,7 @@ export function useAccountEditViewModel() {
       setError("");
       // ✅ chỉ gửi đúng các field hồ sơ, không có password
       await updateUserProfileApi(form);
-      navigate("/account");
+      navigate(returnTo);
     } catch (err) {
       console.error("Lỗi cập nhật:", err);
       setError(err?.response?.data?.message || err.message || "Không thể cập nhật thông tin");
@@ -57,5 +60,5 @@ export function useAccountEditViewModel() {
     }
   };
 
-  return { form, setForm, loading, saving, error, handleChange, handleSubmit, navigate };
+  return { form, setForm, loading, saving, error, handleChange, handleSubmit, navigate, returnTo };
 }

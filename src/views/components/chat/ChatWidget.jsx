@@ -4,7 +4,8 @@ import { chatService } from "../../../services/chatService";
 import { Link } from "react-router-dom";
 
 export default function ChatWidget() {
-	const FACEBOOK_URL = process.env.REACT_APP_FACEBOOK_URL || "https://www.facebook.com/phan.le.chi.khanh";
+	const MESSENGER_PAGE = 911060482093579 || "phan.le.chi.khanh"; // page username hoặc ID
+	const MESSENGER_URL = `https://m.me/${MESSENGER_PAGE}`;
 	const ZALO_URL = process.env.REACT_APP_ZALO_URL || " https://zalo.me/0901801325";
 	const [open, setOpen] = useState(false);
 	const [message, setMessage] = useState("");
@@ -114,15 +115,15 @@ export default function ChatWidget() {
 			{/* Social floating buttons */}
 			<a
 				className={`${styles.socialFab} ${styles.fb}`}
-				href={FACEBOOK_URL}
+				href={MESSENGER_URL}
 				target="_blank"
 				rel="noopener noreferrer"
-				aria-label="Facebook"
-				title="Facebook"
+				aria-label="Messenger"
+				title="Messenger"
 			>
-				{/* 'f' icon */}
+				{/* Messenger icon */}
 				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
-					<path d="M22.675 0h-21.35C.595 0 0 .594 0 1.326v21.348C0 23.406.595 24 1.326 24h11.495v-9.294H9.691V11.01h3.13V8.414c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.765v2.314h3.59l-.467 3.696h-3.123V24h6.127C23.406 24 24 23.406 24 22.674V1.326C24 .594 23.406 0 22.675 0z"/>
+					<path d="M12 2C6.477 2 2 6.04 2 10.98c0 2.77 1.372 5.255 3.566 6.93V22l3.26-1.791c1.023.284 2.11.44 3.174.44 5.523 0 10-4.04 10-8.98S17.523 2 12 2Zm.33 6.55 2.88-1.81a.75.75 0 0 1 .98 1.102l-2.35 3.101a1.5 1.5 0 0 1-2.1.33l-1.21-.86a.75.75 0 0 0-.88.01l-2.88 1.81a.75.75 0 0 1-.98-1.102l2.35-3.101a1.5 1.5 0 0 1 2.1-.33l1.21.86a.75.75 0 0 0 .88-.01Z"/>
 				</svg>
 			</a>
 			<a
