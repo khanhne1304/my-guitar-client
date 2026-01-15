@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../../../components/homeItem/Header/Header";
+import Footer from "../../../../components/homeItem/Footer/Footer";
 import useLegatoPracticeViewModel from "../../../../../viewmodels/LegatoPracticeViewModel";
 import TabDisplay from "./components/TabDisplay";
 import MetronomeControls from "./components/MetronomeControls";
@@ -166,6 +167,7 @@ export default function LegatoPracticePage() {
           />
         )}
       </main>
+      <Footer />
     </>
   );
 }

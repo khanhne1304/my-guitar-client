@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../../../components/homeItem/Header/Header";
+import Footer from "../../../components/homeItem/Footer/Footer";
 import styles from "./CompareTwoSongsPage.module.css";
 import { compareSongService } from "../../../../services/compareSongService";
 import { referenceSongService } from "../../../../services/referenceSongService";
@@ -542,6 +543,7 @@ export default function CompareTwoSongsPage() {
           )}
         </div>
       </main>
+      <Footer />
     </>
   );
 }

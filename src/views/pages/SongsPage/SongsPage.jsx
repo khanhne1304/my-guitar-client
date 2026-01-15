@@ -1,6 +1,7 @@
 import SongHeader from "../../components/song/songHeader/songHeader";
 import SongContent from "../../components/song/songContent/SongContent";
 import { useSongsPageViewModel } from "../../../viewmodels/SongsPageViewModel";
+import Footer from "../../components/homeItem/Footer/Footer";
 
 export default function SongsPage({ items }) {
   const { state, actions } = useSongsPageViewModel(items);
@@ -11,6 +12,7 @@ export default function SongsPage({ items }) {
     <>
       <SongHeader q={q} setQ={setQ} />
       <SongContent loading={loading} error={error} filtered={filtered} />
+      <Footer />
     </>
   );
 }

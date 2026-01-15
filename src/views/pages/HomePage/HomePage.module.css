@@ -192,3 +192,135 @@
   color: #333;
   padding: 0 12px;
 }
+
+/* === Promo Banner (marquee) === */
+.home__promoBanner {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  color: #ffd700;
+  border-radius: 10px;
+  padding: 10px 0;
+  margin-bottom: 28px;
+}
+.home__promoTrack {
+  display: inline-flex;
+  gap: 28px;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+  animation: homePromoScroll 22s linear infinite;
+  padding-left: 100%;
+}
+.home__promoBanner:hover .home__promoTrack {
+  animation-play-state: paused;
+}
+.home__promoItem {
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+.home__promoSeparator {
+  color: #ffd700;
+  opacity: 0.5;
+}
+@keyframes homePromoScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home__promoTrack {
+    animation: none;
+    transform: none;
+    padding-left: 0;
+  }
+}
+
+/* === Carousel (Hero) === */
+.home__carousel {
+  position: relative;
+  margin-bottom: 28px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+.home__carouselViewport {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: #000;
+}
+.home__carouselSlide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.home__carouselSlideActive {
+  opacity: 1;
+}
+.home__carouselImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.home__carouselArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  border: none;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: #fff;
+  font-weight: 800;
+  font-size: 32px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  z-index: 2;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+.home__carouselArrow:hover {
+  background: transparent;
+}
+.home__carouselArrowLeft {
+  left: 12px;
+}
+.home__carouselArrowRight {
+  right: 12px;
+}
+.home__carouselIndicators {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+.home__carouselDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.6);
+  border: none;
+  cursor: pointer;
+}
+.home__carouselDotActive {
+  background: #ffd700;
+}
+
+@media (max-width: 640px) {
+  .home__carouselViewport {
+    height: 300px;
+  }
+}

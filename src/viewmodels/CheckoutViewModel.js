@@ -63,9 +63,15 @@ export function useCheckoutViewModel() {
   const [showQR, setShowQR] = useState(false);
   const [paid, setPaid] = useState(false);
 
-  const orderInfo = `Thanh toan don ${order.orderId}`;
+  const methodLabel =
+    form.method === 'onpay-atm'
+      ? 'VNPay ATM'
+      : form.method === 'onpay-visa'
+      ? 'VNPay VISA/Master'
+      : 'VNPay';
+  const orderInfo = `Thanh toan ${methodLabel} ${order.orderId}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
-    `VNPAY|ORDER=${order.orderId}|AMOUNT=${order.total}|INFO=${orderInfo}`
+    `VNPAY|ORDER=${order.orderId}|AMOUNT=${order.total}|METHOD=${methodLabel}|INFO=${orderInfo}`
   )}`;
 
   // ===== SUCCESS MODAL STATE =====

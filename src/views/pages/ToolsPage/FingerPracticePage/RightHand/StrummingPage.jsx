@@ -1,4 +1,5 @@
 import Header from "../../../../components/homeItem/Header/Header";
+import Footer from "../../../../components/homeItem/Footer/Footer";
 import styles from "../../ChordPracticePage/ChordPracticeDetailPage.module.css";
 
 export default function StrummingPage() {
@@ -11,6 +12,7 @@ export default function StrummingPage() {
           <p className={styles.description}>Strumming theo pattern và nhịp. Nội dung sẽ được bổ sung.</p>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

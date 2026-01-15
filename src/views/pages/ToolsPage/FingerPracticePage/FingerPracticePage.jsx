@@ -1,4 +1,5 @@
 import Header from "../../../components/homeItem/Header/Header";
+import Footer from "../../../components/homeItem/Footer/Footer";
 import PracticeCard from "../../../../components/practice/PracticeCard/PracticeCard";
 import { useAuth } from "../../../../context/AuthContext";
 import { useEffect } from "react";
@@ -31,6 +32,7 @@ export default function FingerPracticePage() {
             </div>
           </div>
         </main>
+        <Footer />
       </>
     );
   }
@@ -74,6 +76,7 @@ export default function FingerPracticePage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

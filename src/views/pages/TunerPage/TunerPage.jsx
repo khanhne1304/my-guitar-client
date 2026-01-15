@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/homeItem/Header/Header";
+import Footer from "../../components/homeItem/Footer/Footer";
 import { useTunerViewModel } from "../../../viewmodels/TunerViewModel";
 import TunerDisplay from "../../components/tuner/TunerDisplay/TunerDisplay";
 import styles from "./TunerPage.module.css";
@@ -33,6 +34,7 @@ export default function TunerPage() {
           setSelectedString={setSelectedString}
         />
       </main>
+      <Footer />
     </>
   );
 }

@@ -7,6 +7,8 @@ import { createFingerMapping } from '../../utils/fingerMapping';
 import VirtualGuitarNeck from '../../components/VirtualGuitarNeck';
 import VirtualHand from '../../components/VirtualHand';
 import GuitarChordSVG from '../../assets/SVG/guiarChord/GuitarChordSVG';
+import Header from '../components/homeItem/Header/Header';
+import Footer from '../components/homeItem/Footer/Footer';
 import styles from './ChordDetailPage.module.css';
 
 const ChordDetailPage = () => {
@@ -161,6 +163,8 @@ const ChordDetailPage = () => {
   const chordInfo = getChordInfo();
 
   return (
+    <>
+    <Header />
     <div className={styles.chordDetailPage} data-scroll-top>
       <div className={styles.header}>
         <button onClick={() => navigate('/tools/chords')} className={styles.backButton}>
@@ -266,6 +270,8 @@ const ChordDetailPage = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

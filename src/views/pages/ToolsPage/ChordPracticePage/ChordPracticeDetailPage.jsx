@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../../../components/homeItem/Header/Header";
+import Footer from "../../../components/homeItem/Footer/Footer";
 import { usePractice } from "../../../../context/PracticeContext";
 import { useAuth } from "../../../../context/AuthContext";
 import { toneChords } from "../../../../data/toneChords";
@@ -176,6 +177,7 @@ export default function ChordPracticeDetailPage() {
         chordName={selectedChord}
         onSuccess={handlePracticeSuccess}
       />
+      <Footer />
     </>
   );
 }

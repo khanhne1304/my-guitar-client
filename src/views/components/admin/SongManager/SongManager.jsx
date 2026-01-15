@@ -10,6 +10,8 @@ export default function SongManager() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editSong, setEditSong] = useState(null); // song đang được chỉnh sửa
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const [styleFilter, setStyleFilter] = useState("all");
 
   async function fetchSongs() {
     try {
@@ -43,6 +45,26 @@ export default function SongManager() {
     }
   };
 
+  const uniqueStyles = Array.from(
+    new Set((songs || []).map((s) => s.styleLabel).filter(Boolean))
+  );
+
+  const visibleSongs = songs.filter((s) => {
+    const query = q.trim().toLowerCase();
+    const matchesQ =
+      !query ||
+      (s.title || "").toLowerCase().includes(query) ||
+      (Array.isArray(s.artists) &&
+        s.artists.join(", ").toLowerCase().includes(query));
+
+    const matchesStyle =
+      styleFilter === "all" ||
+      (s.styleLabel || "").toString().toLowerCase() ===
+        styleFilter.toLowerCase();
+
+    return matchesQ && matchesStyle;
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -55,9 +77,32 @@ export default function SongManager() {
         </button>
       </div>
 
+      {/* Filters */}
+      <div className={styles.filters}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Tìm theo tên bài hát hoặc nghệ sĩ..."
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        <select
+          className={styles.select}
+          value={styleFilter}
+          onChange={(e) => setStyleFilter(e.target.value)}
+        >
+          <option value="all">Tất cả thể loại</option>
+          {uniqueStyles.map((st) => (
+            <option key={st} value={st}>
+              {st}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {loading ? (
         <p className={styles.loading}>Đang tải...</p>
-      ) : songs.length === 0 ? (
+      ) : visibleSongs.length === 0 ? (
         <div className={styles.empty}>Chưa có bài hát nào.</div>
       ) : (
         <table className={styles.table}>
@@ -73,7 +118,7 @@ export default function SongManager() {
             </tr>
           </thead>
           <tbody>
-            {songs.map((s) => (
+            {visibleSongs.map((s) => (
               <tr key={s._id}>
                 <td>{s.title}</td>
                 <td>{s.artists?.join(", ")}</td>
