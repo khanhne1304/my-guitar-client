@@ -16,11 +16,7 @@ export default function Logo() {
 
   return (
     <div className={styles.home__logo} onClick={handleLogoClick}>
-      <img 
-        src={logo} 
-        alt="MyMusic Logo" 
-        className={styles.logo__image} 
-      />
+      <img src={logo} alt="MyMusic Logo" className={styles.logo__image} />
     </div>
   );
 }

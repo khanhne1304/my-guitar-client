@@ -59,14 +59,14 @@ export default function AdminSidebar() {
           >
             Quản lý bài hát
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/admin/reference-songs"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.active : ""}`
             }
           >
             Bài hát gốc (so sánh)
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to="/admin/orders"
             className={({ isActive }) =>

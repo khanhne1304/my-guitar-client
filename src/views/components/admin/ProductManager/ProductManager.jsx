@@ -62,10 +62,9 @@ export default function ProductManager() {
       (stockFilter === "in" && isInStock) ||
       (stockFilter === "out" && !isInStock);
 
-    const cat =
-      (p.attributes?.type || p.category?.slug || p.category || "")
-        .toString()
-        .toLowerCase();
+    const cat = (p.attributes?.type || p.category?.slug || p.category || "")
+      .toString()
+      .toLowerCase();
     const matchesCategory =
       categoryFilter === "all" || cat === categoryFilter.toLowerCase();
 
@@ -79,35 +78,6 @@ export default function ProductManager() {
         <button className={styles.addBtn} onClick={() => setShowModal(true)}>
           + Thêm sản phẩm
         </button>
-      </div>
-
-      {/* Filters */}
-      <div className={styles.filters}>
-        <input
-          className={styles.searchInput}
-          type="text"
-          placeholder="Tìm theo tên hoặc SKU..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <select
-          className={styles.select}
-          value={stockFilter}
-          onChange={(e) => setStockFilter(e.target.value)}
-        >
-          <option value="all">Tất cả tồn kho</option>
-          <option value="in">Còn hàng</option>
-          <option value="out">Hết hàng</option>
-        </select>
-        <select
-          className={styles.select}
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
-          <option value="all">Tất cả danh mục</option>
-          <option value="guitar">Guitar</option>
-          <option value="piano">Piano</option>
-        </select>
       </div>
 
       {loading ? (
@@ -146,7 +116,13 @@ export default function ProductManager() {
                 <td>
                   {p.price?.sale ? (
                     <>
-                      <span style={{ textDecoration: "line-through", color: "#888", marginRight: "4px" }}>
+                      <span
+                        style={{
+                          textDecoration: "line-through",
+                          color: "#888",
+                          marginRight: "4px",
+                        }}
+                      >
                         {p.price.base.toLocaleString("vi-VN")}₫
                       </span>
                       <span style={{ color: "#b91c1c", fontWeight: 700 }}>
@@ -177,8 +153,6 @@ export default function ProductManager() {
                     Xóa
                   </button>
                 </td>
-
-
               </tr>
             ))}
           </tbody>

@@ -9,6 +9,11 @@ export function useTunerViewModel() {
   const [error, setError] = useState("");
   const [tunerMode, setTunerMode] = useState("auto"); // "auto" hoặc "manual"
   const [selectedString, setSelectedString] = useState("E2");
+  
+  // Đồng bộ ref với state
+  useEffect(() => {
+    selectedStringRef.current = selectedString;
+  }, [selectedString]);
 
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
@@ -31,6 +36,8 @@ export function useTunerViewModel() {
   const lastLogAtRef = useRef(0);
   // Thời gian người dùng giữ đúng tông
   const inTuneSinceRef = useRef(null);
+  // Ref để tránh stale closure trong loop
+  const selectedStringRef = useRef("E2");
 
   // Thời gian yêu cầu phải giữ đúng tông để phát beep (ms)
   const IN_TUNE_REQUIRED_MS = 3000; // 3 giây
@@ -110,6 +117,11 @@ export function useTunerViewModel() {
 
   const loop = useCallback(() => {
     if (!analyserRef.current || !bufferRef.current) return;
+    
+    // Kiểm tra audioContext trước khi sử dụng
+    const ctx = audioContextRef.current;
+    if (!ctx) return;
+    
     analyserRef.current.getFloatTimeDomainData(bufferRef.current);
 
     // RMS
@@ -119,7 +131,6 @@ export function useTunerViewModel() {
     r = Math.sqrt(r / buf.length);
     setRms(r);
 
-    const ctx = audioContextRef.current;
     const pitchResult = hpsPitchDetection(buf, ctx.sampleRate);
 
     if (pitchResult && pitchResult.freq) {
@@ -166,58 +177,100 @@ export function useTunerViewModel() {
           stableCountRef.current++;
         }
 
-        if (stableCountRef.current >= MIN_STABLE_COUNT) {
+        // Cho phép cập nhật UI ngay cả khi chưa đủ stable nếu detect nốt mới khác
+        const shouldUpdate = stableCountRef.current >= MIN_STABLE_COUNT;
+        
+        if (shouldUpdate || (smoothed >= 70 && smoothed <= 500 && pitchHistory.current.length >= 3)) {
           if (smoothed >= 70 && smoothed <= 500) {
             if (tunerMode === "auto") {
               const { note, targetFreq, cents } = findClosestNote(smoothed);
+              
+              // Kiểm tra xem có phải nốt mới không
+              const isNewNoteDetected = currentNoteRef.current && note !== currentNoteRef.current;
+              
+              // Nếu detect nốt mới khác hoàn toàn và có đủ dữ liệu, cho phép cập nhật sớm
+              const allowEarlyUpdate = isNewNoteDetected && 
+                confidence >= MIN_CONFIDENCE &&
+                stableCountRef.current >= 1; // Chỉ cần 1 lần stable thay vì 2
+              
+              // Chỉ cập nhật nếu đủ stable hoặc detect nốt mới rõ ràng
+              if (shouldUpdate || allowEarlyUpdate) {
+                const HYSTERESIS_CENTS = 10; // Giảm từ 20 xuống 10 để phản ứng nhanh hơn
+                const lastNote = currentNoteRef.current;
+                let finalNote = note;
+                let finalTarget = targetFreq;
+                let finalCents = cents;
+                let isStable = shouldUpdate; // Chỉ đánh dấu stable khi đủ điều kiện
 
-              const HYSTERESIS_CENTS = 20;
-              const lastNote = currentNoteRef.current;
-              let finalNote = note;
-              let finalTarget = targetFreq;
-              let finalCents = cents;
-
-              if (lastNote && lastNote !== note && Math.abs(cents) < HYSTERESIS_CENTS) {
-                finalNote = lastNote;
-                finalTarget = getTargetFrequency(lastNote) || targetFreq;
-                finalCents = 1200 * Math.log2(smoothed / finalTarget);
-              }
-
-              const DEADZONE_CENTS = 10;
-              if (Math.abs(finalCents) < DEADZONE_CENTS) {
-                finalCents = 0;
-
-                // 🕒 Nếu bắt đầu đúng tông → lưu thời điểm
-                if (!inTuneSinceRef.current) {
-                  inTuneSinceRef.current = performance.now();
-                } else {
-                  const elapsed = performance.now() - inTuneSinceRef.current;
-                  if (elapsed >= IN_TUNE_REQUIRED_MS) {
-                    playBeep();
-                    inTuneSinceRef.current = null; // reset để không kêu liên tục
+                // Chỉ áp dụng hysteresis khi nốt mới và nốt cũ rất gần nhau (trong vùng ranh giới)
+                // Nếu nốt mới khác hoàn toàn, chấp nhận ngay
+                if (lastNote && lastNote !== note && Math.abs(cents) < HYSTERESIS_CENTS) {
+                  // Kiểm tra xem nốt mới có gần với nốt cũ không (trong cùng một octave)
+                  const lastTargetFreq = getTargetFrequency(lastNote) || 0;
+                  const freqDiff = Math.abs(smoothed - lastTargetFreq);
+                  const newFreqDiff = Math.abs(smoothed - targetFreq);
+                  
+                  // Nếu nốt mới gần với target của nó hơn là với target của nốt cũ, chấp nhận nốt mới
+                  if (newFreqDiff < freqDiff * 0.7) {
+                    // Nốt mới rõ ràng hơn, chấp nhận ngay
+                    finalNote = note;
+                    finalTarget = targetFreq;
+                    finalCents = cents;
+                    // Reset stable count một phần để phản ứng nhanh với nốt mới
+                    if (stableCountRef.current > 0) {
+                      stableCountRef.current = Math.max(1, stableCountRef.current - 1);
+                    }
+                  } else {
+                    // Giữ nốt cũ nếu nó vẫn gần hơn
+                    finalNote = lastNote;
+                    finalTarget = lastTargetFreq;
+                    finalCents = 1200 * Math.log2(smoothed / finalTarget);
+                  }
+                } else if (lastNote && lastNote !== note) {
+                  // Nốt mới khác hoàn toàn, chấp nhận ngay và reset một phần stable count
+                  if (stableCountRef.current > 0) {
+                    stableCountRef.current = Math.max(1, stableCountRef.current - 1);
                   }
                 }
-              } else {
-                // ❌ lệch tông → reset bộ đếm
-                inTuneSinceRef.current = null;
-              }
+
+                const DEADZONE_CENTS = 10;
+                if (Math.abs(finalCents) < DEADZONE_CENTS) {
+                  finalCents = 0;
+
+                  // 🕒 Nếu bắt đầu đúng tông → lưu thời điểm
+                  if (!inTuneSinceRef.current) {
+                    inTuneSinceRef.current = performance.now();
+                  } else {
+                    const elapsed = performance.now() - inTuneSinceRef.current;
+                    if (elapsed >= IN_TUNE_REQUIRED_MS) {
+                      playBeep();
+                      inTuneSinceRef.current = null; // reset để không kêu liên tục
+                    }
+                  }
+                } else {
+                  // ❌ lệch tông → reset bộ đếm
+                  inTuneSinceRef.current = null;
+                }
 
 
-              const now = performance.now();
-              if (now - lastUiUpdateAtRef.current > 50) {
-                lastUiUpdateAtRef.current = now;
-                setNoteData({
-                  pitch: smoothed,
-                  note: finalNote,
-                  cents: finalCents,
-                  targetFreq: finalTarget,
-                  confidence,
-                  isStable: true,
-                });
-                currentNoteRef.current = finalNote;
+                const now = performance.now();
+                if (now - lastUiUpdateAtRef.current > 50) {
+                  lastUiUpdateAtRef.current = now;
+                  setNoteData({
+                    pitch: smoothed,
+                    note: finalNote,
+                    cents: finalCents,
+                    targetFreq: finalTarget,
+                    confidence,
+                    isStable: isStable,
+                  });
+                  currentNoteRef.current = finalNote;
+                }
               }
             } else {
-              const targetFreq = getTargetFrequency(selectedString);
+              // Sử dụng ref để tránh stale closure
+              const currentString = selectedStringRef.current;
+              const targetFreq = getTargetFrequency(currentString);
               const aligned = normalizeToNearestOctave(smoothed, targetFreq);
               let cents = 1200 * Math.log2(aligned / targetFreq);
 
@@ -245,13 +298,13 @@ export function useTunerViewModel() {
                 lastUiUpdateAtRef.current = now;
                 setNoteData({
                   pitch: smoothed,
-                  note: selectedString,
+                  note: currentString,
                   cents,
                   targetFreq,
                   confidence,
                   isStable: true,
                 });
-                currentNoteRef.current = selectedString;
+                currentNoteRef.current = currentString;
               }
             }
             lastStablePitchRef.current = smoothed;
@@ -262,8 +315,11 @@ export function useTunerViewModel() {
       stableCountRef.current = 0;
     }
 
-    rafIdRef.current = requestAnimationFrame(loop);
-  }, [tunerMode, selectedString, getTargetFrequency]);
+    // Chỉ tiếp tục loop nếu audio context còn tồn tại
+    if (audioContextRef.current) {
+      rafIdRef.current = requestAnimationFrame(loop);
+    }
+  }, [tunerMode, getTargetFrequency]);
 
   const start = useCallback(async () => {
     try {
@@ -332,6 +388,9 @@ export function useTunerViewModel() {
       stableCountRef.current = 0;
       lastStablePitchRef.current = null;
       lastUiUpdateAtRef.current = 0;
+      
+      // Đảm bảo ref được cập nhật khi start
+      selectedStringRef.current = selectedString;
 
       preGainRef.current = gain;
       hpFilterRef.current = hp;
@@ -376,14 +435,17 @@ export function useTunerViewModel() {
       stableCountRef.current = 0;
       lastStablePitchRef.current = null;
       lastUiUpdateAtRef.current = 0;
-      currentNoteRef.current = mode === "manual" ? selectedString : null;
+      currentNoteRef.current = mode === "manual" ? selectedStringRef.current : null;
+      
+      // Reset noteData khi chuyển mode
+      setNoteData(null);
 
       if (bandFilterRef.current) {
         if (mode === "auto") {
           bandFilterRef.current.frequency.value = 200;
           bandFilterRef.current.Q.value = 0.8;
         } else {
-          const tf = getTargetFrequency(selectedString);
+          const tf = getTargetFrequency(selectedStringRef.current);
           bandFilterRef.current.frequency.value = tf || 200;
           bandFilterRef.current.Q.value = 5;
         }
@@ -393,7 +455,7 @@ export function useTunerViewModel() {
     selectedString,
     setSelectedString: (s) => {
       // 🔄 Reset toàn bộ state
-       inTuneSinceRef.current = null; 
+      inTuneSinceRef.current = null; 
       pitchHistory.current = [];
       confidenceHistory.current = [];
       lastPitchRef.current = null;
@@ -401,6 +463,9 @@ export function useTunerViewModel() {
       lastStablePitchRef.current = null;
       lastUiUpdateAtRef.current = 0;
       currentNoteRef.current = s;
+      
+      // ✅ Reset noteData ngay lập tức để UI không hiển thị dữ liệu cũ
+      setNoteData(null);
 
       // 🎯 Điều chỉnh bandpass filter về dây mới
       if (bandFilterRef.current && tunerMode === "manual") {
@@ -409,9 +474,14 @@ export function useTunerViewModel() {
         bandFilterRef.current.Q.value = 5;
       }
 
-      // 🧠 Restart loop để tránh dùng lại dữ liệu cũ
+      // 🧠 Cập nhật ref trước khi restart loop
+      selectedStringRef.current = s;
+
+      // 🧠 Restart loop để tránh dùng lại dữ liệu cũ (chỉ khi đang chạy)
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      rafIdRef.current = requestAnimationFrame(loop);
+      if (audioContextRef.current) {
+        rafIdRef.current = requestAnimationFrame(loop);
+      }
 
       // ✅ Cập nhật state react
       setSelectedString(s);

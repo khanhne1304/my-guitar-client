@@ -94,7 +94,7 @@
 .product-details__gallery-main img {
   width: 100%;
   height: 100%;
-  object-fit: cover;              /* phủ kín khung, tránh khoảng trắng 2 bên */
+  object-fit: contain;            /* hiển thị toàn bộ hình ảnh, không bị mất góc */
   object-position: center;
   display: block;
   transition: none;
