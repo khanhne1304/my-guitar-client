@@ -1,4 +1,5 @@
 import Header from "../../../../components/homeItem/Header/Header";
+import Footer from "../../../../components/homeItem/Footer/Footer";
 import styles from "../FingerPracticePage.module.css";
 
 export default function BarrePage() {
@@ -11,6 +12,7 @@ export default function BarrePage() {
           <p className={styles.subtitle}>Giữ barre đều và thả – bấm nhịp nhàng. Nội dung sẽ được bổ sung.</p>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

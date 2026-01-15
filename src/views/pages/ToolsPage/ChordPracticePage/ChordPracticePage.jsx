@@ -1,4 +1,5 @@
 import Header from "../../../components/homeItem/Header/Header";
+import Footer from "../../../components/homeItem/Footer/Footer";
 import PracticeCard from "../../../../components/practice/PracticeCard/PracticeCard";
 import { usePractice } from "../../../../context/PracticeContext";
 import { useAuth } from "../../../../context/AuthContext";
@@ -52,6 +53,7 @@ export default function ChordPracticePage() {
             </div>
           </div>
         </main>
+        <Footer />
       </>
     );
   }
@@ -84,6 +86,7 @@ export default function ChordPracticePage() {
            </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

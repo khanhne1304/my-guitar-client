@@ -1,4 +1,5 @@
 import Header from "../../../../components/homeItem/Header/Header";
+import Footer from "../../../../components/homeItem/Footer/Footer";
 import styles from "../FingerPracticePage.module.css";
 
 export default function StretchShiftPage() {
@@ -11,6 +12,7 @@ export default function StretchShiftPage() {
           <p className={styles.subtitle}>Kéo giãn an toàn và chuyển vị trí xa. Nội dung sẽ được bổ sung.</p>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

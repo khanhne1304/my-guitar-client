@@ -12,6 +12,11 @@ export default function ProductManager() {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+
+  // Filters
+  const [q, setQ] = useState("");
+  const [stockFilter, setStockFilter] = useState("all"); // all | in | out
+  const [categoryFilter, setCategoryFilter] = useState("all"); // all | guitar | piano
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -43,6 +48,30 @@ export default function ProductManager() {
     }
   };
 
+  // Derived: filtered products
+  const visibleProducts = products.filter((p) => {
+    const query = q.trim().toLowerCase();
+    const matchesQ =
+      !query ||
+      (p.name || "").toLowerCase().includes(query) ||
+      (p.sku || "").toLowerCase().includes(query);
+
+    const isInStock = (p.stock ?? 0) > 0;
+    const matchesStock =
+      stockFilter === "all" ||
+      (stockFilter === "in" && isInStock) ||
+      (stockFilter === "out" && !isInStock);
+
+    const cat =
+      (p.attributes?.type || p.category?.slug || p.category || "")
+        .toString()
+        .toLowerCase();
+    const matchesCategory =
+      categoryFilter === "all" || cat === categoryFilter.toLowerCase();
+
+    return matchesQ && matchesStock && matchesCategory;
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -52,9 +81,38 @@ export default function ProductManager() {
         </button>
       </div>
 
+      {/* Filters */}
+      <div className={styles.filters}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Tìm theo tên hoặc SKU..."
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        <select
+          className={styles.select}
+          value={stockFilter}
+          onChange={(e) => setStockFilter(e.target.value)}
+        >
+          <option value="all">Tất cả tồn kho</option>
+          <option value="in">Còn hàng</option>
+          <option value="out">Hết hàng</option>
+        </select>
+        <select
+          className={styles.select}
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
+          <option value="all">Tất cả danh mục</option>
+          <option value="guitar">Guitar</option>
+          <option value="piano">Piano</option>
+        </select>
+      </div>
+
       {loading ? (
         <p className={styles.loading}>Đang tải...</p>
-      ) : products.length === 0 ? (
+      ) : visibleProducts.length === 0 ? (
         <div className={styles.empty}>Chưa có sản phẩm nào.</div>
       ) : (
         <table className={styles.table}>
@@ -71,7 +129,7 @@ export default function ProductManager() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p) => (
+            {visibleProducts.map((p) => (
               <tr key={p._id}>
                 <td>
                   <img

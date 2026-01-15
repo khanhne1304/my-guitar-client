@@ -7,8 +7,6 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
     title: "",
     subtitle: "",
     artists: "",
-    posterName: "",
-    postedAt: "",
     views: 0,
     styleLabel: "",
     tags: "",
@@ -66,7 +64,7 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
       artists: form.artists
         ? form.artists.split(",").map((a) => a.trim())
         : [],
-      posterName: form.posterName || undefined,
+      posterName: "admin",
       postedAt: form.postedAt ? new Date(form.postedAt) : new Date(), // Sử dụng ngày hiện tại nếu không có
       views: Number(form.views) || 0,
       styleLabel: form.styleLabel,
@@ -122,26 +120,6 @@ export default function AddSongModal({ open, onClose, onSuccess }) {
               type="text"
               name="artists"
               value={form.artists}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Người đăng
-            <input
-              type="text"
-              name="posterName"
-              value={form.posterName}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Ngày đăng
-            <input
-              type="date"
-              name="postedAt"
-              value={form.postedAt}
               onChange={handleChange}
             />
           </label>

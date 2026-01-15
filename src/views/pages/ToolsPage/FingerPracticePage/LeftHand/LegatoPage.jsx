@@ -1,4 +1,5 @@
 import Header from "../../../../components/homeItem/Header/Header";
+import Footer from "../../../../components/homeItem/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import styles from "./LegatoPage.module.css";
 
@@ -446,6 +447,7 @@ export default function LegatoPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

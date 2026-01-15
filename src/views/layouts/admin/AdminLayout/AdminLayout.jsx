@@ -1,6 +1,7 @@
 import AdminSidebar from "../../../components/sidebar/AdminSidebar";
 import { Outlet } from "react-router-dom";
 import styles from "./AdminLayout.module.css";
+import Footer from "../../../components/homeItem/Footer/Footer";
 
 export default function AdminLayout() {
   return (
@@ -12,6 +13,7 @@ export default function AdminLayout() {
       <main className={styles.adminContent}>
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }
