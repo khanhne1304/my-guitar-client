@@ -36,6 +36,14 @@ export default function AdminSidebar() {
             Báo cáo thống kê
           </NavLink>
           <NavLink
+            to="/admin/forum-reports"
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ""}`
+            }
+          >
+            Báo cáo diễn đàn
+          </NavLink>
+          <NavLink
             to="/admin/users"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.active : ""}`

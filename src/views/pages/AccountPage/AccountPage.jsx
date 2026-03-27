@@ -15,6 +15,15 @@ export default function AccountPage() {
       <main className={styles["account__main"]}>
         <div className={styles["account__container"]}>
           <h1 className={styles["account__title"]}>Tài khoản của tôi</h1>
+          {user?.avatarUrl && (
+            <div className={styles["account__avatarWrap"]}>
+              <img
+                src={user.avatarUrl}
+                alt="Avatar"
+                className={styles["account__avatar"]}
+              />
+            </div>
+          )}
 
           {!user ? (
             <div className={styles["account__state"]}>
