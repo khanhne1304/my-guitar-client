@@ -1,0 +1,524 @@
+.page {
+  font-family: var(--font-sans);
+  background: #fffbe8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  width: 100%;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0e6c8;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  color: #2c2416;
+}
+
+.lead {
+  margin: 0 0 20px;
+  color: #5c5346;
+  line-height: 1.5;
+}
+
+.h2 {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+  color: #3d3428;
+}
+
+.muted {
+  text-align: center;
+  color: #7a7165;
+}
+
+.error {
+  background: #ffe8e8;
+  color: #8b2a2a;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.section {
+  margin-top: 8px;
+}
+
+.questionBlock {
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eee6d6;
+}
+
+.questionBlock:last-of-type {
+  border-bottom: none;
+}
+
+.qTitle {
+  margin: 0 0 10px;
+  font-weight: 600;
+  color: #2c2416;
+  line-height: 1.45;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5dcc8;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.option:hover {
+  background: #fffbf0;
+}
+
+.optionActive {
+  border-color: #c9a227;
+  background: #fff8e6;
+}
+
+.option input {
+  margin-top: 3px;
+}
+
+.goalGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.goalCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #e5dcc8;
+  cursor: pointer;
+  font-weight: 500;
+  color: #3d3428;
+}
+
+.goalCardActive {
+  border-color: #b8860b;
+  background: linear-gradient(135deg, #fff8e6, #fff);
+}
+
+.hint {
+  font-size: 13px;
+  color: #7a7165;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btnPrimary {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #c9a227, #a67c00);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnGhost {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc4b0;
+  background: #fff;
+  color: #4a4338;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* Roadmap */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: #fffbf0;
+  border: 1px solid #f0e6c8;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8b6914;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #6b6358;
+  margin-top: 4px;
+}
+
+.progressBarWrap {
+  height: 10px;
+  background: #eee6d6;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 8px 0 20px;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a227, #e8c547);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.module {
+  margin-bottom: 20px;
+  border: 1px solid #eee6d6;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.moduleHead {
+  padding: 14px 16px;
+  background: linear-gradient(90deg, #faf6eb, #fff);
+  border-bottom: 1px solid #eee6d6;
+}
+
+.moduleTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2c2416;
+}
+
+.moduleDesc {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #6b6358;
+}
+
+.lessonList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lessonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f0e4;
+}
+
+.lessonRow:last-child {
+  border-bottom: none;
+}
+
+.lessonLocked {
+  opacity: 0.55;
+}
+
+.lessonMeta {
+  font-size: 12px;
+  color: #8a8275;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eee6d6;
+  color: #5c5346;
+}
+
+.badgeDone {
+  background: #d4edda;
+  color: #1e6b2f;
+}
+
+.linkBtn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #c9a227;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.linkBtnMuted {
+  background: #ddd5c4;
+  color: #666;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.chartRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+  margin: 16px 0;
+  padding: 8px 0;
+}
+
+.chartBar {
+  flex: 1;
+  background: #e8d9a8;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  position: relative;
+}
+
+.chartLabel {
+  font-size: 10px;
+  color: #8a8275;
+  text-align: center;
+  margin-top: 0;
+}
+
+.dayLabelWrap {
+  position: relative;
+  /* Cho phép tuỳ chỉnh ngôi sao bằng CSS variables từ component cha:
+     --star-size, --star-scale-x, --star-scale-y, --star-top, --star-space
+     (có fallback nếu không truyền) */
+  --star-size-local: var(--star-size, 26px);
+  --star-scale-x-local: var(--star-scale-x, 1);
+  --star-scale-y-local: var(--star-scale-y, 1);
+  /* giữ tương thích: --star-top là offset Y */
+  --star-offset-y-local: var(--star-offset-y, var(--star-top, 0px));
+  --star-space-local: var(--star-space, calc(var(--star-size-local) + 6px));
+
+  /* label ngày nằm dưới ngôi sao */
+  padding-top: var(--star-space-local);
+}
+
+.dayStar {
+  position: absolute;
+  /* canh giữa trong vùng star-space */
+  top: calc(var(--star-space-local) / 2 + var(--star-offset-y-local));
+  left: 50%;
+  transform: translate(-50%, -50%) scale(var(--star-scale-x-local), var(--star-scale-y-local));
+  font-size: var(--star-size-local);
+  font-weight: 900;
+  color: #d4a017; /* vàng */
+  line-height: 1;
+}
+
+.chartLabelMuted {
+  color: #b7b0a3;
+}
+
+.chartBarMuted {
+  background: #ece7dc;
+}
+
+.practiceRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.practiceRow input {
+  width: 72px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc4b0;
+}
+
+/* Lesson detail */
+.videoWrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #000;
+  margin: 16px 0;
+}
+
+.videoWrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.exerciseBody {
+  background: #fffbf0;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #f0e6c8;
+  line-height: 1.6;
+  color: #3d3428;
+  white-space: pre-wrap;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.topActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  width: 190px; /* đảm bảo 2 nút cùng chiều ngang */
+}
+
+@media (max-width: 720px) {
+  .topActions {
+    width: 100%;
+    align-items: flex-start;
+  }
+}
+
+.topActions > button {
+  width: 100%;
+}
+
+.goalPanel {
+  background: #fffbf0;
+  border: 1px solid #f0e6c8;
+  border-radius: 10px;
+  padding: 14px;
+  margin: 10px 0 18px;
+}
+
+.goalGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.goalOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5dcc8;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  color: #3d3428;
+}
+
+.goalOptionActive {
+  border-color: #c9a227;
+  background: #fff8e6;
+}
+
+/* Video recap panel (single panel with tabs) */
+.recapPanel {
+  background: #fffbf0;
+  border: 1px solid #f0e6c8;
+  border-radius: 10px;
+  padding: 14px 14px;
+  margin: 14px 0 10px;
+}
+
+.recapTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.recapTab {
+  border: 1px solid #e5dcc8;
+  background: #fff;
+  color: #4a4338;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.recapTabActive {
+  border-color: #c9a227;
+  background: #fff8e6;
+  color: #2c2416;
+  font-weight: 700;
+}
+
+.recapTitle {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #3d3428;
+}
+
+.recapList {
+  margin: 0;
+  padding-left: 0;
+  list-style: none; /* bỏ dấu chấm đầu dòng */
+  color: #3d3428;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.recapList li {
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(201, 162, 39, 0.25);
+}
+
+.recapList li:last-child {
+  border-bottom: none;
+}
