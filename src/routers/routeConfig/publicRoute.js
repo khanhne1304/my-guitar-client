@@ -46,6 +46,9 @@ import ProfilePage from "../../views/pages/ProfilePage/ProfilePage";
 import SearchPage from "../../views/pages/SearchPage/SearchPage";
 import ForumPostPage from "../../views/pages/ForumPostPage/ForumPostPage";
 import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
+import LearningPathOnboardingPage from "../../views/pages/LearningPathPage/LearningPathOnboardingPage";
+import LearningRoadmapPage from "../../views/pages/LearningPathPage/LearningRoadmapPage";
+import LearningLessonPage from "../../views/pages/LearningPathPage/LearningLessonPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -96,6 +99,9 @@ const publicRoutes = [
   { path: "/search", element: <SearchPage /> },
   { path: "/friends", element: <FriendsListPage /> },
   { path: "/friends/requests", element: <FriendRequestsPage /> },
+  { path: "/learning/onboarding", element: <LearningPathOnboardingPage /> },
+  { path: "/learning/roadmap", element: <LearningRoadmapPage /> },
+  { path: "/learning/lesson/:lessonId", element: <LearningLessonPage /> },
 ];
 
 export default publicRoutes;
