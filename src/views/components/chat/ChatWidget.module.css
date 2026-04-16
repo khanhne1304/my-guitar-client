@@ -14,6 +14,15 @@
     cursor: pointer;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     z-index: 1000;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bubble:focus,
+  .bubble:focus-visible {
+    outline: none;
+  }
+  .bubble:active {
+    background: #0f172a; /* giữ màu khi nhấn để tránh nhấp nháy */
   }
   
   .socialFab {
@@ -49,13 +58,13 @@
     inset: 0;
     background: rgba(0,0,0,0.35);
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
     z-index: 1000;
   }
   
   .modal {
-    width: 420px;
+    width: 1200px;
     max-width: calc(100% - 24px);
     margin: 12px;
     background: #fff;
@@ -64,8 +73,186 @@
     box-shadow: 0 12px 28px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
-    max-height: 80vh;
+    max-height: 85vh;
     position: relative; /* để đặt toast ở giữa modal */
+  }
+  .chat2col {
+    display: flex;
+    min-height: 620px;
+    height: 75vh;
+  }
+  .leftPane {
+    width: 360px;
+    flex: 0 0 360px;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+  }
+  .rightPane {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+  .searchRow {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  .searchInput {
+    width: 100%;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .threadList {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    overflow: auto;
+  }
+  .threadItem, .threadItemActive {
+    display: flex;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    align-items: center;
+  }
+  .threadItem:hover {
+    background: #f3f4f6;
+  }
+  .threadItemActive {
+    background: #e5e7eb;
+  }
+  .threadAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0 0 40px;
+  }
+  .threadMeta {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .threadTopRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .threadName {
+    font-weight: 700;
+    color: #111827;
+  }
+  .threadTime {
+    color: #6b7280;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .threadBottomRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .threadPreview {
+    color: #6b7280;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .unreadDot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e; /* xanh lá */
+    border-radius: 50%;
+    flex: 0 0 8px;
+    margin-left: auto; /* đẩy ra cuối hàng */
+    box-shadow: 0 0 0 2px #e5e7eb; /* viền mỏng cho nổi bật trên nền */
+  }
+  .threadHeader {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .threadHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .threadAvatarLg {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .threadHeaderName {
+    font-weight: 800;
+  }
+  .messagesArea {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+    height: 100%;
+  }
+  .emptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6b7280;
+    font-weight: 600;
+    text-align: center;
+    padding: 16px;
+  }
+  .msgRowMe, .msgRowThem {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .msgRowMe {
+    justify-content: flex-end;
+  }
+  .msgRowThem {
+    justify-content: flex-start;
+  }
+  .msgAvatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .msgBubble {
+    max-width: 70%;
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 8px 10px;
+  }
+  .msgRowMe .msgBubble {
+    background: #111827;
+    color: #fff;
+  }
+  .msgText {
+    white-space: pre-wrap;
+  }
+  .msgTime {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+  .inputRow {
+    padding: 10px 12px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #eee;
   }
   
   .header {
@@ -298,6 +485,19 @@
     .modal {
       margin: 8px;
       width: calc(100% - 16px);
+    }
+    .chat2col {
+      flex-direction: column;
+      height: 70vh;
+    }
+    .leftPane {
+      width: auto;
+      flex: 0 0 auto;
+      border-right: none;
+      border-bottom: 1px solid #eee;
+    }
+    .rightPane {
+      height: 100%;
     }
   }
   

@@ -39,6 +39,13 @@ import ChatbotPage from "../../views/pages/ChatbotPage/ChatbotPage";
 import CompareSongPage from "../../views/pages/ToolsPage/CompareSongPage/CompareSongPage";
 import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
 import AuthCallback from "../../views/pages/AuthCallback/AuthCallback";
+import ForumPage from "../../views/pages/ForumPage/ForumPage";
+import FriendRequestsPage from "../../views/pages/FriendsPage/FriendRequestsPage";
+import FriendsListPage from "../../views/pages/FriendsPage/FriendsListPage";
+import ProfilePage from "../../views/pages/ProfilePage/ProfilePage";
+import SearchPage from "../../views/pages/SearchPage/SearchPage";
+import ForumPostPage from "../../views/pages/ForumPostPage/ForumPostPage";
+import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -82,6 +89,13 @@ const publicRoutes = [
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
   { path: "/chatbot", element: <ChatbotPage /> },
+  { path: "/forum", element: <ForumPage /> },
+  { path: "/forum/post/:postId", element: <ForumPostPage /> },
+  { path: "/profile", element: <ProfilePage /> },
+  { path: "/u/:username", element: <UserProfilePage /> },
+  { path: "/search", element: <SearchPage /> },
+  { path: "/friends", element: <FriendsListPage /> },
+  { path: "/friends/requests", element: <FriendRequestsPage /> },
 ];
 
 export default publicRoutes;

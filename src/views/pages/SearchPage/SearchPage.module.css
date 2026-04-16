@@ -1,0 +1,77 @@
+._font { font-family: var(--font-sans); }
+.page { background: #fffbe8; min-height: 100vh; }
+.main { padding: 24px 0 40px; }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+.panel {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 12px;
+}
+.searchRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+.searchInput {
+  flex: 1 1 320px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+.tabs { display: flex; gap: 8px; }
+.tab {
+  font-family: var(--font-sans);
+  background: #f6f6f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.tabActive { background: #111; color: #ffd700; border-color: #111; }
+.userGrid {
+  display: grid;
+  grid-template-columns: repeat( auto-fill, minmax(220px, 1fr) );
+  gap: 12px;
+}
+.userCard {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.userAvatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.userName { font-weight: 900; }
+.userMeta { color: #6b7280; font-size: 13px; }
+.userBtn {
+  font-family: var(--font-sans);
+  background: #111;
+  color: #ffd700;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-weight: 800;
+}
+.postList { display: flex; flex-direction: column; gap: 12px; }
+.postCard { border: 1px solid #eee; border-radius: 12px; padding: 12px; }
+.postHeader { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+.postAvatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #ddd; }
+.postMeta { display: flex; flex-direction: column; }
+.postAuthor { font-weight: 800; }
+.postTime { color: #6b7280; font-size: 12px; }
+.postContent { white-space: pre-wrap; margin: 6px 0; }
+.postImage { width: 100%; border-radius: 8px; object-fit: cover; }
+.empty { text-align: center; color: #6b7280; padding: 16px 0; font-weight: 600; }
+@media (max-width: 480px) {
+  .container { padding: 0 10px; }
+}
+

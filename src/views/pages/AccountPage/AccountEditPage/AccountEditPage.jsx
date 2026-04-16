@@ -5,7 +5,7 @@ import Footer from "../../../components/homeItem/Footer/Footer";
 import { useAccountEditViewModel } from "../../../../viewmodels/AccountEditViewModel";
 import { useState } from "react";
 export default function AccountEditPage() {
-    const { form, loading, saving, error, handleChange, handleSubmit, navigate, returnTo } =
+    const { form, loading, saving, error, handleChange, handleAvatarFileChange, avatarPreview, handleSubmit, navigate, returnTo } =
         useAccountEditViewModel();
     const [showChangePassword, setShowChangePassword] = useState(false);
     if (loading) return <p className={styles.loading}>Đang tải...</p>;
@@ -19,6 +19,24 @@ export default function AccountEditPage() {
                     {error && <p className={styles.error}>{error}</p>}
 
                     <form className={styles.form} onSubmit={handleSubmit}>
+                        <div className={styles.field}>
+                            {(avatarPreview || form.avatarUrl) ? (
+                                <div className={styles.avatarEditPreviewWrap}>
+                                    <img
+                                        src={avatarPreview || form.avatarUrl}
+                                        alt="Avatar preview"
+                                        className={styles.avatarEditPreview}
+                                    />
+                                </div>
+                            ) : null}
+                            <label>Ảnh đại diện</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleAvatarFileChange(e.target.files?.[0] || null)}
+                            />
+                        </div>
+
                         <div className={styles.field}>
                             <label>Tên tài khoản</label>
                             <input name="username" value={form.username} onChange={handleChange} />

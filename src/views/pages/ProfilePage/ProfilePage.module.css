@@ -1,0 +1,107 @@
+._page {
+  font-family: var(--font-sans);
+  background: #fffbe8;
+  min-height: 100vh;
+}
+._main { padding: 24px 0 40px; }
+._container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+._headerCard {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;      /* xếp dọc avatar + tên */
+  align-items: center;         /* căn giữa */
+  gap: 10px;
+  margin-bottom: 16px;
+}
+._avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 9999px;
+  object-fit: cover;
+  background: #ddd;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+._name {
+  font-size: 24px;
+  font-weight: 900;
+  text-align: center;
+}
+._feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Bio card */
+._bioCard {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+._bioTitle {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+._bioText {
+  color: #374151;
+  white-space: pre-wrap;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* Intro list under bio, in the same header panel */
+._introList {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+._introItem {
+  color: #374151;
+  font-size: 14px;
+}
+._introLabel {
+  font-weight: 800;
+  color: #111;
+}
+._introActions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+._btnPrimary {
+  font-family: var(--font-sans);
+  background: #000;
+  color: #ffd700;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+._btnPrimary:hover { background: #111; }
+._btnGhost {
+  font-family: var(--font-sans);
+  background: #f6f6f6;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+._btnGhost:hover { background: #efefef; }
+

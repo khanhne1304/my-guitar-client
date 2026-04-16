@@ -1,0 +1,501 @@
+._card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+._header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  position: relative;
+}
+
+._avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: #ddd;
+  flex-shrink: 0;
+}
+._avatarImg {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+
+._meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+._name {
+  font-weight: 800;
+}
+._nameLink {
+  text-decoration: none;
+  color: #111;
+}
+._nameLink:visited { color: #111; }
+
+._time {
+  color: #666;
+  font-size: 14px; /* tăng kích cỡ thời gian */
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+._content {
+  padding: 0 12px 12px 12px;
+  white-space: pre-wrap;
+}
+
+._image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  background: #f1f1f1;
+  cursor: pointer;
+}
+._video {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  background: #000;
+  display: block;
+}
+
+._footer {
+  padding: 8px 12px 12px;
+  position: relative; /* để đặt thanh reaction */
+}
+
+/* Reaction summary line */
+._summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px 8px 6px;
+  color: #374151;
+}
+._sumIcons {
+  display: inline-flex;
+  align-items: center;
+}
+._sumIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-left: -4px;
+  border: 1px solid #fff;
+  background: #2563eb; /* default like color */
+  font-size: 12px;
+}
+._sum_like { background: #2563eb; }
+._sum_love { background: #ef4444; }
+._sum_haha { background: #f59e0b; }
+._sum_angry { background: #b91c1c; }
+._sumText {
+  font-size: 14px;
+}
+._sumCmtRight {
+  margin-left: auto;
+  font-size: 14px;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+._sumCmtRight:hover { text-decoration: underline; color: #374151; }
+
+/* Detail modal */
+._detailBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 70;
+}
+._detailModal {
+  width: 1100px;
+  max-width: calc(100% - 24px);
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+._detailHead {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-bottom: 1px solid #eee;
+}
+._detailTitle { font-weight: 800; }
+._detailClose {
+  background: transparent; border: none; cursor: pointer; width: 32px; height: 32px; border-radius: 8px; font-size: 20px;
+}
+._detailBody {
+  display: grid;
+  grid-template-columns: minmax(520px, 1fr) 380px;
+  gap: 0;
+  align-items: start; /* để phần trái co theo ảnh, không kéo giãn */
+  height: calc(90vh - 48px);
+  max-height: calc(90vh - 48px);
+}
+._detailLeft {
+  background: #000; /* nền đen giống Facebook khi xem ảnh */
+  display: flex; align-items: center; justify-content: center;
+  height: 100%;
+}
+._detailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  /* giữ tỉ lệ, phần thiếu sẽ có nền đen */
+  display: block;
+  background: #000;
+}
+._detailVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+._detailNoImage { color: #fff; padding: 16px; white-space: pre-wrap; }
+._detailRight {
+  background: #fff;
+  display: flex; flex-direction: column;
+  border-left: 1px solid #eee;
+  height: 100%;
+  overflow: hidden; /* để comments cuộn riêng, composer cố định */
+}
+
+@media (max-width: 768px) {
+  ._detailModal { width: 100%; }
+  ._detailBody { grid-template-columns: 1fr; height: calc(90vh - 48px); }
+  ._detailLeft { height: 100%; }
+  ._detailRight { height: 100%; }
+}
+._detailPostInfo { padding: 12px; border-bottom: 1px solid #eee; }
+._detailAuthor { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+._detailAvatar { width:40px; height:40px; border-radius:50%; object-fit:cover; background:#ddd; }
+._detailMeta { display:flex; flex-direction:column; }
+._detailTime { color:#6b7280; font-size:12px; }
+._detailContent { white-space: pre-wrap; }
+._detailCounts { padding: 8px 12px; border-bottom: 1px solid #eee; }
+._detailCmtCount { margin-left: auto; color:#6b7280; font-size:14px; }
+._detailComments { padding: 12px; overflow: auto; display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto; }
+
+/* Composer bottom inside right panel */
+._composerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin: 8px 12px 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+._composerAvatar, ._composerAvatarFallback {
+  width: 32px; height: 32px; border-radius: 50%;
+  object-fit: cover;
+  background: #ddd;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+}
+._composerInput {
+  flex: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 8px 12px;
+}
+._composerSend {
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 12px;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+._composerSend:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+._cmtRow { display:flex; gap:8px; align-items:flex-start; }
+._cmtAvatar { width:28px; height:28px; border-radius:50%; background:#111827; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
+._cmtAvatarImg { width:28px; height:28px; border-radius:50%; object-fit: cover; display: block; }
+._cmtBubble { background:#f3f4f6; border-radius:12px; padding:8px 10px; max-width: 100%; color:#111; }
+._cmtAuthor { font-weight: 800; margin-bottom: 2px; color:#111; }
+._cmtText { white-space: pre-wrap; color:#111; }
+._cmtMeta { color:#6b7280; font-size:12px; margin-top:4px; }
+
+._cmtActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+._cmtActionBtn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+}
+._cmtActionBtn:hover { text-decoration: underline; color: #374151; }
+._cmtLiked { color: #2563eb !important; font-weight: 700; }
+._cmtDot { color: #9ca3af; }
+._cmtLikeCount {
+  margin-left: 6px;
+  background: #111827;
+  color: #fff;
+  border-radius: 9999px;
+  font-size: 11px;
+  padding: 2px 6px;
+}
+._replyRow {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+._replyInput {
+  flex: 1 1 auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 6px 10px;
+}
+._replySend, ._replyCancel {
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+._replySend { background: #111827; color: #fff; }
+._replyCancel { background: #f3f4f6; color: #111; }
+
+._actions {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* trái | giữa | phải */
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0 18px;             /* tăng khoảng cách tới lề trái/phải */
+}
+._cellLeft { justify-self: start; margin-left: 18px; }
+._cellCenter { justify-self: center; }
+._cellRight { justify-self: end; margin-right: 49px; }
+
+._btn {
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  transition: background-color 0.15s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-flex;        /* icon và chữ trên cùng một hàng */
+  align-items: center;         /* căn giữa theo trục dọc */
+  gap: 6px;                    /* khoảng cách icon - chữ */
+}
+._btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;              /* tránh lệch baseline */
+}
+
+._btn:hover {
+  background: #f0f2f5;
+  text-decoration: none; /* keep text clean */
+}
+
+._btnLiked {
+  color: #2563eb;
+}
+
+._btn:focus,
+._btn:focus-visible {
+  outline: none;
+}
+
+._btn:active {
+  background: #e5e7eb; /* giữ nền khi nhấn để tránh nhấp nháy */
+}
+
+/* Reaction picker */
+._reactWrap {
+  position: relative;
+  display: inline-block; /* bọc nút Like */
+}
+._picker {
+  position: absolute;
+  bottom: 120%;
+  left: 0;
+  background: #fff;
+  border: none;                /* bỏ viền */
+  border-radius: 9999px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  padding: 8px 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 5;
+}
+._reactIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;                /* bỏ viền mặc định của button */
+  background: transparent;     /* nền trong suốt */
+  cursor: pointer;
+  transition: transform .12s ease;
+  font-size: 22px;             /* tăng kích thước icon react-icons */
+}
+._reactIcon:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+
+/* More menu (3 dots) */
+._moreBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+._moreBtn:hover { background: #f6f6f6; }
+._menu {
+  position: absolute;
+  top: 40px;
+  right: 8px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+  overflow: hidden;
+  z-index: 6;
+}
+._menuItem {
+  padding: 10px 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+._menuItem:hover { background: #f9fafb; }
+
+/* Report modal */
+._rpBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+._rpModal {
+  width: 540px;
+  max-width: calc(100% - 24px);
+  background: #242526;
+  color: #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,.4);
+}
+._rpHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+._rpTitle { font-weight: 800; }
+._rpClose {
+  background: transparent;
+  border: none;
+  color: #e5e7eb;
+  font-size: 20px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+._rpClose:hover { background: rgba(255,255,255,.08); }
+._rpBody { padding: 10px; }
+._rpHint {
+  color: #d1d5db;
+  font-size: 14px;
+  margin: 6px 4px 10px;
+}
+._rpSuccessMsg, ._rpHint { font-family: var(--font-sans); }
+._rpList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+._rpItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+._rpItem:hover {
+  background: rgba(255,255,255,.06);
+}
+
+._rpActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+._rpPrimary {
+  font-family: var(--font-sans);
+  background: #111;
+  color: #ffd700;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+._rpGhost {
+  font-family: var(--font-sans);
+  background: #f6f6f6;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+._rpPrimary:hover { background: #222; }
+._rpGhost:hover { background: #efefef; }
+

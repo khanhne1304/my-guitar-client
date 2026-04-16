@@ -14,3 +14,8 @@ export async function changePasswordApi({ currentPassword, newPassword }) {
     newPassword,
   });
 }
+export async function uploadAvatarApi(file) {
+  const fd = new FormData();
+  fd.append("avatar", file);
+  return apiClient.put("/users/profile/avatar", fd);
+}
