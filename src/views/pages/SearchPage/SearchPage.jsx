@@ -278,7 +278,7 @@ export default function SearchPage({ embedded = false }) {
                     <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
                       <Link
                         className={styles.userBtn}
-                        to={`/u/${encodeURIComponent(u.profileSlug || u.name.toLowerCase().replace(/\\s+/g, "-"))}`}
+                        to={`/u/${encodeURIComponent(u.id || "")}`}
                         title={`Xem trang của ${u.name}`}
                       >
                         Xem trang

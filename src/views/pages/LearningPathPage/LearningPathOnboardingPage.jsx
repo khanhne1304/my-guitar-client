@@ -124,6 +124,7 @@ export default function LearningPathOnboardingPage() {
                   </p>
                   <div className={styles.options}>
                     {q.options.map((opt, idx) => (
+                      // opt có thể là string hoặc object {id,label}
                       <label
                         key={idx}
                         className={`${styles.option} ${answers[q.id] === idx ? styles.optionActive : ''}`}
@@ -134,7 +135,7 @@ export default function LearningPathOnboardingPage() {
                           checked={answers[q.id] === idx}
                           onChange={() => onSelectAnswer(q.id, idx)}
                         />
-                        <span>{opt}</span>
+                        <span>{typeof opt === 'string' ? opt : opt?.label ?? opt?.id ?? ''}</span>
                       </label>
                     ))}
                   </div>

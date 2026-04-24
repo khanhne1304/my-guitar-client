@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
 import PostCard from "../../components/forum/PostCard/PostCard";
+import Composer from "../../components/forum/Composer/Composer";
 import ChatWidget from "../../components/chat/ChatWidget";
 import styles from "./ProfilePage.module.css";
 import { getUserProfileApi } from "../../../services/userService";
@@ -180,6 +181,7 @@ export default function ProfilePage({ embedded = false }) {
           </div>
 
           <div className={styles._feed}>
+            <Composer />
             {posts.length === 0 ? (
               <div>Chưa có bài viết nào.</div>
             ) : (

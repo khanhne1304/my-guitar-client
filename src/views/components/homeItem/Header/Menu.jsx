@@ -59,7 +59,6 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>
           <Link to="/learning/roadmap">LỘ TRÌNH HỌC</Link>
-          <Link to="/tools/compare-song">SO SÁNH BẢN NHẠC (AI)</Link>
           <Link to="/tools/chord-practice">LUYỆN TẬP HỢP ÂM</Link>
           <Link to="/tools/finger-practice">LUYỆN TẬP NGÓN TAY</Link>
         </div>

@@ -312,7 +312,7 @@ export default function LearningLessonPage() {
                               checked={videoQuizPick[q.id] === idx}
                               onChange={() => setVideoQuizPick((p) => ({ ...p, [q.id]: idx }))}
                             />
-                            <span>{opt}</span>
+                            <span>{typeof opt === 'string' ? opt : opt?.label ?? opt?.id ?? ''}</span>
                           </label>
                         ))}
                       </div>
@@ -346,7 +346,7 @@ export default function LearningLessonPage() {
                           checked={quizPick[q.id] === idx}
                           onChange={() => setQuizPick((p) => ({ ...p, [q.id]: idx }))}
                         />
-                        <span>{opt}</span>
+                        <span>{typeof opt === 'string' ? opt : opt?.label ?? opt?.id ?? ''}</span>
                       </label>
                     ))}
                   </div>

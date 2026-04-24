@@ -93,11 +93,6 @@ export default function LearningRoadmapPage() {
       navigate('/login?redirect=/learning/roadmap', { replace: true });
       return;
     }
-    const u = getUser();
-    if (needsGuitarOnboarding(u)) {
-      navigate('/learning/onboarding', { replace: true });
-      return;
-    }
     load();
   }, [authChecked, isAuthenticated, navigate]);
 

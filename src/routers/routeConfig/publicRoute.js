@@ -36,8 +36,6 @@ import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHa
 import StrummingPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/StrummingPage";
 import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
 import ChatbotPage from "../../views/pages/ChatbotPage/ChatbotPage";
-import CompareSongPage from "../../views/pages/ToolsPage/CompareSongPage/CompareSongPage";
-import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
 import AuthCallback from "../../views/pages/AuthCallback/AuthCallback";
 import ForumPage from "../../views/pages/ForumPage/ForumPage";
 import FriendRequestsPage from "../../views/pages/FriendsPage/FriendRequestsPage";
@@ -84,8 +82,6 @@ const publicRoutes = [
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
-  { path: "/tools/compare-song", element: <CompareSongPage /> },
-  { path: "/tools/compare-two-songs", element: <CompareTwoSongsPage /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
