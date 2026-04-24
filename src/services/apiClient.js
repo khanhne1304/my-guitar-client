@@ -61,8 +61,10 @@ export const apiClient = {
       const u = new URL(url);
       return u.href;
     } catch {
-      if (url.startsWith('/')) return `${BASE_URL.replace(/\/api$/, '')}${url}`;
-      return url;
+      const origin = BASE_URL.replace(/\/api$/, '');
+      // Support both "/uploads/a.png" and "uploads/a.png"
+      if (url.startsWith('/')) return `${origin}${url}`;
+      return `${origin}/${url}`;
     }
   },
 };

@@ -58,6 +58,19 @@
   object-fit: cover;
   background: #f3f4f6;
 }
+.coverFallback {
+  width: 100%;
+  height: 160px;
+  background: #111;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 1px;
+  user-select: none;
+}
 .content {
   padding: 10px;
   display: flex;

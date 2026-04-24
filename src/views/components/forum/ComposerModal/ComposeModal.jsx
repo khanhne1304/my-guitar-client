@@ -29,7 +29,7 @@ export default function ComposeModal({
     const img = new Image();
     img.onload = () => {
       const vw = Math.max(320, (typeof window !== "undefined" ? window.innerWidth : 1200) - 48);
-      const w = Math.max(420, Math.min(img.naturalWidth, 800, vw));
+      const w = Math.max(360, Math.min(img.naturalWidth, 640, vw));
       setMediaWidth(w);
     };
     img.src = images[0];

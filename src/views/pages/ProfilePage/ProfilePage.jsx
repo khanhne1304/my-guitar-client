@@ -4,86 +4,99 @@ import Footer from "../../components/homeItem/Footer/Footer";
 import PostCard from "../../components/forum/PostCard/PostCard";
 import ChatWidget from "../../components/chat/ChatWidget";
 import styles from "./ProfilePage.module.css";
+import { getUserProfileApi } from "../../../services/userService";
+import { useNavigate } from "react-router-dom";
 
-export default function ProfilePage() {
+export default function ProfilePage({ embedded = false }) {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [bio, setBio] = useState("");
-  const [intro, setIntro] = useState({ location: "", birthday: "", education: "" });
+  const [loadError, setLoadError] = useState("");
+  const [profile, setProfile] = useState({
+    bio: "",
+    location: "",
+    birthday: "",
+    education: "",
+    website: "",
+    facebookUrl: "",
+    youtubeUrl: "",
+    tiktokUrl: "",
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
-    try {
-      const rawUser = localStorage.getItem("user");
-      setUser(rawUser ? JSON.parse(rawUser) : null);
-      let rawBio = localStorage.getItem("user_bio");
-      if (!rawBio || !rawBio.trim()) {
-        rawBio =
-          "Yêu guitar, thích fingerstyle và acoustic.\nMục tiêu 2026: luyện 30 phút mỗi ngày.";
-        localStorage.setItem("user_bio", rawBio);
-      }
-      setBio(rawBio);
-      // intro defaults
-      let rawIntro = localStorage.getItem("user_intro");
-      if (!rawIntro) {
-        const def = {
-          location: "TP. Hồ Chí Minh, Việt Nam",
-          birthday: "01/01/2000",
-          education: "Đại học CNTT",
-        };
-        localStorage.setItem("user_intro", JSON.stringify(def));
-        rawIntro = JSON.stringify(def);
-      }
+    const load = async () => {
+      // prefer API, fallback local cache
       try {
-        setIntro(JSON.parse(rawIntro));
-      } catch {
-        setIntro({ location: "", birthday: "", education: "" });
+        setLoadError("");
+        const data = await getUserProfileApi();
+        setUser(data || null);
+        setProfile({
+          bio: data?.bio || "",
+          location: data?.location || "",
+          birthday: data?.birthday || "",
+          education: data?.education || "",
+          website: data?.website || "",
+          facebookUrl: data?.facebookUrl || "",
+          youtubeUrl: data?.youtubeUrl || "",
+          tiktokUrl: data?.tiktokUrl || "",
+        });
+        try { localStorage.setItem("user", JSON.stringify(data)); } catch {}
+        return;
+      } catch (err) {
+        const status = err?.response?.status ?? err?.status;
+        if (status === 401) {
+          setLoadError("Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn.");
+        } else if (status === 404) {
+          setLoadError("Không tìm thấy API thông tin người dùng (`/users/profile`).");
+        } else {
+          setLoadError(err?.response?.data?.message || err?.message || "Không thể tải thông tin người dùng.");
+        }
       }
-    } catch {}
+
+      try {
+        const rawUser = localStorage.getItem("user");
+        const parsedUser = rawUser ? JSON.parse(rawUser) : null;
+        setUser(parsedUser);
+        setProfile({
+          bio: parsedUser?.bio || "",
+          location: parsedUser?.location || "",
+          birthday: parsedUser?.birthday || "",
+          education: parsedUser?.education || "",
+          website: parsedUser?.website || "",
+          facebookUrl: parsedUser?.facebookUrl || "",
+          youtubeUrl: parsedUser?.youtubeUrl || "",
+          tiktokUrl: parsedUser?.tiktokUrl || "",
+        });
+      } catch {}
+    };
+
+    load();
+    const onChanged = () => load();
+    window.addEventListener("user:profile-changed", onChanged);
+    return () => window.removeEventListener("user:profile-changed", onChanged);
+  }, []);
+
+  useEffect(() => {
     const load = () => {
       try {
         const raw = localStorage.getItem("user_posts");
-        let arr = raw ? JSON.parse(raw) : [];
-        // Seed 20 sample posts if empty
-        if (!Array.isArray(arr) || arr.length === 0) {
-          const now = Date.now();
-          const sampleTexts = [
-            "Hôm nay luyện 30 phút chromatic, cảm giác tay trái đỡ cứng hơn.",
-            "Chia sẻ tab intro bài Hotel California mình mới soạn.",
-            "Anh em có preset reverb/delay nào hợp acoustic không?",
-            "Ngày mưa, làm tách cà phê và gảy vài hợp âm.",
-            "Vừa thay dây Elixir 11-52, cảm giác trơn tay.",
-            "Luyện metronome 80bpm alternate picking đều dần.",
-            "Cover nhanh một đoạn City of Stars 🎶",
-            "Gợi ý capo nào kẹp chắc mà không lệch tone?",
-            "Ảnh góc tập mới giản dị nhưng đủ dùng!",
-            "Học hợp âm 7 nghe mượt tai quá.",
-          ];
-          const sampleImages = [
-            "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?q=80&w=1200&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?q=80&w=1200&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1483412033650-1015ddeb83d1?q=80&w=1200&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1520975682031-c83b66c1113b?q=80&w=1200&auto=format&fit=crop",
-          ];
-          const u = (() => {
-            try {
-              const ru = localStorage.getItem("user");
-              return ru ? JSON.parse(ru) : null;
-            } catch { return null; }
-          })();
-          const authorName = u?.fullName || u?.username || "Tôi";
-          const authorAvatarUrl = u?.avatarUrl || "";
-          arr = Array.from({ length: 20 }).map((_, i) => ({
-            id: `seed-${now - i}`,
-            authorName,
-            authorAvatarUrl,
-            time: new Date(now - i * 3600 * 1000).toLocaleString("vi-VN", { hour12: false }),
-            content: sampleTexts[i % sampleTexts.length],
-            imageUrl: i % 2 === 0 ? sampleImages[i % sampleImages.length] : "",
-          }));
-          localStorage.setItem("user_posts", JSON.stringify(arr));
+        const arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) {
+          setPosts([]);
+          return;
         }
-        setPosts(arr);
+        if (!user) {
+          setPosts(arr);
+          return;
+        }
+        const uid = user.id || user._id || user.userId || null;
+        const name = user.fullName || user.username || null;
+        const filtered = arr.filter((p) => {
+          if (p.authorId && uid) return p.authorId === uid;
+          if (name) return p.authorName === name;
+          return false;
+        });
+        setPosts(filtered);
       } catch {
         setPosts([]);
       }
@@ -96,33 +109,17 @@ export default function ProfilePage() {
       window.removeEventListener("user:new-post", onChanged);
       window.removeEventListener("user:post-changed", onChanged);
     };
-  }, []);
+  }, [user]);
 
-  function handleEditBio() {
-    // eslint-disable-next-line no-alert
-    const next = window.prompt("Chỉnh sửa mô tả", bio || "");
-    if (next === null) return;
-    const clean = String(next);
-    setBio(clean);
-    try { localStorage.setItem("user_bio", clean); } catch {}
-  }
-
-  function handleEditIntro() {
-    // Thu thập từng trường qua prompt nhanh
-    // eslint-disable-next-line no-alert
-    const loc = window.prompt("Nơi sống", intro.location || "") ?? intro.location;
-    // eslint-disable-next-line no-alert
-    const bd = window.prompt("Ngày sinh (dd/mm/yyyy)", intro.birthday || "") ?? intro.birthday;
-    // eslint-disable-next-line no-alert
-    const edu = window.prompt("Học vấn", intro.education || "") ?? intro.education;
-    const next = { location: String(loc || ""), birthday: String(bd || ""), education: String(edu || "") };
-    setIntro(next);
-    try { localStorage.setItem("user_intro", JSON.stringify(next)); } catch {}
-  }
+  const hasSocial =
+    (profile.website && profile.website.trim()) ||
+    (profile.facebookUrl && profile.facebookUrl.trim()) ||
+    (profile.youtubeUrl && profile.youtubeUrl.trim()) ||
+    (profile.tiktokUrl && profile.tiktokUrl.trim());
 
   return (
     <div className={styles._page}>
-      <Header />
+      {embedded ? null : <Header />}
       <main className={styles._main}>
         <div className={styles._container}>
           <div className={styles._headerCard}>
@@ -132,21 +129,53 @@ export default function ProfilePage() {
               <div className={styles._avatar} />
             )}
             <div className={styles._name}>{user?.fullName || user?.username || "Tôi"}</div>
-            {bio?.trim() ? <div className={styles._bioText}>{bio}</div> : null}
+            {loadError ? <div className={styles._bioText}>{loadError}</div> : null}
+            {profile.bio?.trim() ? <div className={styles._bioText}>{profile.bio}</div> : null}
             <div className={styles._introList}>
-              {intro.location ? (
-                <div className={styles._introItem}><span className={styles._introLabel}>Nơi sống:</span> {intro.location}</div>
+              {profile.location ? (
+                <div className={styles._introItem}><span className={styles._introLabel}>Nơi sống:</span> {profile.location}</div>
               ) : null}
-              {intro.birthday ? (
-                <div className={styles._introItem}><span className={styles._introLabel}>Ngày sinh:</span> {intro.birthday}</div>
+              {profile.birthday ? (
+                <div className={styles._introItem}><span className={styles._introLabel}>Ngày sinh:</span> {profile.birthday}</div>
               ) : null}
-              {intro.education ? (
-                <div className={styles._introItem}><span className={styles._introLabel}>Học vấn:</span> {intro.education}</div>
+              {profile.education ? (
+                <div className={styles._introItem}><span className={styles._introLabel}>Học vấn:</span> {profile.education}</div>
+              ) : null}
+
+              {hasSocial ? (
+                <div className={styles._introItem}>
+                  <span className={styles._introLabel}>Liên kết:</span>{" "}
+                  {profile.website ? (
+                    <a href={profile.website} target="_blank" rel="noreferrer">Website</a>
+                  ) : null}
+                  {profile.facebookUrl ? (
+                    <>
+                      {profile.website ? " · " : null}
+                      <a href={profile.facebookUrl} target="_blank" rel="noreferrer">Facebook</a>
+                    </>
+                  ) : null}
+                  {profile.youtubeUrl ? (
+                    <>
+                      {(profile.website || profile.facebookUrl) ? " · " : null}
+                      <a href={profile.youtubeUrl} target="_blank" rel="noreferrer">YouTube</a>
+                    </>
+                  ) : null}
+                  {profile.tiktokUrl ? (
+                    <>
+                      {(profile.website || profile.facebookUrl || profile.youtubeUrl) ? " · " : null}
+                      <a href={profile.tiktokUrl} target="_blank" rel="noreferrer">TikTok</a>
+                    </>
+                  ) : null}
+                </div>
               ) : null}
             </div>
             <div className={styles._introActions}>
-              <button className={styles._btnPrimary} onClick={handleEditBio}>Chỉnh sửa mô tả</button>
-              <button className={styles._btnGhost} onClick={handleEditIntro}>Chỉnh sửa giới thiệu</button>
+              <button
+                className={styles._btnPrimary}
+                onClick={() => navigate("/account/edit?returnTo=/profile")}
+              >
+                Chỉnh sửa trang cá nhân
+              </button>
             </div>
           </div>
 
@@ -159,8 +188,8 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
-      <Footer />
-      <ChatWidget />
+      {embedded ? null : <Footer />}
+      {embedded ? null : <ChatWidget />}
     </div>
   );
 }

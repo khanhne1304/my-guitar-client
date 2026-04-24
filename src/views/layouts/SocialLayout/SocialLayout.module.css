@@ -1,0 +1,45 @@
+.page {
+  font-family: var(--font-sans);
+  background: #fffbe8;
+  min-height: 100vh;
+}
+
+.main {
+  padding: 24px 0;
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.left,
+.center {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.center {
+  min-width: 0;
+  font-size: 16px;     /* tăng kích thước cơ bản của ô trung tâm */
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .left {
+    display: none;
+  }
+}
+

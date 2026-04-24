@@ -31,10 +31,21 @@ export default function PostCard({ post }) {
   const commentsRef = useRef(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("user");
-      setCurrentUser(raw ? JSON.parse(raw) : null);
-    } catch {}
+    const loadUser = () => {
+      try {
+        const raw = localStorage.getItem("user");
+        setCurrentUser(raw ? JSON.parse(raw) : null);
+      } catch {}
+    };
+    loadUser();
+    const onProfileChanged = () => loadUser();
+    window.addEventListener("user:profile-changed", onProfileChanged);
+    // Also react to localStorage updates across tabs/windows
+    const onStorage = (e) => {
+      if (e?.key === "user") loadUser();
+    };
+    window.addEventListener("storage", onStorage);
+
     // load blocked
     const loadBlocked = () => {
       try {
@@ -58,12 +69,14 @@ export default function PostCard({ post }) {
     const onMutedChanged = () => loadMuted();
     window.addEventListener("forum:muted-changed", onMutedChanged);
     return () => {
+      window.removeEventListener("user:profile-changed", onProfileChanged);
+      window.removeEventListener("storage", onStorage);
       window.removeEventListener("forum:blocked-changed", onBlockedChanged);
       window.removeEventListener("forum:muted-changed", onMutedChanged);
     };
   }, []);
 
-  // Reactions: load or seed sample
+  // Reactions: load hoặc khởi tạo trống (không seed dữ liệu giả)
   useEffect(() => {
     if (!post?.id) return;
     try {
@@ -76,14 +89,7 @@ export default function PostCard({ post }) {
         setUserReaction(rec.userReaction ?? null);
         setReaction(rec.userReaction ?? null);
       } else {
-        // seed sample counts (deterministic-ish by id string)
-        const seed = String(post.id).split("").reduce((s, ch) => s + ch.charCodeAt(0), 0);
-        const total = 10 + (seed % 41); // 10..50
-        const like = Math.max(0, Math.floor(total * 0.5) + (seed % 3) - 1);
-        const love = Math.max(0, Math.floor(total * 0.25) + ((seed >> 2) % 2) - 1);
-        const haha = Math.max(0, Math.floor(total * 0.15) + ((seed >> 3) % 2) - 1);
-        const angry = Math.max(0, total - like - love - haha);
-        const cnts = { like, love, haha, angry };
+        const cnts = { like: 0, love: 0, haha: 0, angry: 0 };
         setCounts(cnts);
         const rec = { counts: cnts, userReaction: null };
         localStorage.setItem(key, JSON.stringify({ ...map, [post.id]: rec }));
@@ -92,84 +98,22 @@ export default function PostCard({ post }) {
     } catch {}
   }, [post?.id]);
 
-  // Comments: load or seed 14 mock comments per post
+  // Comments: chỉ load từ localStorage, không seed dữ liệu giả
   useEffect(() => {
     if (!post?.id) return;
     try {
       const key = "post_comments";
       const raw = localStorage.getItem(key);
       const map = raw ? JSON.parse(raw) : {};
-      const ensureRichComments = () => {
-        const commenters = [
-          { name: "Hoàng Trung", avatar: "https://i.pravatar.cc/80?img=1" },
-          { name: "Phan Thanh Nhật", avatar: "https://i.pravatar.cc/80?img=12" },
-          { name: "Tỷ Đăng", avatar: "https://i.pravatar.cc/80?img=22" },
-          { name: "Long Black Zju", avatar: "https://i.pravatar.cc/80?img=33" },
-          { name: "Nhân Trần", avatar: "https://i.pravatar.cc/80?img=17" },
-          { name: "Lê Thanh Toàn", avatar: "https://i.pravatar.cc/80?img=45" },
-          { name: "Minh Thi", avatar: "https://i.pravatar.cc/80?img=6" },
-          { name: "Bình Nhi", avatar: "https://i.pravatar.cc/80?img=38" },
-          { name: "Laam Ly", avatar: "https://i.pravatar.cc/80?img=28" },
-          { name: "Nguyệt Anh", avatar: "https://i.pravatar.cc/80?img=43" },
-          { name: "Đạt Tiên", avatar: "https://i.pravatar.cc/80?img=7" },
-          { name: "Quốc Huy", avatar: "https://i.pravatar.cc/80?img=20" },
-          { name: "Anh Thư", avatar: "https://i.pravatar.cc/80?img=15" },
-          { name: "Thanh Tùng", avatar: "https://i.pravatar.cc/80?img=5" },
-          { name: "Khánh Vy", avatar: "https://i.pravatar.cc/80?img=8" },
-          { name: "Minh Khoa", avatar: "https://i.pravatar.cc/80?img=14" },
-          { name: "Bảo Trâm", avatar: "https://i.pravatar.cc/80?img=47" },
-          { name: "Tuấn Kiệt", avatar: "https://i.pravatar.cc/80?img=23" },
-        ];
-        const texts = [
-          "Bản phối nghe rất mượt, đặc biệt là phần chuyển hợp âm.",
-          "Ảnh đẹp quá, góc tập gọn mà hiệu quả!",
-          "Mình thích delay nhẹ hơn một chút sẽ cân bằng hơn.",
-          "Hay quá bạn ơi, có thể chia sẻ tab không?",
-          "Đoạn điệp khúc nghe rất ấm, nhạc cụ phối hợp ổn áp.",
-          "Bạn dùng dây bao nhiêu vậy? Nghe khá sáng.",
-          "Xin preset reverb/delay với ạ, nghe thích thật.",
-          "Cố gắng luyện đều tay trái là ổn, tiến bộ rõ!",
-          "Tone guitar nghe dày và có lực, mê quá.",
-          "Like mạnh! Chờ video bản đầy đủ.",
-          "Bạn chia sẻ thêm cách thu âm không?",
-          "Phần kết hay, cách bạn nhấn nhá rất cảm xúc.",
-          "Luyện metronome đều là ra thành quả như này.",
-          "Quá tuyệt vời, tiếp tục ra sản phẩm nhé!",
-          "Âm trường thoáng, nghe rõ từng nốt.",
-          "Cách đánh harmonics ở đoạn giữa rất ổn.",
-          "Bố cục ảnh đẹp, ánh sáng vừa đủ.",
-          "Tab đoạn intro cho mình xin với!",
-        ];
-        const now = Date.now();
-        const seed = String(post.id).split("").reduce((s, ch) => s + ch.charCodeAt(0), 0);
-        const total = 14;
-        return Array.from({ length: total }).map((_, i) => ({
-          id: `c-${post.id}-${i}`,
-          authorName: commenters[(seed + i) % commenters.length].name,
-          authorAvatarUrl: commenters[(seed + i) % commenters.length].avatar,
-          text: texts[(seed * (i + 3)) % texts.length],
-          time: new Date(now - (i + 1) * 3600 * 1000).toLocaleString("vi-VN", { hour12: false }),
-        }));
-      };
-      if (Array.isArray(map[post.id]) && map[post.id].length) {
-        const arr = map[post.id];
-        const hasRich = arr.every((c) => c && c.authorName && c.text);
-        if (!hasRich) {
-          const cmts = ensureRichComments();
-          localStorage.setItem(key, JSON.stringify({ ...map, [post.id]: cmts }));
-          setComments(cmts);
-        } else {
-          setComments(arr);
-        }
+      if (Array.isArray(map[post.id])) {
+        setComments(map[post.id]);
       } else {
-        const cmts = ensureRichComments();
-        localStorage.setItem(key, JSON.stringify({ ...map, [post.id]: cmts }));
-        setComments(cmts);
+        setComments([]);
       }
     } catch {}
   }, [post?.id]);
 
-  // Seed comment like map
+  // Khởi tạo map like cho bình luận (mặc định 0, không seed random)
   useEffect(() => {
     if (!post?.id || comments.length === 0) return;
     try {
@@ -181,8 +125,7 @@ export default function PostCard({ post }) {
       comments.forEach((c, idx) => {
         const k = `${post.id}:${c.id}`;
         if (!next[k]) {
-          const seed = String(k).split("").reduce((s, ch) => s + ch.charCodeAt(0), 0);
-          next[k] = { liked: false, count: (seed % 6) }; // 0..5
+          next[k] = { liked: false, count: 0 };
           changed = true;
         }
       });
@@ -331,6 +274,8 @@ export default function PostCard({ post }) {
     return !!name && post?.authorName === name;
   })();
 
+  const displayAuthorAvatarUrl = (isOwner ? (currentUser?.avatarUrl || "") : (post?.authorAvatarUrl || ""));
+
   const authorKey = post?.authorId || post?.authorName || "";
   const isBlockedAuthor = authorKey ? blockedSet.has(authorKey) : false;
   if (isBlockedAuthor) return null;
@@ -363,8 +308,18 @@ export default function PostCard({ post }) {
       const raw = localStorage.getItem("user_posts");
       const arr = raw ? JSON.parse(raw) : [];
       const uid = currentUser?.id || currentUser?._id || currentUser?.userId;
+      const latestAvatar = currentUser?.avatarUrl || "";
       const updated = arr.map((p) =>
-        p.id === post.id ? { ...p, content: editContent, imageUrl: editImages?.[0] || "" , authorId: p.authorId || uid } : p
+        p.id === post.id
+          ? {
+              ...p,
+              content: editContent,
+              imageUrl: editImages?.[0] || "",
+              authorId: p.authorId || uid,
+              // keep snapshot in sync for places still reading from post object
+              authorAvatarUrl: latestAvatar || p.authorAvatarUrl || "",
+            }
+          : p
       );
       localStorage.setItem("user_posts", JSON.stringify(updated));
       try {
@@ -472,17 +427,17 @@ export default function PostCard({ post }) {
   return (
     <article className={styles._card}>
       <header className={styles._header}>
-        {post.authorAvatarUrl ? (
-          <Link to={`/u/${encodeURIComponent(post.authorName || "")}`} aria-label={post.authorName}>
-            <img className={styles._avatarImg} src={post.authorAvatarUrl} alt="" />
+        {displayAuthorAvatarUrl ? (
+          <Link to={`/u/${encodeURIComponent(post.authorId || post.authorName || "")}`} aria-label={post.authorName}>
+            <img className={styles._avatarImg} src={displayAuthorAvatarUrl} alt="" />
           </Link>
         ) : (
-          <Link to={`/u/${encodeURIComponent(post.authorName || "")}`} aria-label={post.authorName}>
+          <Link to={`/u/${encodeURIComponent(post.authorId || post.authorName || "")}`} aria-label={post.authorName}>
             <div className={styles._avatar} />
           </Link>
         )}
         <div className={styles._meta}>
-          <Link className={styles._nameLink} to={`/u/${encodeURIComponent(post.authorName || "")}`}>
+          <Link className={styles._nameLink} to={`/u/${encodeURIComponent(post.authorId || post.authorName || "")}`}>
             <span className={styles._name}>{post.authorName}</span>
           </Link>
           <span className={styles._time}>{post.time}</span>
@@ -702,8 +657,8 @@ export default function PostCard({ post }) {
               <div className={styles._detailRight}>
                 <div className={styles._detailPostInfo}>
                   <div className={styles._detailAuthor}>
-                    {post.authorAvatarUrl ? (
-                      <img className={styles._detailAvatar} src={post.authorAvatarUrl} alt="" />
+                    {displayAuthorAvatarUrl ? (
+                      <img className={styles._detailAvatar} src={displayAuthorAvatarUrl} alt="" />
                     ) : <div className={styles._detailAvatar} />}
                     <div className={styles._detailMeta}>
                       <strong>{post.authorName}</strong>
