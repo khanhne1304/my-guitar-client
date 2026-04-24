@@ -10,24 +10,7 @@ export default function ChatWidget() {
 			const raw = localStorage.getItem("gm.chat.conversations");
 			if (raw) return JSON.parse(raw);
 		} catch {}
-		// mock seed
-		const seedUsers = [
-			{ id: "u1", name: "Minh Anh", avatar: "https://i.pravatar.cc/80?img=15" },
-			{ id: "u2", name: "Hải Nam", avatar: "https://i.pravatar.cc/80?img=11" },
-			{ id: "u3", name: "Quốc Huy", avatar: "https://i.pravatar.cc/80?img=18" },
-			{ id: "u4", name: "Ngọc Mai", avatar: "https://i.pravatar.cc/80?img=12" },
-			{ id: "u5", name: "Thanh Tùng", avatar: "https://i.pravatar.cc/80?img=5" },
-		];
-		const now = Date.now();
-		return seedUsers.map((u, idx) => ({
-			user: u,
-			lastAt: now - idx * 3600_000,
-			messages: [
-				{ id: `m${idx}a`, from: "them", text: "Chào bạn! Rảnh chat không?", at: now - (idx * 3600_000 + 200_000) },
-				{ id: `m${idx}b`, from: "me", text: "Hi! Có nè.", at: now - (idx * 3600_000 + 150_000) },
-			],
-			unread: idx === 0 ? 1 : 0,
-		}));
+		return [];
 	});
 	const [selectedUserId, setSelectedUserId] = useState(null);
 	const [draft, setDraft] = useState("");
@@ -40,6 +23,31 @@ export default function ChatWidget() {
 			localStorage.setItem("gm.chat.conversations", JSON.stringify(conversations));
 		} catch {}
 	}, [conversations]);
+
+	useEffect(() => {
+		function handleOpenChat(e) {
+			const u = e?.detail?.user;
+			if (!u?.id) return;
+			setOpen(true);
+			setConversations((prev) => {
+				const exists = prev.some((c) => c.user?.id === u.id);
+				if (exists) return prev;
+				const now = Date.now();
+				return [
+					{
+						user: { id: u.id, name: u.name || "Người dùng", avatar: u.avatar || "" },
+						lastAt: now,
+						messages: [],
+						unread: 0,
+					},
+					...prev,
+				];
+			});
+			setSelectedUserId(u.id);
+		}
+		window.addEventListener("gm:chat:open", handleOpenChat);
+		return () => window.removeEventListener("gm:chat:open", handleOpenChat);
+	}, []);
 
 	useEffect(() => {
 		if (!open) return;
@@ -133,7 +141,13 @@ export default function ChatWidget() {
 													className={active ? styles.threadItemActive : styles.threadItem}
 													onClick={() => selectConversation(c.user.id)}
 												>
-													<img className={styles.threadAvatar} src={c.user.avatar} alt="" />
+													{c.user.avatar ? (
+														<img className={styles.threadAvatar} src={c.user.avatar} alt="" />
+													) : (
+														<div className={styles.threadAvatarFallback} aria-hidden="true">
+															{initialsFromName(c.user.name)}
+														</div>
+													)}
 													<div className={styles.threadMeta}>
 														<div className={styles.threadTopRow}>
 															<div className={styles.threadName}>{c.user.name}</div>
@@ -159,7 +173,13 @@ export default function ChatWidget() {
 									<>
 										<div className={styles.threadHeader}>
 											<div className={styles.threadHeaderLeft}>
-												<img className={styles.threadAvatarLg} src={selectedConversation.user.avatar} alt="" />
+												{selectedConversation.user.avatar ? (
+													<img className={styles.threadAvatarLg} src={selectedConversation.user.avatar} alt="" />
+												) : (
+													<div className={styles.threadAvatarLgFallback} aria-hidden="true">
+														{initialsFromName(selectedConversation.user.name)}
+													</div>
+												)}
 												<div className={styles.threadHeaderName}>{selectedConversation.user.name}</div>
 											</div>
 										</div>
@@ -168,7 +188,14 @@ export default function ChatWidget() {
 												const mine = m.from === "me";
 												return (
 													<div key={m.id} className={mine ? styles.msgRowMe : styles.msgRowThem}>
-														{!mine && <img className={styles.msgAvatar} src={selectedConversation.user.avatar} alt="" />}
+														{!mine &&
+															(selectedConversation.user.avatar ? (
+																<img className={styles.msgAvatar} src={selectedConversation.user.avatar} alt="" />
+															) : (
+																<div className={styles.msgAvatarFallback} aria-hidden="true">
+																	{initialsFromName(selectedConversation.user.name)}
+																</div>
+															))}
 														<div className={styles.msgBubble}>
 															<div className={styles.msgText}>{m.text}</div>
 															<div className={styles.msgTime}>{formatTime(m.at)}</div>
@@ -201,6 +228,15 @@ export default function ChatWidget() {
 			)}
 		</>
 	);
+}
+
+function initialsFromName(name) {
+	const safe = (name || "").trim();
+	if (!safe) return "?";
+	const parts = safe.split(/\s+/).filter(Boolean);
+	const a = parts[0]?.[0] || "";
+	const b = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+	return (a + b).toUpperCase() || "?";
 }
 
 function formatTime(ts) {

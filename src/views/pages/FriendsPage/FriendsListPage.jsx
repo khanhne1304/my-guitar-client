@@ -1,39 +1,119 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaEllipsisH } from "react-icons/fa";
 import styles from "./FriendsListPage.module.css";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
+import { apiClient } from "../../../services/apiClient";
+import { blockUserApi, getFriendsApi, unfriendApi } from "../../../services/userService";
+import { useConfirm } from "../../../context/ConfirmContext";
+import { useNavigate } from "react-router-dom";
 
-const mockFriends = [
-  { id: "f1", name: "Minh Thi", mutual: 12, avatar: "https://i.pravatar.cc/200?img=12", addedAt: "2026-03-24" },
-  { id: "f2", name: "Khoa Lê", mutual: 4, avatar: "https://i.pravatar.cc/200?img=22", addedAt: "2026-03-26" },
-  { id: "f3", name: "Nguyễn Duy Khánh", mutual: 50, avatar: "https://i.pravatar.cc/200?img=5", addedAt: "2026-02-10" },
-  { id: "f4", name: "Laam Ly", mutual: 14, avatar: "https://i.pravatar.cc/200?img=28", addedAt: "2026-03-25" },
-  { id: "f5", name: "Nguyễn Hoàng Nam", mutual: 37, avatar: "https://i.pravatar.cc/200?img=17", addedAt: "2026-01-12" },
-  { id: "f6", name: "Nguyệt Anh", mutual: 2, avatar: "https://i.pravatar.cc/200?img=43", addedAt: "2026-03-20" },
-  { id: "f7", name: "Vũ Văn Đức", mutual: 2, avatar: "https://i.pravatar.cc/200?img=48", addedAt: "2026-03-22" },
-  { id: "f8", name: "Đạt Tiên", mutual: 33, avatar: "https://i.pravatar.cc/200?img=7", addedAt: "2026-02-28" },
-  { id: "f9", name: "Bình Nhi", mutual: 45, avatar: "https://i.pravatar.cc/200?img=38", addedAt: "2026-03-27" },
-];
+function initialsFromName(name) {
+  const safe = (name || "").trim();
+  if (!safe) return "?";
+  const parts = safe.split(/\s+/).filter(Boolean);
+  const a = parts[0]?.[0] || "";
+  const b = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+  return (a + b).toUpperCase() || "?";
+}
 
-export default function FriendsListPage() {
+function mapUser(u) {
+  return {
+    id: u?._id || u?.id,
+    name: u?.fullName || u?.username || "Người dùng",
+    avatar: apiClient.ensureAbsolute(u?.avatarUrl) || "",
+    addedAt: u?.createdAt || null,
+    mutual: u?.mutualCount ?? 0,
+  };
+}
+
+export default function FriendsListPage({ embedded = false }) {
   const [tab, setTab] = useState("all"); // all | recent
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [menuOpenId, setMenuOpenId] = useState(null);
+  const menuRef = useRef(null);
+  const { confirm } = useConfirm();
+  const navigate = useNavigate();
 
   const data = useMemo(() => {
     if (tab === "recent") {
       // coi những người có addedAt trong vòng 7 ngày là "đã thêm gần đây"
       const now = new Date();
-      return mockFriends.filter((f) => {
+      return friends.filter((f) => {
+        if (!f.addedAt) return false;
         const dt = new Date(f.addedAt);
         return (now - dt) / (1000 * 60 * 60 * 24) <= 7;
       });
     }
-    return mockFriends;
-  }, [tab]);
+    return friends;
+  }, [tab, friends]);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await getFriendsApi();
+        const arr = Array.isArray(res) ? res : res?.data;
+        if (!alive) return;
+        setFriends((arr || []).map(mapUser));
+      } catch {
+        if (!alive) return;
+        setFriends([]);
+      } finally {
+        if (!alive) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    function onDocDown(e) {
+      if (!menuOpenId) return;
+      if (menuRef.current && menuRef.current.contains(e.target)) return;
+      setMenuOpenId(null);
+    }
+    document.addEventListener("mousedown", onDocDown);
+    return () => document.removeEventListener("mousedown", onDocDown);
+  }, [menuOpenId]);
+
+  const openChat = (f) => {
+    window.dispatchEvent(
+      new CustomEvent("gm:chat:open", {
+        detail: { user: { id: f.id, name: f.name, avatar: f.avatar } },
+      })
+    );
+  };
+
+  const doUnfriend = async (f) => {
+    const ok = await confirm(`Hủy kết bạn với ${f.name}?`);
+    if (!ok) return;
+    try {
+      await unfriendApi(f.id);
+      setFriends((prev) => prev.filter((x) => x.id !== f.id));
+    } finally {
+      setMenuOpenId(null);
+    }
+  };
+
+  const doBlock = async (f) => {
+    const ok = await confirm(`Chặn ${f.name}? Bạn sẽ không thấy nhau trong danh sách bạn bè.`);
+    if (!ok) return;
+    try {
+      await blockUserApi(f.id);
+      setFriends((prev) => prev.filter((x) => x.id !== f.id));
+    } finally {
+      setMenuOpenId(null);
+    }
+  };
 
   return (
     <div className={styles.page}>
-      <Header />
+      {embedded ? null : <Header />}
       <main className={styles.main}>
         <div className={styles.container}>
           <div className={styles.panel}>
@@ -58,24 +138,90 @@ export default function FriendsListPage() {
                 {tab === "all" ? "Bạn bè" : "Đã thêm gần đây"}
               </div>
               <div className={styles.list}>
-                {data.map((f) => (
-                  <div key={f.id} className={styles.row}>
-                    <img src={f.avatar} alt="" className={styles.avatar} />
-                    <div className={styles.nameMeta}>
-                      <div className={styles.name}>{f.name}</div>
-                      <div className={styles.meta}>{f.mutual} bạn chung</div>
+                {loading ? (
+                  <div className={styles.row}>Đang tải...</div>
+                ) : data.length === 0 ? (
+                  <div className={styles.row}>Chưa có bạn bè.</div>
+                ) : (
+                  data.map((f) => (
+                    <div
+                      key={f.id}
+                      className={styles.row}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => navigate(`/u/${encodeURIComponent(f.id || "")}`)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          navigate(`/u/${encodeURIComponent(f.id || "")}`);
+                        }
+                      }}
+                    >
+                      {f.avatar ? (
+                        <img src={f.avatar} alt="" className={styles.avatar} />
+                      ) : (
+                        <div className={styles.avatarFallback} aria-hidden="true">
+                          {initialsFromName(f.name)}
+                        </div>
+                      )}
+                      <div className={styles.nameMeta}>
+                        <div className={styles.name}>{f.name}</div>
+                        <div className={styles.meta}>{f.mutual} bạn chung</div>
+                      </div>
+                      <div className={styles.actions}>
+                        <button
+                          className={styles.messageBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openChat(f);
+                          }}
+                        >
+                          Nhắn tin
+                        </button>
+                        <div className={styles.menuWrap} ref={menuOpenId === f.id ? menuRef : null}>
+                          <button
+                            className={styles.menuBtn}
+                            aria-label="Tùy chọn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMenuOpenId((cur) => (cur === f.id ? null : f.id));
+                            }}
+                          >
+                            <FaEllipsisH />
+                          </button>
+                          {menuOpenId === f.id ? (
+                            <div className={styles.menu}>
+                              <button
+                                className={styles.menuItemDanger}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  doUnfriend(f);
+                                }}
+                              >
+                                Hủy kết bạn
+                              </button>
+                              <button
+                                className={styles.menuItemDanger}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  doBlock(f);
+                                }}
+                              >
+                                Chặn
+                              </button>
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
                     </div>
-                    <button className={styles.menuBtn} aria-label="Tùy chọn">
-                      <FaEllipsisH />
-                    </button>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
         </div>
       </main>
-      <Footer />
+      {embedded ? null : <Footer />}
     </div>
   );
 }

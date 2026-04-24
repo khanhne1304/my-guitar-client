@@ -1,40 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./FriendRequestsPage.module.css";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
+import { apiClient } from "../../../services/apiClient";
+import { useNavigate } from "react-router-dom";
+import {
+  acceptFriendRequestApi,
+  cancelOrDeclineFriendRequestApi,
+  getFriendRequestsApi,
+} from "../../../services/userService";
 
-const mockRequests = [
-  { id: "u1", name: "Lê Mạnh Bảo", mutual: 3, avatar: "https://i.pravatar.cc/300?img=11" },
-  { id: "u2", name: "Lê Ngọc Kiều", mutual: 8, avatar: "https://i.pravatar.cc/300?img=25" },
-  { id: "u3", name: "Thảo Nguyên", mutual: 2, avatar: "https://i.pravatar.cc/300?img=47" },
-  { id: "u4", name: "Ngọc Lan", mutual: 5, avatar: "https://i.pravatar.cc/300?img=15" },
-  { id: "u5", name: "Nguyễn Ngọc Thanh", mutual: 1, avatar: "https://i.pravatar.cc/300?img=36" },
-  { id: "u6", name: "Diệu Liên", mutual: 4, avatar: "https://i.pravatar.cc/300?img=31" },
-  { id: "u7", name: "Thúy Huỳnh", mutual: 6, avatar: "https://i.pravatar.cc/300?img=9" },
-  { id: "u8", name: "Huỳnh Cúc", mutual: 3, avatar: "https://i.pravatar.cc/300?img=23" },
-  { id: "u9", name: "Trung Nghĩa", mutual: 7, avatar: "https://i.pravatar.cc/300?img=40" },
-  { id: "u10", name: "Mỹ Duyên", mutual: 2, avatar: "https://i.pravatar.cc/300?img=45" },
-  { id: "u11", name: "Hoàng Phúc", mutual: 5, avatar: "https://i.pravatar.cc/300?img=4" },
-  { id: "u12", name: "Minh Châu", mutual: 9, avatar: "https://i.pravatar.cc/300?img=56" },
-  { id: "u13", name: "Thanh Tâm", mutual: 1, avatar: "https://i.pravatar.cc/300?img=21" },
-  { id: "u14", name: "Nhật Hào", mutual: 4, avatar: "https://i.pravatar.cc/300?img=60" },
-  { id: "u15", name: "Phương Thảo", mutual: 3, avatar: "https://i.pravatar.cc/300?img=34" },
-  { id: "u16", name: "Bảo Ngọc", mutual: 6, avatar: "https://i.pravatar.cc/300?img=52" },
-  { id: "u17", name: "Văn Tín", mutual: 2, avatar: "https://i.pravatar.cc/300?img=7" },
-  { id: "u18", name: "Khánh Huyền", mutual: 8, avatar: "https://i.pravatar.cc/300?img=66" },
-  { id: "u19", name: "Anh Khoa", mutual: 5, avatar: "https://i.pravatar.cc/300?img=17" },
-  { id: "u20", name: "Thuỳ Dương", mutual: 3, avatar: "https://i.pravatar.cc/300?img=30" },
-];
+function initialsFromName(name) {
+  const safe = (name || "").trim();
+  if (!safe) return "?";
+  const parts = safe.split(/\s+/).filter(Boolean);
+  const a = parts[0]?.[0] || "";
+  const b = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+  return (a + b).toUpperCase() || "?";
+}
 
-export default function FriendRequestsPage() {
-  const [requests, setRequests] = useState(mockRequests);
+function mapUser(u) {
+  return {
+    id: u?._id || u?.id,
+    name: u?.fullName || u?.username || "Người dùng",
+    mutual: u?.mutualCount ?? 0,
+    avatar: apiClient.ensureAbsolute(u?.avatarUrl) || "",
+  };
+}
 
-  const accept = (id) => setRequests((prev) => prev.filter((r) => r.id !== id));
-  const remove = (id) => setRequests((prev) => prev.filter((r) => r.id !== id));
+export default function FriendRequestsPage({ embedded = false }) {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await getFriendRequestsApi();
+        const arr = Array.isArray(res) ? res : res?.data;
+        if (!alive) return;
+        setRequests((arr || []).map(mapUser));
+      } catch {
+        if (!alive) return;
+        setRequests([]);
+      } finally {
+        if (!alive) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const accept = async (id) => {
+    try {
+      await acceptFriendRequestApi(id);
+      setRequests((prev) => prev.filter((r) => r.id !== id));
+    } catch {}
+  };
+  const remove = async (id) => {
+    try {
+      await cancelOrDeclineFriendRequestApi(id);
+      setRequests((prev) => prev.filter((r) => r.id !== id));
+    } catch {}
+  };
 
   return (
     <div className={styles.page}>
-      <Header />
+      {embedded ? null : <Header />}
       <main className={styles.main}>
         <div className={styles.container}>
           <div className={styles.titleBar}>
@@ -42,23 +78,63 @@ export default function FriendRequestsPage() {
             <a href="#" className={styles.seeAll}>Xem tất cả</a>
           </div>
           <div className={styles.grid}>
-            {requests.map((r) => (
-              <div key={r.id} className={styles.card}>
-                <img src={r.avatar} alt="" className={styles.cover} />
+            {loading ? (
+              <div>Đang tải...</div>
+            ) : requests.length === 0 ? (
+              <div>Không có lời mời kết bạn.</div>
+            ) : (
+              requests.map((r) => (
+              <div
+                key={r.id}
+                className={styles.card}
+                role="button"
+                tabIndex={0}
+                onClick={() => navigate(`/u/${encodeURIComponent(r.id || "")}`)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(`/u/${encodeURIComponent(r.id || "")}`);
+                  }
+                }}
+              >
+                {r.avatar ? (
+                  <img src={r.avatar} alt="" className={styles.cover} />
+                ) : (
+                  <div className={styles.coverFallback} aria-hidden="true">
+                    {initialsFromName(r.name)}
+                  </div>
+                )}
                 <div className={styles.content}>
                   <div className={styles.name}>{r.name}</div>
                   <div className={styles.meta}>{r.mutual} bạn chung</div>
                   <div className={styles.actions}>
-                    <button className={styles.accept} onClick={() => accept(r.id)}>Xác nhận</button>
-                    <button className={styles.remove} onClick={() => remove(r.id)}>Xóa</button>
+                    <button
+                      className={styles.accept}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        accept(r.id);
+                      }}
+                    >
+                      Xác nhận
+                    </button>
+                    <button
+                      className={styles.remove}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        remove(r.id);
+                      }}
+                    >
+                      Xóa
+                    </button>
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </main>
-      <Footer />
+      {embedded ? null : <Footer />}
     </div>
   );
 }

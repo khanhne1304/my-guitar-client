@@ -134,6 +134,20 @@
     object-fit: cover;
     flex: 0 0 40px;
   }
+  .threadAvatarFallback {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #111;
+    color: #ffd700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    flex: 0 0 40px;
+    user-select: none;
+  }
   .threadMeta {
     min-width: 0;
     flex: 1 1 auto;
@@ -192,6 +206,19 @@
     border-radius: 50%;
     object-fit: cover;
   }
+  .threadAvatarLgFallback {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #111;
+    color: #ffd700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    user-select: none;
+  }
   .threadHeaderName {
     font-weight: 800;
   }
@@ -229,6 +256,20 @@
     height: 28px;
     border-radius: 50%;
     object-fit: cover;
+  }
+  .msgAvatarFallback {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #111;
+    color: #ffd700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    user-select: none;
+    flex: 0 0 28px;
   }
   .msgBubble {
     max-width: 70%;

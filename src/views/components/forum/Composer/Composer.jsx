@@ -11,13 +11,29 @@ export default function Composer() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("user");
-      if (raw) setCurrentUser(JSON.parse(raw));
-    } catch {}
+    const loadUser = () => {
+      try {
+        const raw = localStorage.getItem("user");
+        setCurrentUser(raw ? JSON.parse(raw) : null);
+      } catch {}
+    };
+    loadUser();
+    const onProfileChanged = () => loadUser();
+    window.addEventListener("user:profile-changed", onProfileChanged);
+    // Also react to localStorage updates across tabs/windows
+    const onStorage = (e) => {
+      if (e?.key === "user") loadUser();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener("user:profile-changed", onProfileChanged);
+      window.removeEventListener("storage", onStorage);
+    };
   }, []);
 
   const pickImages = () => {
+    // Reset value để chọn lại cùng 1 file vẫn trigger onChange
+    if (fileRef.current) fileRef.current.value = "";
     fileRef.current?.click();
   };
   const onFiles = async (files) => {
@@ -50,6 +66,11 @@ export default function Composer() {
     // Ngăn input nhận focus để tránh hiệu ứng nhấp nháy placeholder
     e.preventDefault();
     setOpen(true);
+  };
+  const closeComposer = () => {
+    setOpen(false);
+    setContent("");
+    setImages([]);
   };
   const submit = () => {
     // Save to localStorage for Profile page history
@@ -105,13 +126,17 @@ export default function Composer() {
           multiple
           ref={fileRef}
           style={{ display: "none" }}
-          onChange={(e) => onFiles(e.target.files)}
+          onChange={(e) => {
+            onFiles(e.target.files);
+            // Reset value để lần sau chọn lại cùng file vẫn chạy
+            e.target.value = "";
+          }}
         />
       </div>
 
       <ComposeModal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={closeComposer}
         content={content}
         setContent={setContent}
         images={images}
