@@ -58,9 +58,9 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       <div className={styles.home__menuItem}>
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>
+          <Link to="/learning/roadmap">LỘ TRÌNH HỌC</Link>
           <Link to="/tools/chord-practice">LUYỆN TẬP HỢP ÂM</Link>
           <Link to="/tools/finger-practice">LUYỆN TẬP NGÓN TAY</Link>
-          <Link to="/tools/compare-two-songs">ĐÁNH GIÁ KỸ THUẬT CHƠI</Link>
         </div>
       </div>
       <div className={styles.home__menuItem}>
@@ -73,6 +73,9 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       </div>
       <div className={styles.home__menuItem}>
         <Link to="/songs">Bài hát</Link>
+      </div>
+      <div className={styles.home__menuItem}>
+        <Link to="/forum">Diễn đàn</Link>
       </div>
     </nav>
   );

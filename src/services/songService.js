@@ -10,6 +10,11 @@ export const songService = {
     return apiClient.get(`/songs/${slug}`);
   },
 
+  // Create a new rating/comment for a song
+  async addRating(songId, { stars, comment }) {
+    return apiClient.post(`/songs/${songId}/ratings`, { stars, comment });
+  },
+
   async create(data) {
     return apiClient.post("/songs", data);
   },

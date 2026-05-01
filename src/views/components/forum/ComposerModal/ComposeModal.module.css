@@ -1,0 +1,192 @@
+/* Backdrop + modal */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+.modal {
+  width: 560px; /* sẽ bị override bằng inline style khi có ảnh */
+  max-width: calc(100% - 24px);
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,.25);
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  font-weight: 800;
+}
+.close {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+.body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* giảm khoảng cách tổng thể */
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.identity {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.name {
+  font-weight: 800;
+  margin-bottom: 4px; /* tăng khoảng cách với dòng Công khai */
+}
+.visBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #374151;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.visMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  min-width: 180px;
+  z-index: 5;
+  overflow: hidden;
+}
+.visItem {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.visItem:hover {
+  background: #f9fafb;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #ddd;
+  flex-shrink: 0;
+}
+.textarea {
+  width: 100%;
+  min-height: 70px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: var(--font-sans);
+  font-size: 14px;       /* đồng bộ với bài viết ngoài feed */
+  line-height: 1.5;
+  color: #111;
+}
+.images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.mediaBox {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  resize: vertical;            /* cho phép kéo cao thấp */
+  min-height: 140px;
+  height: 280px;               /* mặc định */
+  max-height: 75vh;
+  overflow: auto;              /* cuộn khi ảnh quá dài */
+  margin-top: 4px;             /* sát hơn với textarea */
+  position: relative;
+}
+.mediaBox img {
+  width: 100%;
+  height: auto;                /* giữ tỷ lệ, cho phép cao hơn khung */
+  object-fit: contain;         /* không cắt, hiển thị đầy phần ngang */
+  display: block;
+}
+.mediaBox .remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.thumb {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+.remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  cursor: pointer;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 6px;
+}
+.attachBtn {
+  padding: 6px 8px;
+  background: #f6f6f6;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+.submit {
+  padding: 8px 12px;
+  background: #000;
+  color: #ffd700;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+.submit:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+@media (max-width: 520px) {
+  .images { grid-template-columns: repeat(2, 1fr); }
+}
+

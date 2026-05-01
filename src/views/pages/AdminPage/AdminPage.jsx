@@ -9,6 +9,7 @@ import ReviewManager from "../../components/admin/ReviewManager/ReviewManager";
 import CouponManager from "../../components/admin/CouponManager/CouponManager";
 import NotificationManager from "../../components/admin/NotificationManager/NotificationManager";
 import StatisticsReport from "../../components/admin/StatisticsReport/StatisticsReport";
+import ForumReportManager from "../../components/admin/ForumReportManager/ForumReportManager";
 
 export default function AdminPage() {
   return (
@@ -24,6 +25,7 @@ export default function AdminPage() {
         <Route path="reviews" element={<ReviewManager />} />
         <Route path="coupons" element={<CouponManager />} />
         <Route path="notifications" element={<NotificationManager />} />
+        <Route path="forum-reports" element={<ForumReportManager />} />
       </Route>
     </Routes>
   );

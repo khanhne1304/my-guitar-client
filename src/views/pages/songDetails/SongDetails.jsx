@@ -6,6 +6,7 @@ import LyricsViewer from "../../components/song/songDetails/LyricsViewer";
 import ChordList from "../../components/song/songDetails/ChordList";
 import RelatedSongs from "../../components/song/songDetails/RelatedSongs";
 import RatingsSection from "../../components/song/songDetails/RatingsSection";
+import Footer from "../../components/homeItem/Footer/Footer";
 export default function SongDetails() {
   const { slug } = useParams();
   const { state, actions } = useSongDetailsVM(slug);
@@ -29,6 +30,7 @@ export default function SongDetails() {
         setNewRating={setNewRating}
         onSubmit={handleSubmitRating}
       />
+      <Footer />
     </div>
   );
 }

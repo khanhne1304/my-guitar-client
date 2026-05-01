@@ -1,4 +1,5 @@
 import Header from "../../../components/homeItem/Header/Header";
+import Footer from "../../../components/homeItem/Footer/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../ChordPracticePage/ChordPracticeDetailPage.module.css";
 
@@ -65,6 +66,7 @@ export default function LeftHandPracticePage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

@@ -1,9 +1,9 @@
 // RegisterViewModel.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RegisterForm, User } from '../../../src/models/AuthModels/registerModel';
+import { RegisterForm } from '../../../src/models/AuthModels/registerModel';
 import { validateRegister } from '../../utils/validators';
-import { saveSession } from '../../utils/storage';
+import { saveSession, mergeUser } from '../../utils/storage';
 import { sendOTPForRegister, verifyOTPAndRegister } from '../../services/authService';
 
 export function useRegisterViewModel() {
@@ -127,7 +127,7 @@ export function useRegisterViewModel() {
       });
 
       const backendUser = result?.user || result?.data?.user || {};
-      const user = new User({
+      const user = mergeUser(backendUser, {
         id: backendUser.id ?? backendUser._id,
         name: backendUser.fullName ?? backendUser.name ?? form.fullName.trim(),
         email: backendUser.email ?? form.email.trim(),
@@ -140,7 +140,7 @@ export function useRegisterViewModel() {
       saveSession({ token: result?.token || result?.data?.token, user });
       setOk('Đăng ký thành công! Đang chuyển hướng...');
       setShowOTPModal(false);
-      setTimeout(() => navigate('/'), 1000);
+      setTimeout(() => navigate('/learning/onboarding'), 1000);
     } catch (error) {
       const message =
         error?.data?.message ||
@@ -166,7 +166,7 @@ export function useRegisterViewModel() {
       });
 
       const backendUser = result?.user || result?.data?.user || {};
-      const user = new User({
+      const user = mergeUser(backendUser, {
         id: backendUser.id ?? backendUser._id,
         name: backendUser.fullName ?? backendUser.name ?? form.fullName.trim(),
         email: backendUser.email ?? form.email.trim(),
@@ -177,9 +177,9 @@ export function useRegisterViewModel() {
       });
 
       saveSession({ token: result?.token || result?.data?.token, user });
-      setOk('Đăng ký thành công! Đang chuyển về trang chủ...');
+      setOk('Đăng ký thành công! Đang chuyển hướng...');
       setShowOTPModal(false);
-      setTimeout(() => navigate('/'), 2000);
+      setTimeout(() => navigate('/learning/onboarding'), 2000);
     } catch (error) {
       const message = error?.message || 'Xác thực OTP thất bại. Vui lòng thử lại.';
       throw new Error(message);

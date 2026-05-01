@@ -7,6 +7,7 @@ import GoogleIcon from '../../components/icons/GoogleIcon';
 import OTPModal from '../../../components/OTPModal/OTPModal';
 import { useRegisterViewModel } from '../../../viewmodels/AuthViewModel/RegisterViewModel';
 import { apiClient } from '../../../services/apiClient';
+import Footer from '../../components/homeItem/Footer/Footer';
 
 export default function RegisterPage() {
   const {
@@ -41,6 +42,7 @@ export default function RegisterPage() {
   };
 
   return (
+    <>
     <div className={styles.registerPage}>
       <div className={styles.register}>
         <div className={styles.register__card}>
@@ -192,5 +194,7 @@ export default function RegisterPage() {
         onResendOTP={handleResendOTP}
       />
     </div>
+    <Footer />
+    </>
   );
 }

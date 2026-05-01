@@ -36,9 +36,17 @@ import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHa
 import StrummingPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/StrummingPage";
 import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
 import ChatbotPage from "../../views/pages/ChatbotPage/ChatbotPage";
-import CompareSongPage from "../../views/pages/ToolsPage/CompareSongPage/CompareSongPage";
-import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
 import AuthCallback from "../../views/pages/AuthCallback/AuthCallback";
+import ForumPage from "../../views/pages/ForumPage/ForumPage";
+import FriendRequestsPage from "../../views/pages/FriendsPage/FriendRequestsPage";
+import FriendsListPage from "../../views/pages/FriendsPage/FriendsListPage";
+import ProfilePage from "../../views/pages/ProfilePage/ProfilePage";
+import SearchPage from "../../views/pages/SearchPage/SearchPage";
+import ForumPostPage from "../../views/pages/ForumPostPage/ForumPostPage";
+import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
+import LearningPathOnboardingPage from "../../views/pages/LearningPathPage/LearningPathOnboardingPage";
+import LearningRoadmapPage from "../../views/pages/LearningPathPage/LearningRoadmapPage";
+import LearningLessonPage from "../../views/pages/LearningPathPage/LearningLessonPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -74,14 +82,22 @@ const publicRoutes = [
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
-  { path: "/tools/compare-song", element: <CompareSongPage /> },
-  { path: "/tools/compare-two-songs", element: <CompareTwoSongsPage /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
   { path: "/chatbot", element: <ChatbotPage /> },
+  { path: "/forum", element: <ForumPage /> },
+  { path: "/forum/post/:postId", element: <ForumPostPage /> },
+  { path: "/profile", element: <ProfilePage /> },
+  { path: "/u/:username", element: <UserProfilePage /> },
+  { path: "/search", element: <SearchPage /> },
+  { path: "/friends", element: <FriendsListPage /> },
+  { path: "/friends/requests", element: <FriendRequestsPage /> },
+  { path: "/learning/onboarding", element: <LearningPathOnboardingPage /> },
+  { path: "/learning/roadmap", element: <LearningRoadmapPage /> },
+  { path: "/learning/lesson/:lessonId", element: <LearningLessonPage /> },
 ];
 
 export default publicRoutes;

@@ -12,6 +12,7 @@ export default function SearchBox({
   const [loading, setLoading] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const boxRef = useRef(null);
+  const inputRef = useRef(null);
   const controllerRef = useRef(null);
 
   const q = useMemo(() => keyword.trim(), [keyword]);
@@ -49,7 +50,18 @@ export default function SearchBox({
       if (!boxRef.current.contains(e.target)) setOpen(false);
     };
     document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
+    // Focus search from anywhere
+    const onFocusSearch = () => {
+      try {
+        inputRef.current?.focus();
+        setOpen(suggestions.length > 0);
+      } catch {}
+    };
+    window.addEventListener("app:focus-search", onFocusSearch);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("app:focus-search", onFocusSearch);
+    };
   }, []);
 
   const onKeyDown = (e) => {
@@ -76,6 +88,7 @@ export default function SearchBox({
     <div className={styles.home__searchBox} ref={boxRef}>
       <div className={styles.searchWrap}>
         <input
+          ref={inputRef}
           type="text"
           placeholder="Tìm kiếm..."
           value={keyword}

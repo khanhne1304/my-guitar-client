@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/homeItem/Header/Header";
+import Footer from "../../../../components/homeItem/Footer/Footer";
 import styles from "../../ChordPracticePage/ChordPracticeDetailPage.module.css";
 import VirtualGuitarNeck from "../../../../../components/VirtualGuitarNeck";
 import VirtualHand from "../../../../../components/VirtualHand";
@@ -270,6 +271,7 @@ export default function IndependencePage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

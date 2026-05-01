@@ -12,6 +12,11 @@ export default function ProductManager() {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+
+  // Filters
+  const [q, setQ] = useState("");
+  const [stockFilter, setStockFilter] = useState("all"); // all | in | out
+  const [categoryFilter, setCategoryFilter] = useState("all"); // all | guitar | piano
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -43,6 +48,29 @@ export default function ProductManager() {
     }
   };
 
+  // Derived: filtered products
+  const visibleProducts = products.filter((p) => {
+    const query = q.trim().toLowerCase();
+    const matchesQ =
+      !query ||
+      (p.name || "").toLowerCase().includes(query) ||
+      (p.sku || "").toLowerCase().includes(query);
+
+    const isInStock = (p.stock ?? 0) > 0;
+    const matchesStock =
+      stockFilter === "all" ||
+      (stockFilter === "in" && isInStock) ||
+      (stockFilter === "out" && !isInStock);
+
+    const cat = (p.attributes?.type || p.category?.slug || p.category || "")
+      .toString()
+      .toLowerCase();
+    const matchesCategory =
+      categoryFilter === "all" || cat === categoryFilter.toLowerCase();
+
+    return matchesQ && matchesStock && matchesCategory;
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -54,7 +82,7 @@ export default function ProductManager() {
 
       {loading ? (
         <p className={styles.loading}>Đang tải...</p>
-      ) : products.length === 0 ? (
+      ) : visibleProducts.length === 0 ? (
         <div className={styles.empty}>Chưa có sản phẩm nào.</div>
       ) : (
         <table className={styles.table}>
@@ -71,7 +99,7 @@ export default function ProductManager() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p) => (
+            {visibleProducts.map((p) => (
               <tr key={p._id}>
                 <td>
                   <img
@@ -88,7 +116,13 @@ export default function ProductManager() {
                 <td>
                   {p.price?.sale ? (
                     <>
-                      <span style={{ textDecoration: "line-through", color: "#888", marginRight: "4px" }}>
+                      <span
+                        style={{
+                          textDecoration: "line-through",
+                          color: "#888",
+                          marginRight: "4px",
+                        }}
+                      >
                         {p.price.base.toLocaleString("vi-VN")}₫
                       </span>
                       <span style={{ color: "#b91c1c", fontWeight: 700 }}>
@@ -119,8 +153,6 @@ export default function ProductManager() {
                     Xóa
                   </button>
                 </td>
-
-
               </tr>
             ))}
           </tbody>

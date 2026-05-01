@@ -7,8 +7,6 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
     title: "",
     subtitle: "",
     artists: "",
-    posterName: "",
-    postedAt: "",
     styleLabel: "",
     tags: "",
     excerpt: "",
@@ -23,8 +21,6 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
         title: song.title || "",
         subtitle: song.subtitle || "",
         artists: song.artists?.join(", ") || "",
-        posterName: song.posterName || "",
-        postedAt: song.postedAt ? song.postedAt.slice(0, 10) : "",
         styleLabel: song.styleLabel || "",
         tags: song.tags?.join(", ") || "",
         excerpt: song.excerpt || "",
@@ -78,7 +74,6 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
         ...form,
         artists: form.artists.split(",").map((a) => a.trim()).filter(Boolean),
         tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
-        postedAt: form.postedAt ? new Date(form.postedAt).toISOString() : new Date().toISOString(), // Sử dụng ngày hiện tại nếu không có
       });
       onSuccess?.(); // reload list
       onClose?.(); // close modal
@@ -126,26 +121,6 @@ export default function EditSongModal({ open, onClose, song, onSuccess }) {
               type="text"
               name="artists"
               value={form.artists}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Người đăng
-            <input
-              type="text"
-              name="posterName"
-              value={form.posterName}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Ngày đăng
-            <input
-              type="date"
-              name="postedAt"
-              value={form.postedAt}
               onChange={handleChange}
             />
           </label>

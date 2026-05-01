@@ -1,143 +1,113 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ChatWidget.module.css";
-import { chatService } from "../../../services/chatService";
-import { Link } from "react-router-dom";
 
 export default function ChatWidget() {
-	const MESSENGER_PAGE = 911060482093579 || "phan.le.chi.khanh"; // page username hoặc ID
-	const MESSENGER_URL = `https://m.me/${MESSENGER_PAGE}`;
-	const ZALO_URL = process.env.REACT_APP_ZALO_URL || " https://zalo.me/0901801325";
 	const [open, setOpen] = useState(false);
-	const [message, setMessage] = useState("");
-	const [messages, setMessages] = useState([]); // [{ role: 'user'|'assistant', content: string, items?: [] }]
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
-	const [copiedIdx, setCopiedIdx] = useState(null);
+
+	// Two-pane user chat state
+	const [conversations, setConversations] = useState(() => {
+		try {
+			const raw = localStorage.getItem("gm.chat.conversations");
+			if (raw) return JSON.parse(raw);
+		} catch {}
+		return [];
+	});
+	const [selectedUserId, setSelectedUserId] = useState(null);
+	const [draft, setDraft] = useState("");
+
 	const inputRef = useRef(null);
 	const listRef = useRef(null);
 
-	function copyTextToClipboard(text) {
+	useEffect(() => {
 		try {
-			if (navigator?.clipboard?.writeText) {
-				navigator.clipboard.writeText(text);
-				return;
-			}
+			localStorage.setItem("gm.chat.conversations", JSON.stringify(conversations));
 		} catch {}
-		const ta = document.createElement('textarea');
-		ta.value = text;
-		ta.style.position = 'fixed';
-		ta.style.opacity = '0';
-		document.body.appendChild(ta);
-		ta.select();
-		try {
-			document.execCommand('copy');
-		} finally {
-			document.body.removeChild(ta);
-		}
-	}
+	}, [conversations]);
 
-	function editQuestion(content, idxToEdit) {
-		// Xoá toàn bộ đoạn hội thoại từ tin đang chỉnh sửa trở xuống
-		setMessages((prev) => prev.slice(0, Math.max(0, idxToEdit)));
-		setMessage(content || "");
-		setLoading(false);
-		setError("");
-		setCopiedIdx(null);
+	useEffect(() => {
+		function handleOpenChat(e) {
+			const u = e?.detail?.user;
+			if (!u?.id) return;
+			setOpen(true);
+			setConversations((prev) => {
+				const exists = prev.some((c) => c.user?.id === u.id);
+				if (exists) return prev;
+				const now = Date.now();
+				return [
+					{
+						user: { id: u.id, name: u.name || "Người dùng", avatar: u.avatar || "" },
+						lastAt: now,
+						messages: [],
+						unread: 0,
+					},
+					...prev,
+				];
+			});
+			setSelectedUserId(u.id);
+		}
+		window.addEventListener("gm:chat:open", handleOpenChat);
+		return () => window.removeEventListener("gm:chat:open", handleOpenChat);
+	}, []);
+
+	useEffect(() => {
+		if (!open) return;
+		// focus input when modal opens (if a thread is picked)
+		const t = setTimeout(() => inputRef.current?.focus(), 60);
+		return () => clearTimeout(t);
+	}, [open]);
+
+	const selectedConversation = useMemo(
+		() => conversations.find((c) => c.user.id === selectedUserId) || null,
+		[conversations, selectedUserId]
+	);
+
+	function selectConversation(userId) {
+		setSelectedUserId(userId);
+		// mark as read
+		setConversations((prev) =>
+			prev.map((c) => (c.user.id === userId ? { ...c, unread: 0 } : c))
+		);
+		// scroll to bottom after render
 		setTimeout(() => {
-			try {
-				inputRef.current?.focus();
-				// Đưa caret về cuối
-				const el = inputRef.current;
-				el?.setSelectionRange?.(el.value.length, el.value.length);
-			} catch {}
+			if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
 		}, 0);
 	}
 
-	useEffect(() => {
-		if (open) {
-			setTimeout(() => inputRef.current?.focus(), 50);
-			// Chào mừng lần đầu mở
-			setMessages((prev) => {
-				if (prev.length) return prev;
-				return [
-					{
-						role: "assistant",
-						content: "Xin chào! Tôi có thể giúp gì cho bạn?",
-					},
-				];
-			});
-		}
-	}, [open]);
-
-	useEffect(() => {
-		// Auto scroll to bottom khi có tin mới
-		if (listRef.current) {
-			listRef.current.scrollTop = listRef.current.scrollHeight;
-		}
-	}, [messages, loading]);
-
-	async function send() {
-		if (!message.trim()) return;
-		setError("");
-		const userTurn = { role: "user", content: message };
-		setMessages((prev) => [...prev, userTurn]);
-		try {
-			setLoading(true);
-			const res = await chatService.ask({ message });
-			const assistantTurn = {
-				role: "assistant",
-				content: res?.answer || "Mình tạm thời chưa có câu trả lời.",
-				items: Array.isArray(res?.items) ? res.items : [],
-			};
-			setMessages((prev) => [...prev, assistantTurn]);
-			setMessage("");
-		} catch (e) {
-			setError(e?.message || "Lỗi chatbot");
-		} finally {
-			setLoading(false);
-		}
+	function sendMessage() {
+		const text = draft.trim();
+		if (!text || !selectedConversation) return;
+		const when = Date.now();
+		setConversations((prev) =>
+			prev.map((c) => {
+				if (c.user.id !== selectedConversation.user.id) return c;
+				const msg = { id: `m${when}`, from: "me", text, at: when };
+				return { ...c, messages: [...c.messages, msg], lastAt: when };
+			})
+		);
+		setDraft("");
+		setTimeout(() => {
+			listRef.current?.scrollTo?.({ top: listRef.current.scrollHeight, behavior: "smooth" });
+		}, 0);
 	}
 
 	function handleKeyDown(e) {
-		// Enter để gửi, Shift+Enter để xuống dòng (nếu sau này dùng <textarea>)
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
-			send();
-			return;
+			sendMessage();
 		}
-		if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-			send();
-		}
+	}
+	function handleCloseReset() {
+		// Close and reset selection (used by the X button)
+		setOpen(false);
+		setSelectedUserId(null);
+	}
+	function handleBackdropClose() {
+		// Close but KEEP current selection to restore next open
+		setOpen(false);
 	}
 
 	return (
 		<>
-			{/* Social floating buttons */}
-			<a
-				className={`${styles.socialFab} ${styles.fb}`}
-				href={MESSENGER_URL}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Messenger"
-				title="Messenger"
-			>
-				{/* Messenger icon */}
-				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
-					<path d="M12 2C6.477 2 2 6.04 2 10.98c0 2.77 1.372 5.255 3.566 6.93V22l3.26-1.791c1.023.284 2.11.44 3.174.44 5.523 0 10-4.04 10-8.98S17.523 2 12 2Zm.33 6.55 2.88-1.81a.75.75 0 0 1 .98 1.102l-2.35 3.101a1.5 1.5 0 0 1-2.1.33l-1.21-.86a.75.75 0 0 0-.88.01l-2.88 1.81a.75.75 0 0 1-.98-1.102l2.35-3.101a1.5 1.5 0 0 1 2.1-.33l1.21.86a.75.75 0 0 0 .88-.01Z"/>
-				</svg>
-			</a>
-			<a
-				className={`${styles.socialFab} ${styles.zalo}`}
-				href={ZALO_URL}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Zalo"
-				title="Zalo"
-			>
-				{/* simple Z letter */}
-				<span className={styles.zaloIcon}>Z</span>
-			</a>
-
 			<button className={styles.bubble} onClick={() => setOpen(true)} aria-label="Chatbot">
 				{/* simple chat icon */}
 				<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -146,103 +116,141 @@ export default function ChatWidget() {
 			</button>
 
 			{open && (
-				<div className={styles.backdrop} onClick={() => setOpen(false)}>
+				<div className={styles.backdrop} onClick={handleBackdropClose}>
 					<div className={styles.modal} onClick={(e) => e.stopPropagation()}>
 						<div className={styles.header}>
-							<div className={styles.title}>Trợ lý tư vấn sản phẩm</div>
-							<button className={styles.close} onClick={() => setOpen(false)} aria-label="Đóng">×</button>
+							<div className={styles.title}>Tin nhắn</div>
+							<button className={styles.close} onClick={handleCloseReset} aria-label="Đóng">×</button>
 						</div>
-						<div className={styles.body}>
-							{copiedIdx !== null && (
-								<div className={styles.copiedCenter}>Đã copy</div>
-							)}
-							<div className={styles.chatArea} ref={listRef}>
-								{messages.map((m, idx) => {
-									const isUser = m.role === "user";
-									return (
-										<div key={idx} className={isUser ? styles.bubbleUser : styles.bubbleBot}>
-											{isUser && (
-												<button
-													type="button"
-													className={styles.copyBtn}
-													title="Sao chép câu hỏi"
-													aria-label="Sao chép câu hỏi"
-													onClick={() => {
-														copyTextToClipboard(m.content);
-														setCopiedIdx(idx);
-														setTimeout(() => setCopiedIdx(null), 1500);
-													}}
+						<div className={styles.chat2col}>
+							{/* Left: conversation list */}
+							<aside className={styles.leftPane}>
+								<div className={styles.searchRow}>
+									<input className={styles.searchInput} placeholder="Tìm kiếm" />
+								</div>
+								<ul className={styles.threadList}>
+									{conversations
+										.slice()
+										.sort((a, b) => b.lastAt - a.lastAt)
+										.map((c) => {
+											const active = c.user.id === selectedUserId;
+											const lastMsg = c.messages[c.messages.length - 1];
+											return (
+												<li
+													key={c.user.id}
+													className={active ? styles.threadItemActive : styles.threadItem}
+													onClick={() => selectConversation(c.user.id)}
 												>
-													<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-														<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-														<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-													</svg>
-												</button>
-											)}
-											{isUser && (
-												<button
-													type="button"
-													className={styles.editBtn}
-													title="Chỉnh sửa câu hỏi"
-													aria-label="Chỉnh sửa câu hỏi"
-													onClick={() => editQuestion(m.content, idx)}
-												>
-													<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-														<path d="M12 20h9"></path>
-														<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
-													</svg>
-												</button>
-											)}
-											<div className={styles.msgText}>{m.content}</div>
-											{!isUser && Array.isArray(m.items) && m.items.length > 0 && (
-												<ul className={styles.items}>
-													{m.items.slice(0, 6).map((p) => (
-														<li key={p.id} className={styles.item}>
-															<div className={styles.itemName}>
-																<Link to={`/products/${p.slug}`} onClick={() => setOpen(false)}>
-																	{p.name}
-																</Link>
+													{c.user.avatar ? (
+														<img className={styles.threadAvatar} src={c.user.avatar} alt="" />
+													) : (
+														<div className={styles.threadAvatarFallback} aria-hidden="true">
+															{initialsFromName(c.user.name)}
+														</div>
+													)}
+													<div className={styles.threadMeta}>
+														<div className={styles.threadTopRow}>
+															<div className={styles.threadName}>{c.user.name}</div>
+															<div className={styles.threadTime}>{formatTime(c.lastAt)}</div>
+														</div>
+														<div className={styles.threadBottomRow}>
+															<div className={styles.threadPreview}>
+																{lastMsg?.from === "me" ? "Bạn: " : ""}
+																{lastMsg?.text || ""}
 															</div>
-															<div className={styles.itemMeta}>
-																{Number(p.price)?.toLocaleString("vi-VN")} {p.currency}
-																{p.brandName ? ` • ${p.brandName}` : ""} {p.categoryName ? ` • ${p.categoryName}` : ""}
-															</div>
-														</li>
-													))}
-												</ul>
-											)}
-										</div>
-									);
-								})}
-								{loading && (
-									<div className={styles.bubbleBot}>
-										<div className={styles.typing}>
-											<span></span><span></span><span></span>
-										</div>
-									</div>
-								)}
-							</div>
-							<div className={styles.formRow}>
-								<input
-									ref={inputRef}
-									className={styles.input}
-									placeholder="Câu hỏi của bạn..."
-									value={message}
-									onChange={(e) => setMessage(e.target.value)}
-									onKeyDown={handleKeyDown}
-								/>
-								<button className={styles.send} onClick={send} disabled={!message.trim() || loading}>
-									{loading ? "Đang tư vấn..." : "Gửi"}
-                                </button>
-							</div>
+															{c.unread ? <span className={styles.unreadDot} /> : null}
+														</div>
+													</div>
+												</li>
+											);
+										})}
+								</ul>
+							</aside>
 
-							{error && <div className={styles.error}>{error}</div>}
+							{/* Right: messages */}
+							<section className={styles.rightPane}>
+								{selectedConversation ? (
+									<>
+										<div className={styles.threadHeader}>
+											<div className={styles.threadHeaderLeft}>
+												{selectedConversation.user.avatar ? (
+													<img className={styles.threadAvatarLg} src={selectedConversation.user.avatar} alt="" />
+												) : (
+													<div className={styles.threadAvatarLgFallback} aria-hidden="true">
+														{initialsFromName(selectedConversation.user.name)}
+													</div>
+												)}
+												<div className={styles.threadHeaderName}>{selectedConversation.user.name}</div>
+											</div>
+										</div>
+										<div className={styles.messagesArea} ref={listRef}>
+											{selectedConversation.messages.map((m) => {
+												const mine = m.from === "me";
+												return (
+													<div key={m.id} className={mine ? styles.msgRowMe : styles.msgRowThem}>
+														{!mine &&
+															(selectedConversation.user.avatar ? (
+																<img className={styles.msgAvatar} src={selectedConversation.user.avatar} alt="" />
+															) : (
+																<div className={styles.msgAvatarFallback} aria-hidden="true">
+																	{initialsFromName(selectedConversation.user.name)}
+																</div>
+															))}
+														<div className={styles.msgBubble}>
+															<div className={styles.msgText}>{m.text}</div>
+															<div className={styles.msgTime}>{formatTime(m.at)}</div>
+														</div>
+													</div>
+												);
+											})}
+										</div>
+										<div className={styles.inputRow}>
+											<input
+												ref={inputRef}
+												className={styles.input}
+												placeholder="Nhập tin nhắn..."
+												value={draft}
+												onChange={(e) => setDraft(e.target.value)}
+												onKeyDown={handleKeyDown}
+											/>
+											<button className={styles.send} onClick={sendMessage} disabled={!draft.trim()}>
+												Gửi
+											</button>
+										</div>
+									</>
+								) : (
+									<div className={styles.emptyState}>Hãy chọn đoạn chat và cùng bắt đầu câu chuyện nào!</div>
+								)}
+							</section>
 						</div>
 					</div>
 				</div>
 			)}
 		</>
 	);
+}
+
+function initialsFromName(name) {
+	const safe = (name || "").trim();
+	if (!safe) return "?";
+	const parts = safe.split(/\s+/).filter(Boolean);
+	const a = parts[0]?.[0] || "";
+	const b = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+	return (a + b).toUpperCase() || "?";
+}
+
+function formatTime(ts) {
+	try {
+		const d = new Date(ts);
+		const now = Date.now();
+		const diff = Math.floor((now - ts) / 1000);
+		if (diff < 60) return "vừa xong";
+		if (diff < 3600) return `${Math.floor(diff / 60)} phút`;
+		if (diff < 86400) return `${Math.floor(diff / 3600)} giờ`;
+		return d.toLocaleDateString("vi-VN");
+	} catch {
+		return "";
+	}
 }
 
 
