@@ -11,6 +11,52 @@
   align-items:flex-start;
 }
 
+._body{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  flex:1;
+  min-width:0;
+}
+
+._avatarCol{
+  flex:0 0 44px;
+}
+
+._avatarImg{
+  width:44px;
+  height:44px;
+  border-radius:999px;
+  object-fit:cover;
+  border:1px solid #eee;
+  background:#fafafa;
+  display:block;
+}
+
+._avatarFallback{
+  width:44px;
+  height:44px;
+  border-radius:999px;
+  border:1px solid #eee;
+  background:#f3f4f6;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:16px;
+  color:#444;
+}
+
+._authorLine{
+  margin-top:4px;
+  margin-bottom:2px;
+}
+
+._authorName{
+  font-size:13px;
+  font-weight:700;
+  color:#374151;
+}
+
 ._votes{
   width:56px;
   flex:0 0 56px;

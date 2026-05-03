@@ -69,10 +69,11 @@ export default function NotificationCenter() {
       if (response.ok) {
         // Cập nhật local state - lấy userId từ user object
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const uid = user.id || user._id;
         setNotifications(prev => 
           prev.map(notif => 
             notif._id === notificationId 
-              ? { ...notif, readBy: [...(notif.readBy || []), { user: user.id, readAt: new Date() }] }
+              ? { ...notif, readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }] }
               : notif
           )
         );
@@ -95,10 +96,11 @@ export default function NotificationCenter() {
 
       if (response.ok) {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const uid = user.id || user._id;
         setNotifications(prev => 
           prev.map(notif => ({
             ...notif,
-            readBy: [...(notif.readBy || []), { user: user.id, readAt: new Date() }]
+            readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }]
           }))
         );
       }
@@ -154,7 +156,8 @@ export default function NotificationCenter() {
       promotion: { class: styles.typePromotion, text: 'Khuyến mãi', icon: '🎉' },
       system: { class: styles.typeSystem, text: 'Hệ thống', icon: '⚙️' },
       order: { class: styles.typeOrder, text: 'Đơn hàng', icon: '📦' },
-      product: { class: styles.typeProduct, text: 'Sản phẩm', icon: '🛍️' }
+      product: { class: styles.typeProduct, text: 'Sản phẩm', icon: '🛍️' },
+      forum: { class: styles.typeSystem, text: 'Diễn đàn', icon: '🎸' },
     };
     
     const badge = badges[type] || badges.general;
@@ -174,7 +177,10 @@ export default function NotificationCenter() {
 
   const isUnread = (notification) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return !notification.readBy?.some(read => read.user === user.id);
+    const uid = user.id || user._id;
+    if (!uid) return true;
+    const reads = notification.readBy || [];
+    return !reads.some((read) => String(read?.user ?? read) === String(uid));
   };
 
   useEffect(() => {
@@ -219,6 +225,7 @@ export default function NotificationCenter() {
           <option value="system">Hệ thống</option>
           <option value="order">Đơn hàng</option>
           <option value="product">Sản phẩm</option>
+          <option value="forum">Diễn đàn</option>
         </select>
 
         <label className={styles.checkboxLabel}>
@@ -285,12 +292,14 @@ export default function NotificationCenter() {
                   </a>
                 )}
                 
+                {notification.feedKind === 'forum' ? (
                 <button
                   onClick={() => hideNotification(notification._id)}
                   className={styles.hideBtn}
                 >
                   Ẩn
                 </button>
+                ) : null}
               </div>
             </div>
           ))

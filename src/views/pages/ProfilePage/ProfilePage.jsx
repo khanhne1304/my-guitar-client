@@ -123,6 +123,24 @@ export default function ProfilePage({ embedded = false }) {
               <div className={styles._avatar} />
             )}
             <div className={styles._name}>{user?.fullName || user?.username || "Tôi"}</div>
+            {user && (user.forumKarma != null || user.forumBadge) ? (
+              <div className={styles._bioText}>
+                Uy tín diễn đàn: <strong>{user.forumKarma ?? 0}</strong>
+                {user.forumBadge ? (
+                  <>
+                    {" "}
+                    · Huy hiệu:{" "}
+                    <strong>
+                      {user.forumBadge === "pro"
+                        ? "Pro"
+                        : user.forumBadge === "intermediate"
+                          ? "Trung cấp"
+                          : "Mới bắt đầu"}
+                    </strong>
+                  </>
+                ) : null}
+              </div>
+            ) : null}
             {loadError ? <div className={styles._bioText}>{loadError}</div> : null}
             {profile.bio?.trim() ? <div className={styles._bioText}>{profile.bio}</div> : null}
             <div className={styles._introList}>

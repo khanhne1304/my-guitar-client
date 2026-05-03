@@ -52,6 +52,14 @@ export default function ThreadCard({ thread, onDeleted }) {
     : thread?.category === 'discussion' ? 'Thảo luận'
     : (thread?.category || 'Thảo luận');
 
+  const author = thread?.user;
+  const displayName =
+    String(author?.fullName || '').trim()
+    || String(author?.username || '').trim()
+    || 'Thành viên';
+  const avatarUrl = String(author?.avatarUrl || '').trim();
+  const initial = displayName.slice(0, 1).toUpperCase() || '?';
+
   return (
     <article className={styles._card} style={{ position: 'relative' }}>
       {isOwner ? (
@@ -121,18 +129,42 @@ export default function ThreadCard({ thread, onDeleted }) {
           <div className={styles._score}>{likeCount}</div>
           <div style={{ fontSize: 12, color: '#666' }}>thích</div>
         </div>
-        <div className={styles._meta}>
+        <div className={styles._body}>
+          <div className={styles._avatarCol}>
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={displayName}
+                className={styles._avatarImg}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div className={styles._avatarFallback} title={displayName} aria-label={displayName}>
+                {initial}
+              </div>
+            )}
+          </div>
+          <div className={styles._meta}>
           <h3 className={styles._title}>
             <Link className={styles._titleLink} to={`/forum/thread/${encodeURIComponent(threadId)}`}>
               {thread?.title || 'Chủ đề'}
             </Link>
           </h3>
+          <div className={styles._authorLine}>
+            <span className={styles._authorName}>{displayName}</span>
+          </div>
           <div className={styles._sub}>
             <span className={styles._badge}>{typeLabel}</span>
             <span className={styles._badge}>{categoryLabel}</span>
             {hasBest ? <span className={styles._badge}>Câu trả lời hay nhất</span> : null}
             {!hasBest && isAnswered ? <span className={styles._badge}>Đã có trả lời</span> : null}
             {!isAnswered ? <span className={styles._badge}>Chưa có trả lời</span> : null}
+            {thread?.needsReview ? (
+              <span className={styles._badge} title="Nội dung đang chờ kiểm duyệt">
+                Đang chờ duyệt
+              </span>
+            ) : null}
           </div>
 
           {(thread?.tags || []).length > 0 ? (
@@ -148,6 +180,7 @@ export default function ThreadCard({ thread, onDeleted }) {
             <span>•</span>
             <span>{thread?.createdAt ? new Date(thread.createdAt).toLocaleString('vi-VN') : ''}</span>
           </div>
+        </div>
         </div>
       </div>
     </article>
