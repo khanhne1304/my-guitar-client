@@ -27,7 +27,7 @@ export default function LearningPathOnboardingPage() {
     }
     const u = getUser();
     if (!needsGuitarOnboarding(u)) {
-      navigate('/learning/roadmap', { replace: true });
+      navigate('/learning/course', { replace: true });
       return;
     }
     let cancelled = false;
@@ -82,7 +82,7 @@ export default function LearningPathOnboardingPage() {
       );
       setUser(merged);
       authLogin(merged);
-      navigate('/learning/roadmap', { replace: true });
+      navigate('/learning/course', { replace: true });
     } catch (e) {
       setErr(e.message || 'Không lưu được. Thử lại.');
     } finally {

@@ -4,20 +4,10 @@ import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
 import { useAuth } from '../../../context/AuthContext';
 import { getLearningRoadmapApi } from '../../../services/learningService';
-import { needsGuitarOnboarding, LEVEL_LABELS, GOAL_OPTIONS } from '../../../utils/learningOnboarding';
+import { LEVEL_LABELS, GOAL_OPTIONS } from '../../../utils/learningOnboarding';
 import { getUser, setUser, mergeUser } from '../../../utils/storage';
 import { updateUserProfileApi } from '../../../services/userService';
 import styles from './LearningPathPage.module.css';
-
-function lastNDays(n) {
-  const out = [];
-  for (let i = n - 1; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    out.push(d.toISOString().slice(0, 10));
-  }
-  return out;
-}
 
 function startOfWeekMonday(date) {
   const d = new Date(date);
@@ -90,7 +80,7 @@ export default function LearningRoadmapPage() {
   useEffect(() => {
     if (!authChecked) return;
     if (!isAuthenticated) {
-      navigate('/login?redirect=/learning/roadmap', { replace: true });
+      navigate('/login?redirect=/learning/course', { replace: true });
       return;
     }
     load();

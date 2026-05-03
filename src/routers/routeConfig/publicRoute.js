@@ -44,9 +44,19 @@ import ProfilePage from "../../views/pages/ProfilePage/ProfilePage";
 import SearchPage from "../../views/pages/SearchPage/SearchPage";
 import ForumThreadPage from "../../views/pages/ForumThreadPage/ForumThreadPage";
 import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
+import { Navigate } from "react-router-dom";
 import LearningPathOnboardingPage from "../../views/pages/LearningPathPage/LearningPathOnboardingPage";
-import LearningRoadmapPage from "../../views/pages/LearningPathPage/LearningRoadmapPage";
 import LearningLessonPage from "../../views/pages/LearningPathPage/LearningLessonPage";
+import CourseCatalogPage from "../../views/pages/CourseLearning/CourseCatalogPage";
+import CourseDetailPage from "../../views/pages/CourseLearning/CourseDetailPage";
+import CourseModulePage from "../../views/pages/CourseLearning/CourseModulePage";
+import CourseLessonPlayerPage from "../../views/pages/CourseLearning/CourseLessonPlayerPage";
+import ModuleQuizPage from "../../views/pages/CourseLearning/ModuleQuizPage";
+import MyLearningPathsPage from "../../views/pages/LearningPathPage/MyLearningPathsPage";
+import UserLearningPathFormPage from "../../views/pages/LearningPathPage/UserLearningPathFormPage";
+import InstructorDashboardPage from "../../views/pages/Instructor/InstructorDashboardPage";
+import InstructorCourseCreatePage from "../../views/pages/Instructor/InstructorCourseCreatePage";
+import CourseBuilderPage from "../../views/pages/Instructor/CourseBuilderPage";
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -99,8 +109,19 @@ const publicRoutes = [
   { path: "/friends", element: <FriendsListPage /> },
   { path: "/friends/requests", element: <FriendRequestsPage /> },
   { path: "/learning/onboarding", element: <LearningPathOnboardingPage /> },
-  { path: "/learning/roadmap", element: <LearningRoadmapPage /> },
+  { path: "/learning/roadmap", element: <Navigate to="/learning/course" replace /> },
+  { path: "/learning/paths/new", element: <UserLearningPathFormPage /> },
+  { path: "/learning/paths/edit/:pathId", element: <UserLearningPathFormPage /> },
+  { path: "/learning/paths", element: <MyLearningPathsPage /> },
+  { path: "/learning/course", element: <CourseCatalogPage /> },
+  { path: "/learning/course/:courseId", element: <CourseDetailPage /> },
+  { path: "/learning/course/:courseId/module/:moduleId", element: <CourseModulePage /> },
+  { path: "/learning/course/:courseId/module/:moduleId/lesson/:lessonId", element: <CourseLessonPlayerPage /> },
+  { path: "/learning/course/:courseId/module/:moduleId/quiz", element: <ModuleQuizPage /> },
   { path: "/learning/lesson/:lessonId", element: <LearningLessonPage /> },
+  { path: "/instructor", element: <InstructorDashboardPage /> },
+  { path: "/instructor/course/new", element: <InstructorCourseCreatePage /> },
+  { path: "/instructor/course/:courseId/edit", element: <CourseBuilderPage /> },
 ];
 
 export default publicRoutes;

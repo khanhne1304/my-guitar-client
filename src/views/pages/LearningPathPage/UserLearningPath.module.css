@@ -1,0 +1,191 @@
+/**
+ * Lộ trình tự tạo — đồng bộ palette với LearningPathPage / roadmap:
+ * kem #fffbe8 nền trang (qua .page), thẻ #fff, viền #f0e6c8 / #eee6d6, accent vàng #c9a227 · #8b6914
+ */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.pathList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pathRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #f0e6c8;
+  background: linear-gradient(135deg, #fffbf0 0%, #fffef8 100%);
+  box-shadow: 0 2px 12px rgba(201, 162, 39, 0.06);
+}
+
+.pathMeta {
+  flex: 1;
+  min-width: 200px;
+}
+
+.pathTitle {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2c2416;
+}
+
+.pathDesc {
+  margin: 0;
+  font-size: 14px;
+  color: #6b6358;
+  line-height: 1.45;
+}
+
+.pathActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stepList {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stepCard {
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #eee6d6;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+}
+
+.stepHead {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, #faf6eb, #fff);
+  border-bottom: 1px solid #eee6d6;
+}
+
+.stepBody {
+  padding: 14px;
+}
+
+.stepNum {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b6914;
+  min-width: 72px;
+  letter-spacing: 0.02em;
+}
+
+.stepBtns {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.iconBtn {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid #ccc4b0;
+  background: #fff;
+  cursor: pointer;
+  color: #4a4338;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.iconBtn:hover:not(:disabled) {
+  background: #fffbf0;
+  border-color: #c9a227;
+  color: #2c2416;
+}
+
+.iconBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d3428;
+  margin-bottom: 6px;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5dcc8;
+  font-family: inherit;
+  font-size: 14px;
+  color: #2c2416;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #c9a227;
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.18);
+}
+
+.field textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.dangerBtn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #e8b4b4;
+  background: #ffe8e8;
+  color: #8b2a2a;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.dangerBtn:hover {
+  background: #ffd6d6;
+  border-color: #d48a8a;
+}
+
+.rowActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}

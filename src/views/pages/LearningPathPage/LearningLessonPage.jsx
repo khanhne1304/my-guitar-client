@@ -126,7 +126,7 @@ export default function LearningLessonPage() {
     try {
       await flushPracticeMinutes();
       await postCompleteLessonApi({ lessonId });
-      navigate('/learning/roadmap');
+      navigate('/learning/course');
     } catch (e) {
       setErr(e.message || 'Không đánh dấu hoàn thành được');
     } finally {
@@ -140,7 +140,7 @@ export default function LearningLessonPage() {
     try {
       await flushPracticeMinutes();
       await postCompleteLessonApi({ lessonId, quizAnswers: videoQuizPick });
-      navigate('/learning/roadmap');
+      navigate('/learning/course');
     } catch (e) {
       setErr(e.message || 'Chưa đạt hoặc lỗi gửi bài');
     } finally {
@@ -154,7 +154,7 @@ export default function LearningLessonPage() {
     try {
       await flushPracticeMinutes();
       await postCompleteLessonApi({ lessonId, quizAnswers: quizPick });
-      navigate('/learning/roadmap');
+      navigate('/learning/course');
     } catch (e) {
       setErr(e.message || 'Chưa đạt hoặc lỗi gửi bài');
     } finally {
@@ -181,7 +181,7 @@ export default function LearningLessonPage() {
         <main className={styles.main}>
           <div className={styles.card}>
             <p>Không tìm thấy bài học.</p>
-            <Link to="/learning/roadmap">Về lộ trình</Link>
+            <Link to="/learning/course">Về lộ trình</Link>
           </div>
         </main>
         <Footer />
@@ -204,7 +204,7 @@ export default function LearningLessonPage() {
             <h1 className={styles.title}>Bài học bị khóa</h1>
             <p className={styles.lead}>Hoàn thành bài học trước trong lộ trình để mở khóa.</p>
             {progressText && <p className={styles.hint}>{progressText}</p>}
-            <Link to="/learning/roadmap" className={styles.btnPrimary} style={{ display: 'inline-block' }}>
+            <Link to="/learning/course" className={styles.btnPrimary} style={{ display: 'inline-block' }}>
               Về lộ trình
             </Link>
           </div>
@@ -233,7 +233,7 @@ export default function LearningLessonPage() {
               <h1 className={styles.title}>{les.title}</h1>
               {les.summary && <p className={styles.lead}>{les.summary}</p>}
             </div>
-            <Link to="/learning/roadmap" className={styles.btnGhost}>
+            <Link to="/learning/course" className={styles.btnGhost}>
               Lộ trình
             </Link>
           </div>
