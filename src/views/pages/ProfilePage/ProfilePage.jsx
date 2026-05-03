@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
-import PostCard from "../../components/forum/PostCard/PostCard";
 import Composer from "../../components/forum/Composer/Composer";
 import ChatWidget from "../../components/chat/ChatWidget";
 import styles from "./ProfilePage.module.css";
 import { getUserProfileApi } from "../../../services/userService";
 import { useNavigate } from "react-router-dom";
+import { forumApi } from "../../../services/forumApi";
+import ThreadCard from "../../components/forum/ThreadCard/ThreadCard";
 
 export default function ProfilePage({ embedded = false }) {
   const [user, setUser] = useState(null);
-  const [posts, setPosts] = useState([]);
+  const [threads, setThreads] = useState([]);
+  const [loadingThreads, setLoadingThreads] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [profile, setProfile] = useState({
     bio: "",
@@ -78,37 +80,28 @@ export default function ProfilePage({ embedded = false }) {
   }, []);
 
   useEffect(() => {
-    const load = () => {
+    let alive = true;
+    const uid = user?.id || user?._id || user?.userId || null;
+    if (!uid) {
+      setThreads([]);
+      return () => {};
+    }
+    (async () => {
       try {
-        const raw = localStorage.getItem("user_posts");
-        const arr = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(arr)) {
-          setPosts([]);
-          return;
-        }
-        if (!user) {
-          setPosts(arr);
-          return;
-        }
-        const uid = user.id || user._id || user.userId || null;
-        const name = user.fullName || user.username || null;
-        const filtered = arr.filter((p) => {
-          if (p.authorId && uid) return p.authorId === uid;
-          if (name) return p.authorName === name;
-          return false;
-        });
-        setPosts(filtered);
+        setLoadingThreads(true);
+        const data = await forumApi.listThreads({ userId: String(uid), sort: "newest" });
+        if (!alive) return;
+        setThreads(Array.isArray(data) ? data : []);
       } catch {
-        setPosts([]);
+        if (!alive) return;
+        setThreads([]);
+      } finally {
+        if (!alive) return;
+        setLoadingThreads(false);
       }
-    };
-    load();
-    const onChanged = () => load();
-    window.addEventListener("user:new-post", onChanged);
-    window.addEventListener("user:post-changed", onChanged);
+    })();
     return () => {
-      window.removeEventListener("user:new-post", onChanged);
-      window.removeEventListener("user:post-changed", onChanged);
+      alive = false;
     };
   }, [user]);
 
@@ -182,10 +175,18 @@ export default function ProfilePage({ embedded = false }) {
 
           <div className={styles._feed}>
             <Composer />
-            {posts.length === 0 ? (
-              <div>Chưa có bài viết nào.</div>
+            {loadingThreads ? (
+              <div>Đang tải chủ đề...</div>
+            ) : threads.length === 0 ? (
+              <div>Chưa có chủ đề nào.</div>
             ) : (
-              posts.map((p) => <PostCard key={p.id} post={p} />)
+              threads.map((t) => (
+                <ThreadCard
+                  key={t._id || t.id}
+                  thread={t}
+                  onDeleted={(id) => setThreads((prev) => (prev || []).filter((x) => String(x?._id || x?.id) !== String(id)))}
+                />
+              ))
             )}
           </div>
         </div>

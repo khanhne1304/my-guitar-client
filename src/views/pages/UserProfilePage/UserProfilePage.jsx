@@ -3,8 +3,9 @@ import Footer from "../../components/homeItem/Footer/Footer";
 import styles from "../ProfilePage/ProfilePage.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import PostCard from "../../components/forum/PostCard/PostCard";
 import { getPublicUserProfileApi } from "../../../services/userService";
+import { forumApi } from "../../../services/forumApi";
+import ThreadCard from "../../components/forum/ThreadCard/ThreadCard";
 
 function avatarFromName(name) {
   if (!name) return "";
@@ -26,7 +27,8 @@ export default function UserProfilePage() {
     if (url) return url;
     return avatarFromName(displayName);
   }, [user?.avatarUrl, displayName]);
-  const [posts, setPosts] = useState([]);
+  const [threads, setThreads] = useState([]);
+  const [loadingThreads, setLoadingThreads] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -53,31 +55,29 @@ export default function UserProfilePage() {
   }, [idOrName, isMongoId]);
 
   useEffect(() => {
-    const load = () => {
+    let alive = true;
+    if (!isMongoId) {
+      setThreads([]);
+      return () => {};
+    }
+    (async () => {
       try {
-        const raw = localStorage.getItem("user_posts");
-        const arr = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(arr)) {
-          setPosts([]);
-          return;
-        }
-        const filtered = isMongoId
-          ? arr.filter((p) => String(p.authorId || "") === String(idOrName))
-          : arr.filter((p) => p.authorName === idOrName || p.authorName === displayName);
-        setPosts(filtered);
+        setLoadingThreads(true);
+        const data = await forumApi.listThreads({ userId: String(idOrName), sort: "newest" });
+        if (!alive) return;
+        setThreads(Array.isArray(data) ? data : []);
       } catch {
-        setPosts([]);
+        if (!alive) return;
+        setThreads([]);
+      } finally {
+        if (!alive) return;
+        setLoadingThreads(false);
       }
-    };
-    load();
-    const onChanged = () => load();
-    window.addEventListener("user:new-post", onChanged);
-    window.addEventListener("user:post-changed", onChanged);
+    })();
     return () => {
-      window.removeEventListener("user:new-post", onChanged);
-      window.removeEventListener("user:post-changed", onChanged);
+      alive = false;
     };
-  }, [displayName, idOrName, isMongoId]);
+  }, [idOrName, isMongoId]);
 
   return (
     <div className={styles._page}>
@@ -96,10 +96,18 @@ export default function UserProfilePage() {
           </div>
 
           <div className={styles._feed}>
-            {posts.length === 0 ? (
-              <div>Người dùng này chưa có bài viết nào.</div>
+            {loadingThreads ? (
+              <div>Đang tải chủ đề...</div>
+            ) : threads.length === 0 ? (
+              <div>Người dùng này chưa có chủ đề nào.</div>
             ) : (
-              posts.map((p) => <PostCard key={p.id} post={p} />)
+              threads.map((t) => (
+                <ThreadCard
+                  key={t._id || t.id}
+                  thread={t}
+                  onDeleted={(id) => setThreads((prev) => (prev || []).filter((x) => String(x?._id || x?.id) !== String(id)))}
+                />
+              ))
             )}
           </div>
         </div>

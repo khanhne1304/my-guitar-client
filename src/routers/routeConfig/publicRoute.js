@@ -42,7 +42,7 @@ import FriendRequestsPage from "../../views/pages/FriendsPage/FriendRequestsPage
 import FriendsListPage from "../../views/pages/FriendsPage/FriendsListPage";
 import ProfilePage from "../../views/pages/ProfilePage/ProfilePage";
 import SearchPage from "../../views/pages/SearchPage/SearchPage";
-import ForumPostPage from "../../views/pages/ForumPostPage/ForumPostPage";
+import ForumThreadPage from "../../views/pages/ForumThreadPage/ForumThreadPage";
 import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
 import LearningPathOnboardingPage from "../../views/pages/LearningPathPage/LearningPathOnboardingPage";
 import LearningRoadmapPage from "../../views/pages/LearningPathPage/LearningRoadmapPage";
@@ -89,7 +89,10 @@ const publicRoutes = [
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
   { path: "/chatbot", element: <ChatbotPage /> },
   { path: "/forum", element: <ForumPage /> },
-  { path: "/forum/post/:postId", element: <ForumPostPage /> },
+  // New structured forum route
+  { path: "/forum/thread/:threadId", element: <ForumThreadPage /> },
+  // Backward compatibility: old "post" route now resolves to the new thread page
+  { path: "/forum/post/:postId", element: <ForumThreadPage legacyParam="postId" /> },
   { path: "/profile", element: <ProfilePage /> },
   { path: "/u/:username", element: <UserProfilePage /> },
   { path: "/search", element: <SearchPage /> },

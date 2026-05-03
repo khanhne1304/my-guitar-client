@@ -1,107 +1,72 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./ForumReportManager.module.css";
-import PostCard from "../../forum/PostCard/PostCard";
 import { useNavigate } from "react-router-dom";
-
-function resolvePostSnapshot(v) {
-  // Ưu tiên lấy nội dung thật từ localStorage 'user_posts' nếu trùng postId
-  try {
-    const raw = localStorage.getItem("user_posts");
-    const arr = raw ? JSON.parse(raw) : [];
-    if (Array.isArray(arr) && v?.postId) {
-      const match = arr.find((p) => p.id === v.postId);
-      if (match) {
-        return {
-          id: match.id,
-          authorName: match.authorName || v?.snapshot?.authorName || v?.authorName || "Người dùng",
-          authorAvatarUrl: match.authorAvatarUrl || v?.snapshot?.authorAvatarUrl || "",
-          time: match.time || v?.snapshot?.time || "",
-          content: match.content || v?.snapshot?.content || "",
-          imageUrl: match.imageUrl || v?.snapshot?.imageUrl || "",
-        };
-      }
-    }
-  } catch {}
-  // Fallback dùng snapshot đã lưu trong reported_posts
-  return {
-    id: v?.postId,
-    authorName: v?.snapshot?.authorName || v?.authorName || "Người dùng",
-    authorAvatarUrl: v?.snapshot?.authorAvatarUrl || "",
-    time: v?.snapshot?.time || "",
-    content: v?.snapshot?.content || "",
-    imageUrl: v?.snapshot?.imageUrl || "",
-  };
-}
+import { forumApi } from "../../../../services/forumApi";
 
 export default function ForumReportManager() {
   const [reports, setReports] = useState([]);
-  const [viewing, setViewing] = useState(null);
   const [viewingDetails, setViewingDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  function load() {
-    try {
-      const raw = localStorage.getItem("reported_posts");
-      const arr = raw ? JSON.parse(raw) : [];
-      if (Array.isArray(arr)) {
-        setReports(arr);
-      } else {
-        setReports([]);
-      }
-    } catch {
-      setReports([]);
-    }
-  }
-
   useEffect(() => {
-    load();
-    const onChanged = () => load();
-    window.addEventListener("forum:reports-updated", onChanged);
-    return () => window.removeEventListener("forum:reports-updated", onChanged);
+    let alive = true;
+    (async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await forumApi.listReports();
+        if (!alive) return;
+        setReports(Array.isArray(data) ? data : []);
+      } catch (e) {
+        if (!alive) return;
+        setReports([]);
+        setError(e?.message || "Không thể tải báo cáo.");
+      } finally {
+        if (!alive) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
   }, []);
 
-  const sorted = useMemo(
-    () => reports.slice().sort((a, b) => (b.count || 0) - (a.count || 0)),
-    [reports]
-  );
+  const grouped = useMemo(() => {
+    const map = new Map();
+    (reports || []).forEach((r) => {
+      const tid = String(r?.thread?._id || r?.thread || "");
+      if (!tid) return;
+      const cur = map.get(tid) || { thread: r.thread, items: [], count: 0, lastReportedAt: 0 };
+      cur.items.push(r);
+      cur.count += 1;
+      cur.lastReportedAt = Math.max(cur.lastReportedAt, new Date(r?.createdAt || 0).getTime());
+      map.set(tid, cur);
+    });
+    return Array.from(map.values()).sort((a, b) => (b.count || 0) - (a.count || 0));
+  }, [reports]);
 
-  function viewReport(r) {
-    if (r?.postId) {
-      navigate(`/forum/post/${encodeURIComponent(r.postId)}`);
-      return;
-    }
-    // Fallback: open inline modal if no id
-    setViewing(r);
+  function viewReport(g) {
+    const tid = g?.thread?._id || g?.thread;
+    if (!tid) return;
+    navigate(`/forum/thread/${encodeURIComponent(tid)}`);
   }
 
-  function viewDetails(r) {
-    setViewingDetails(r);
+  function viewDetails(g) {
+    setViewingDetails(g);
   }
 
-  function deletePost(r) {
-    if (!window.confirm("Xoá bài viết này? Bài sẽ ẩn khỏi bảng tin.")) return;
+  async function deleteThread(g) {
+    const tid = g?.thread?._id || g?.thread;
+    if (!tid) return;
+    if (!window.confirm("Xoá chủ đề này?")) return;
     try {
-      // 1) Nếu bài thuộc user_posts thì xóa khỏi đó
-      const raw = localStorage.getItem("user_posts");
-      const arr = raw ? JSON.parse(raw) : [];
-      if (Array.isArray(arr) && arr.length) {
-        const after = arr.filter((p) => p.id !== r.postId);
-        localStorage.setItem("user_posts", JSON.stringify(after));
-        try { window.dispatchEvent(new Event("user:post-changed")); } catch {}
-      }
-      // 2) Thêm vào danh sách muted_posts để ẩn cả bài demo
-      const mutedRaw = localStorage.getItem("muted_posts");
-      const muted = mutedRaw ? JSON.parse(mutedRaw) : [];
-      if (!muted.includes(r.postId)) {
-        muted.push(r.postId);
-        localStorage.setItem("muted_posts", JSON.stringify(muted));
-        try { window.dispatchEvent(new Event("forum:muted-changed")); } catch {}
-      }
-      // 3) Xóa khỏi danh sách báo cáo
-      const left = reports.filter((x) => x.postId !== r.postId);
-      localStorage.setItem("reported_posts", JSON.stringify(left));
-      setReports(left);
-    } catch {}
+      await forumApi.deleteThread(String(tid));
+      setReports((prev) => (prev || []).filter((r) => String(r?.thread?._id || r?.thread) !== String(tid)));
+    } catch {
+      // ignore
+    }
   }
 
   return (
@@ -111,48 +76,53 @@ export default function ForumReportManager() {
           <h1 className={styles.title}>Báo cáo diễn đàn</h1>
         </div>
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Danh sách bài viết bị báo cáo</h2>
+          <h2 className={styles.sectionTitle}>Danh sách chủ đề bị báo cáo</h2>
           <div className={styles.tableWrap}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Bài viết</th>
+                  <th>Chủ đề</th>
                   <th>Lần báo cáo</th>
                   <th>Gần nhất</th>
                   <th>Hành động</th>
                 </tr>
               </thead>
               <tbody>
-                {sorted.length > 0 ? (
-                  sorted.map((r) => {
-                    const snap = resolvePostSnapshot(r);
+                {error ? (
+                  <tr>
+                    <td colSpan="4" className={styles.empty}>{error}</td>
+                  </tr>
+                ) : loading ? (
+                  <tr>
+                    <td colSpan="4" className={styles.empty}>Đang tải...</td>
+                  </tr>
+                ) : grouped.length > 0 ? (
+                  grouped.map((g) => {
+                    const tid = g?.thread?._id || g?.thread;
                     return (
-                    <tr key={r.postId}>
+                    <tr key={String(tid)}>
                       <td>
                         <div className={styles.postCell}>
-                          {r?.snapshot?.authorAvatarUrl ? (
-                            <img className={styles._avatar} src={r.snapshot.authorAvatarUrl} alt="" />
-                          ) : <div className={styles._avatar} />}
                           <div>
-                            <div className={styles._name}>{r.snapshot?.authorName || r.authorName || "Người dùng"}</div>
-                            {snap?.content ? <div className={styles._preview}>{snap.content}</div> : null}
+                            <div className={styles._name}>{g?.thread?.title || "Chủ đề"}</div>
+                            <div className={styles._preview}>{g?.thread?.category} • {g?.thread?.type}</div>
                           </div>
                         </div>
                       </td>
-                      <td><span className={styles.countBadge}>{r.count}</span></td>
-                      <td>{r.lastReportedAt ? new Date(r.lastReportedAt).toLocaleString("vi-VN") : "-"}</td>
+                      <td><span className={styles.countBadge}>{g.count}</span></td>
+                      <td>{g.lastReportedAt ? new Date(g.lastReportedAt).toLocaleString("vi-VN") : "-"}</td>
                       <td>
                         <div className={styles.actions}>
-                          <button className={styles.btn} onClick={() => viewReport(r)}>Xem bài viết</button>
-                          <button className={styles.btn} onClick={() => viewDetails(r)}>Xem chi tiết</button>
-                          <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => deletePost(r)}>Xoá bài viết</button>
+                          <button className={styles.btn} onClick={() => viewReport(g)}>Xem chủ đề</button>
+                          <button className={styles.btn} onClick={() => viewDetails(g)}>Xem chi tiết</button>
+                          <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => deleteThread(g)}>Xoá chủ đề</button>
                         </div>
                       </td>
                     </tr>
                   )})
                 ) : (
                   <tr>
-                    <td colSpan="4" className={styles.empty}>Chưa có bài viết nào bị báo cáo.</td>
+                    <td colSpan="4" className={styles.empty}>Chưa có chủ đề nào bị báo cáo.</td>
                   </tr>
                 )}
               </tbody>
@@ -160,20 +130,6 @@ export default function ForumReportManager() {
           </div>
         </div>
       </div>
-
-      {viewing && (
-        <div className={styles._modalBackdrop} onClick={() => setViewing(null)}>
-          <div className={styles._modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles._modalHead}>
-              <div className={styles.title}>Bài viết bị báo cáo</div>
-              <button className={styles.btn} onClick={() => setViewing(null)}>Đóng</button>
-            </div>
-            <div className={styles._modalBody}>
-              <PostCard post={resolvePostSnapshot(viewing)} />
-            </div>
-          </div>
-        </div>
-      )}
 
       {viewingDetails && (
         <div className={styles._modalBackdrop} onClick={() => setViewingDetails(null)}>
@@ -183,14 +139,11 @@ export default function ForumReportManager() {
               <button className={styles.btn} onClick={() => setViewingDetails(null)}>Đóng</button>
             </div>
             <div className={styles._modalBody}>
-              <div className={styles.sectionTitle} style={{marginTop:0}}>Bài viết</div>
+              <div className={styles.sectionTitle} style={{marginTop:0}}>Chủ đề</div>
               <div className={styles._postHeader}>
-                {viewingDetails?.snapshot?.authorAvatarUrl ? (
-                  <img className={styles._postAvatar} src={viewingDetails.snapshot.authorAvatarUrl} alt="" />
-                ) : <div className={styles._postAvatar} />}
                 <div>
-                  <div className={styles._postName}>{viewingDetails?.snapshot?.authorName || viewingDetails?.authorName || "Người dùng"}</div>
-                  <div className={styles._postTime}>{viewingDetails?.snapshot?.time || ""}</div>
+                  <div className={styles._postName}>{viewingDetails?.thread?.title || "Chủ đề"}</div>
+                  <div className={styles._postTime}>{viewingDetails?.thread?.category} • {viewingDetails?.thread?.type}</div>
                 </div>
               </div>
               <div className={styles.sectionTitle}>Danh sách người báo cáo</div>
@@ -205,15 +158,15 @@ export default function ForumReportManager() {
                     </tr>
                   </thead>
                   <tbody>
-                    {(viewingDetails.reports || []).map((rp, idx) => (
-                      <tr key={rp.id || idx}>
+                    {(viewingDetails.items || []).map((rp, idx) => (
+                      <tr key={rp._id || idx}>
                         <td>{idx + 1}</td>
-                        <td>{rp.reporterName || "Ẩn danh"}</td>
-                        <td>{rp.reason}</td>
-                        <td>{rp.at ? new Date(rp.at).toLocaleString("vi-VN") : ""}</td>
+                        <td>{rp?.reportedBy?.fullName || rp?.reportedBy?.username || "Ẩn danh"}</td>
+                        <td>{rp?.reason}</td>
+                        <td>{rp?.createdAt ? new Date(rp.createdAt).toLocaleString("vi-VN") : ""}</td>
                       </tr>
                     ))}
-                    {(!viewingDetails.reports || viewingDetails.reports.length === 0) && (
+                    {(!viewingDetails.items || viewingDetails.items.length === 0) && (
                       <tr><td colSpan="4" className={styles.empty}>Chưa có chi tiết người báo cáo.</td></tr>
                     )}
                   </tbody>

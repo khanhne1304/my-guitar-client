@@ -1,0 +1,92 @@
+._card{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:14px;
+}
+
+._top{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+
+._votes{
+  width:56px;
+  flex:0 0 56px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  border-right:1px solid #f2f2f2;
+  padding-right:10px;
+}
+
+._score{
+  font-weight:800;
+  font-size:18px;
+}
+
+._meta{
+  flex:1;
+  min-width:0;
+}
+
+._title{
+  font-size:16px;
+  font-weight:800;
+  margin:0;
+  color:#111;
+}
+
+._titleLink{
+  text-decoration:none;
+  color:inherit;
+}
+
+._sub{
+  margin-top:6px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  color:#555;
+  font-size:13px;
+}
+
+._badge{
+  display:inline-flex;
+  align-items:center;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#f7f7f7;
+  border:1px solid #eee;
+  font-size:12px;
+  font-weight:700;
+  color:#333;
+}
+
+._tags{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+._tag{
+  font-size:12px;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#fff7d6;
+  border:1px solid #fde68a;
+  color:#7a5200;
+  font-weight:700;
+}
+
+._stats{
+  margin-top:10px;
+  display:flex;
+  gap:12px;
+  color:#666;
+  font-size:12px;
+}
+
