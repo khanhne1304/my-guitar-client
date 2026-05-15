@@ -68,6 +68,16 @@
   }
 }
 
+.song-details__chord--clickable {
+  cursor: pointer;
+}
+
+.song-details__chord--clickable:focus-visible {
+  outline: 2px solid #e85d04;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .song-details__chord {
   color: #0066cc;
   font-weight: 700;

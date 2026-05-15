@@ -56,6 +56,8 @@ import QuizPage from "../../views/pages/courses/QuizPage";
 import CreatorDashboardPage from "../../views/pages/creator/CreatorDashboardPage";
 import CreatorCourseNewPage from "../../views/pages/creator/CreatorCourseNewPage";
 import CreatorCourseEditPage from "../../views/pages/creator/CreatorCourseEditPage";
+import SongSearchPage from "../../views/pages/SongSearchPage/SongSearchPage";
+import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
 
 const publicRoutes = [
   { path: "/", element: <Home /> },
@@ -90,9 +92,12 @@ const publicRoutes = [
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
+  { path: "/tools/ai-guitar-practice", element: <CompareTwoSongsPage /> },
+  { path: "/tools/compare-song", element: <Navigate to="/tools/ai-guitar-practice" replace /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
+  { path: "/song-search", element: <SongSearchPage /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
   { path: "/chatbot", element: <ChatbotPage /> },

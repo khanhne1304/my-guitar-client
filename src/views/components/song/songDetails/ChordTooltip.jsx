@@ -2,8 +2,14 @@ import { useEffect, useState, useRef } from "react";
 import styles from "../../../pages/songDetails/SongDetails.module.css";
 import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
 
-export default function ChordTooltip({ chordText, children, forceVisible = false }) {
+export default function ChordTooltip({
+  chordText,
+  children,
+  forceVisible = false,
+  trigger = 'hover',
+}) {
   const [hoverVisible, setHoverVisible] = useState(false);
+  const [clickVisible, setClickVisible] = useState(false);
   const [coords, setCoords] = useState({
     top: 0,
     left: 0,
@@ -42,38 +48,76 @@ export default function ChordTooltip({ chordText, children, forceVisible = false
     setCoords({ top, left, placeAbove, align });
   }
 
+  const isClickMode = trigger === 'click';
+  const popupVisible =
+    forceVisible || (isClickMode ? clickVisible : hoverVisible);
+
   function handleEnter(e) {
+    if (isClickMode) return;
     const el = ref.current || e.currentTarget;
     computeAndSetCoords(el);
     setHoverVisible(true);
   }
 
   function handleLeave() {
+    if (isClickMode) return;
     setHoverVisible(false);
   }
 
-  // Khi forceVisible bật: không cần tính toạ độ gần chữ (sẽ hiển thị dạng dock)
+  function handleClick(e) {
+    if (!isClickMode || forceVisible) return;
+    e.stopPropagation();
+    const el = ref.current || e.currentTarget;
+    computeAndSetCoords(el);
+    setClickVisible((v) => !v);
+  }
+
+  useEffect(() => {
+    if (!isClickMode || !clickVisible || forceVisible) return undefined;
+    const onDocClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setClickVisible(false);
+      }
+    };
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, [isClickMode, clickVisible, forceVisible]);
+
   useEffect(() => {
     if (forceVisible) return;
-    // nếu không force, cập nhật toạ độ khi kích thước viewport thay đổi
     const onResize = () => {
-      if (hoverVisible) computeAndSetCoords(ref.current);
+      if (popupVisible) computeAndSetCoords(ref.current);
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [forceVisible, hoverVisible]);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [forceVisible, popupVisible]);
 
   return (
     <>
       <span
         ref={ref}
+        role={isClickMode ? 'button' : undefined}
+        tabIndex={isClickMode ? 0 : undefined}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
-        className={styles["song-details__chord"]}
+        onClick={handleClick}
+        onKeyDown={
+          isClickMode
+            ? (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleClick(e);
+                }
+              }
+            : undefined
+        }
+        className={`${styles['song-details__chord']} ${
+          isClickMode ? styles['song-details__chord--clickable'] : ''
+        }`}
       >
         {children}
       </span>
-      {(forceVisible || hoverVisible) && (
+      {popupVisible && (
         forceVisible ? (
           <div className={`${styles.chordTooltip} ${styles.chordTooltipDocked}`}
             style={{ position: "fixed", right: 20, bottom: 20, width: 180, zIndex: 9999 }}>
