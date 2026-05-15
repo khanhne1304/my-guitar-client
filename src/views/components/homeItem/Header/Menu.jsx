@@ -60,8 +60,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       <div className={styles.home__menuItem}>
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>
-          <Link to="/learning/course">LỘ TRÌNH HỌC</Link>
-          <Link to="/learning/paths">LỘ TRÌNH TỰ TẠO</Link>
+          <Link to="/learn">KHÓA HỌC</Link>
           <Link to="/tools/chord-practice">LUYỆN TẬP HỢP ÂM</Link>
           <Link to="/tools/finger-practice">LUYỆN TẬP NGÓN TAY</Link>
         </div>
@@ -82,7 +81,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       </div>
       {user && (
         <div className={styles.home__menuItem}>
-          <Link to="/instructor">Khóa của tôi</Link>
+          <Link to="/creator">Tạo khóa học</Link>
         </div>
       )}
     </nav>

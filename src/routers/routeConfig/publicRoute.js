@@ -9,7 +9,7 @@ import ViewCategory from "../../views/pages/CategoryPage/CategoryPage";
 import Cart from "../../views/pages/CartPage/CartPage";
 import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
 import CheckOutHistory from "../../views/pages/CheckOutHistory/CheckOutHistory";
-import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê/tìm kiếm sản phẩm
+import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage";
 import Account from "../../views/pages/AccountPage/AccountPage";
 import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
 import Songs from "../../views/pages/SongsPage/SongsPage";
@@ -45,18 +45,18 @@ import SearchPage from "../../views/pages/SearchPage/SearchPage";
 import ForumThreadPage from "../../views/pages/ForumThreadPage/ForumThreadPage";
 import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
 import { Navigate } from "react-router-dom";
-import LearningPathOnboardingPage from "../../views/pages/LearningPathPage/LearningPathOnboardingPage";
-import LearningLessonPage from "../../views/pages/LearningPathPage/LearningLessonPage";
-import CourseCatalogPage from "../../views/pages/CourseLearning/CourseCatalogPage";
-import CourseDetailPage from "../../views/pages/CourseLearning/CourseDetailPage";
-import CourseModulePage from "../../views/pages/CourseLearning/CourseModulePage";
-import CourseLessonPlayerPage from "../../views/pages/CourseLearning/CourseLessonPlayerPage";
-import ModuleQuizPage from "../../views/pages/CourseLearning/ModuleQuizPage";
-import MyLearningPathsPage from "../../views/pages/LearningPathPage/MyLearningPathsPage";
-import UserLearningPathFormPage from "../../views/pages/LearningPathPage/UserLearningPathFormPage";
-import InstructorDashboardPage from "../../views/pages/Instructor/InstructorDashboardPage";
-import InstructorCourseCreatePage from "../../views/pages/Instructor/InstructorCourseCreatePage";
-import CourseBuilderPage from "../../views/pages/Instructor/CourseBuilderPage";
+import LearningDashboardPage from "../../views/pages/courses/LearningDashboardPage";
+import CourseListPage from "../../views/pages/courses/CourseListPage";
+import CourseDetailPage from "../../views/pages/courses/CourseDetailPage";
+import LessonPlayerPage from "../../views/pages/courses/LessonPlayerPage";
+import PracticeRoutinePage from "../../views/pages/courses/PracticeRoutinePage";
+import ChallengeSongPage from "../../views/pages/courses/ChallengeSongPage";
+import ModuleCompletePage from "../../views/pages/courses/ModuleCompletePage";
+import QuizPage from "../../views/pages/courses/QuizPage";
+import CreatorDashboardPage from "../../views/pages/creator/CreatorDashboardPage";
+import CreatorCourseNewPage from "../../views/pages/creator/CreatorCourseNewPage";
+import CreatorCourseEditPage from "../../views/pages/creator/CreatorCourseEditPage";
+
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -64,15 +64,13 @@ const publicRoutes = [
   { path: "/auth/callback", element: <AuthCallback /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
-  { path: "/products/:slug", element: <ProductDetails /> }, // chi tiết sản phẩm
-  { path: "/products", element: <ProductsCategory /> },     // tìm kiếm/lọc sản phẩm theo ?q=&category=&brand=
-  { path: "/category/:slug", element: <ViewCategory /> },   // list sản phẩm theo :slug
+  { path: "/products/:slug", element: <ProductDetails /> },
+  { path: "/products", element: <ProductsCategory /> },
+  { path: "/category/:slug", element: <ViewCategory /> },
   { path: "/cart", element: <Cart /> },
   { path: "/favorites", element: <FavoritesPage /> },
   { path: "/checkout", element: <Checkout /> },
   { path: "/checkout-history", element: <CheckOutHistory /> },
-
-  // { path: "/productsCategory", element: <ProductsCategory /> }, // (tuỳ chọn) alias cũ, có thể bỏ
   { path: "/account", element: <Account /> },
   { path: "/addresses", element: <AddressPage /> },
   { path: "/tools/metronome", element: <Metronome /> },
@@ -99,29 +97,29 @@ const publicRoutes = [
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
   { path: "/chatbot", element: <ChatbotPage /> },
   { path: "/forum", element: <ForumPage /> },
-  // New structured forum route
   { path: "/forum/thread/:threadId", element: <ForumThreadPage /> },
-  // Backward compatibility: old "post" route now resolves to the new thread page
   { path: "/forum/post/:postId", element: <ForumThreadPage legacyParam="postId" /> },
   { path: "/profile", element: <ProfilePage /> },
   { path: "/u/:username", element: <UserProfilePage /> },
   { path: "/search", element: <SearchPage /> },
   { path: "/friends", element: <FriendsListPage /> },
   { path: "/friends/requests", element: <FriendRequestsPage /> },
-  { path: "/learning/onboarding", element: <LearningPathOnboardingPage /> },
-  { path: "/learning/roadmap", element: <Navigate to="/learning/course" replace /> },
-  { path: "/learning/paths/new", element: <UserLearningPathFormPage /> },
-  { path: "/learning/paths/edit/:pathId", element: <UserLearningPathFormPage /> },
-  { path: "/learning/paths", element: <MyLearningPathsPage /> },
-  { path: "/learning/course", element: <CourseCatalogPage /> },
-  { path: "/learning/course/:courseId", element: <CourseDetailPage /> },
-  { path: "/learning/course/:courseId/module/:moduleId", element: <CourseModulePage /> },
-  { path: "/learning/course/:courseId/module/:moduleId/lesson/:lessonId", element: <CourseLessonPlayerPage /> },
-  { path: "/learning/course/:courseId/module/:moduleId/quiz", element: <ModuleQuizPage /> },
-  { path: "/learning/lesson/:lessonId", element: <LearningLessonPage /> },
-  { path: "/instructor", element: <InstructorDashboardPage /> },
-  { path: "/instructor/course/new", element: <InstructorCourseCreatePage /> },
-  { path: "/instructor/course/:courseId/edit", element: <CourseBuilderPage /> },
+
+  { path: "/learn", element: <LearningDashboardPage /> },
+  { path: "/courses", element: <CourseListPage /> },
+  { path: "/courses/:courseId", element: <CourseDetailPage /> },
+  { path: "/courses/:courseId/lesson/:lessonId", element: <LessonPlayerPage /> },
+  { path: "/courses/:courseId/module/:moduleId/practice", element: <PracticeRoutinePage /> },
+  { path: "/courses/:courseId/module/:moduleId/challenge", element: <ChallengeSongPage /> },
+  { path: "/courses/:courseId/module/:moduleId/complete", element: <ModuleCompletePage /> },
+  { path: "/quiz/:quizId", element: <QuizPage /> },
+
+  { path: "/creator", element: <CreatorDashboardPage /> },
+  { path: "/creator/course/new", element: <CreatorCourseNewPage /> },
+  { path: "/creator/course/:courseId/edit", element: <CreatorCourseEditPage /> },
+
+  { path: "/learning/*", element: <Navigate to="/learn" replace /> },
+  { path: "/instructor/*", element: <Navigate to="/creator" replace /> },
 ];
 
 export default publicRoutes;

@@ -96,6 +96,25 @@ function likeLabel(n) {
   return String(v);
 }
 
+function renderTextWithLinks(text) {
+  const raw = String(text || '');
+  if (!raw) return null;
+  const urlRe = /(https?:\/\/[^\s]+)/g;
+  const parts = raw.split(urlRe);
+  return parts.map((p, idx) => {
+    // split() with capturing group keeps matches as standalone parts
+    if (/^https?:\/\//.test(p)) {
+      const href = p;
+      return (
+        <a key={`u_${idx}`} href={href} target="_blank" rel="noreferrer" style={{ fontWeight: 900 }}>
+          {href}
+        </a>
+      );
+    }
+    return <span key={`t_${idx}`}>{p}</span>;
+  });
+}
+
 export default function ForumThreadPage({ legacyParam }) {
   const params = useParams();
   const navigate = useNavigate();
@@ -519,7 +538,9 @@ export default function ForumThreadPage({ legacyParam }) {
                     ) : null}
                   </div>
                 </div>
-                <div style={{ marginTop: 8, color: '#444', whiteSpace: 'pre-wrap' }}>{thread.content}</div>
+                <div style={{ marginTop: 8, color: '#444', whiteSpace: 'pre-wrap' }}>
+                  {renderTextWithLinks(thread.content)}
+                </div>
 
                 {(() => {
                   const img = thread?.mediaUrl || thread?.files?.find((f) => f?.type === 'image')?.url || '';

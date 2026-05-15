@@ -1,0 +1,361 @@
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .grid2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.courseCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.courseCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #efe4cf;
+  margin-bottom: 12px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f5efd9;
+  color: #5c5346;
+  font-weight: 600;
+}
+
+.videoWrap {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #111;
+  margin: 16px 0;
+}
+
+.videoWrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.layout {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 280px 1fr;
+    align-items: start;
+  }
+}
+
+.sidebar {
+  border: 1px solid #eee6d6;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fffdf8;
+}
+
+.lessonLink {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #2c2416;
+  margin-bottom: 4px;
+}
+
+.lessonLink:hover,
+.lessonLinkActive {
+  background: #f5efd9;
+}
+
+.resultPass {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #9ccc9c;
+  background: #f0faf0;
+  color: #1e5c2a;
+  font-weight: 700;
+}
+
+.resultFail {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #e8b4b4;
+  background: #fff5f5;
+  color: #7a2a2a;
+  font-weight: 700;
+}
+
+.formBlock {
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid #eee6d6;
+  border-radius: 10px;
+  background: #fff;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.addLessonPanel {
+  margin-top: 12px;
+  padding: 14px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e5dcc8;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.addLessonPanel .field {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.addLessonPanel textarea.field {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.addLessonPanel .submitRow {
+  margin-top: 4px;
+}
+
+.lessonListEdit {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  min-width: 0;
+}
+
+.lessonItem {
+  border: 1px solid #e5dcc8;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: #fffdf7;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.lessonItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lessonItemHeader h3 {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.quizSection {
+  margin-top: 12px;
+  min-width: 0;
+}
+
+.quizSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quizSectionHeader p {
+  margin: 0;
+  font-weight: 600;
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.questionCard {
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #efe4cf;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.optionRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.optionRow label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.optionRow .optionInput {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.quizActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.lessonToolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.collapsePanel {
+  min-width: 0;
+}
+
+.collapseHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  margin: 0;
+  border: 1px solid #e5dcc8;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: #2c2416;
+  transition: background 0.15s ease;
+}
+
+.collapseHeader:hover {
+  background: #fffbf0;
+}
+
+.collapseHeaderOpen {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: #efe4cf;
+  background: #fffdf7;
+}
+
+.collapseTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.collapseMeta {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a7165;
+  flex-shrink: 0;
+}
+
+.collapseChevron {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #f5efd9;
+  font-size: 11px;
+  transition: transform 0.2s ease;
+}
+
+.collapseChevronOpen {
+  transform: rotate(180deg);
+}
+
+.collapseBody {
+  padding: 12px;
+  border: 1px solid #e5dcc8;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: #fff;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.collapseBodyFlush {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.lessonItemCollapsed .lessonItemHeader {
+  margin-bottom: 0;
+}
+
+.lessonItemCollapsed {
+  padding-bottom: 0;
+}
+
+.questionCardCollapsed .collapseHeader {
+  margin-bottom: 0;
+}
+
+.nestedCollapse {
+  margin-top: 10px;
+}
+
+.nestedCollapse + .nestedCollapse,
+.questionCardCollapsed {
+  margin-top: 8px;
+}
+
+.lessonItem + .lessonItem {
+  margin-top: 12px;
+}

@@ -15,6 +15,10 @@
   box-sizing: border-box;
 }
 
+.mainWide {
+  max-width: 1200px;
+}
+
 .card {
   background: #fffdf7;
   border: 1px solid #e5dcc8;
@@ -59,6 +63,15 @@
   color: #8b1a1a;
 }
 
+.success {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #9ccc9c;
+  background: #f0faf0;
+  color: #1e5c2a;
+}
+
 .btnPrimary,
 .btnGhost,
 .linkBtn {
@@ -73,6 +86,7 @@
   justify-content: center;
   gap: 8px;
   user-select: none;
+  font-size: 14px;
 }
 
 .btnPrimary {
@@ -91,11 +105,6 @@
   background: #fff;
   color: #2c2416;
   border-color: #e5dcc8;
-}
-
-.linkBtnMuted {
-  opacity: 0.65;
-  cursor: not-allowed;
 }
 
 .progressBarWrap {
@@ -117,28 +126,7 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 10px;
-}
-
-.lessonRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #fff;
-  border: 1px solid #efe4cf;
-}
-
-.lessonLocked {
-  opacity: 0.75;
-}
-
-.lessonMeta {
-  margin-top: 4px;
-  font-size: 13px;
-  color: #7a7165;
+  gap: 8px;
 }
 
 .badge {
@@ -152,8 +140,7 @@
   color: #2c2416;
 }
 
-.badgeDone,
-.badgeDone:global(*) {
+.badgeDone {
   background: #e7f7ea;
   color: #1e6b2f;
 }
@@ -179,6 +166,115 @@
   background: #fffbf0;
 }
 
+.statGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 20px 0;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #e5dcc8;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: #2c2416;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: #7a7165;
+  margin-top: 6px;
+}
+
+.moduleNavItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: #2c2416;
+  text-decoration: none;
+}
+
+.moduleNavItem:hover,
+.moduleNavActive {
+  background: #f5efd9;
+}
+
+.moduleSection {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #efe4cf;
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.checkDone {
+  color: #1e6b2f;
+  font-weight: 700;
+}
+
+.markdown {
+  color: #3d3428;
+  line-height: 1.65;
+  margin-top: 16px;
+}
+
+.markdown h2,
+.markdown h3 {
+  color: #2c2416;
+  margin: 1em 0 0.5em;
+}
+
+.markdown p {
+  margin: 0 0 0.75em;
+}
+
+.markdown ul {
+  padding-left: 1.25em;
+  margin: 0 0 0.75em;
+}
+
+.completeBanner {
+  text-align: center;
+  padding: 32px 20px;
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.completeIcon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
 @media (max-width: 600px) {
   .main {
     padding: 16px 12px 34px;
@@ -187,4 +283,3 @@
     font-size: 24px;
   }
 }
-
