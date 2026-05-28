@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 import { useCategory } from "../../../../context/CategoryContext";
+import { useAuth } from "../../../../context/AuthContext";
 
 export default function Menu({ brands, loading, loadBrandsFor }) {
   const { selectCategory, selectBrand } = useCategory();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleCategoryClick = (categorySlug) => {
     selectCategory(categorySlug);
@@ -58,9 +60,10 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
       <div className={styles.home__menuItem}>
         <Link to="/">Luyện tập</Link>
         <div className={styles.home__submenu}>
-          <Link to="/learning/roadmap">LỘ TRÌNH HỌC</Link>
+          <Link to="/learn">KHÓA HỌC</Link>
           <Link to="/tools/chord-practice">LUYỆN TẬP HỢP ÂM</Link>
           <Link to="/tools/finger-practice">LUYỆN TẬP NGÓN TAY</Link>
+          <Link to="/tools/ai-guitar-practice">LUYỆN TẬP GUITAR VỚI AI</Link>
         </div>
       </div>
       <div className={styles.home__menuItem}>
@@ -69,14 +72,20 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
           <Link to="/tools/metronome">MÁY ĐẾM NHỊP</Link>
           <Link to="/tools/chords">TRA CỨU HỢP ÂM</Link>
           <Link to="/tools/tuner">CHỈNH DÂY</Link>
+          <Link to="/song-search">HỢP ÂM CHUẨN</Link>
         </div>
       </div>
       <div className={styles.home__menuItem}>
-        <Link to="/songs">Bài hát</Link>
+        <Link to="/song-search">Bài hát</Link>
       </div>
       <div className={styles.home__menuItem}>
         <Link to="/forum">Diễn đàn</Link>
       </div>
+      {user && (
+        <div className={styles.home__menuItem}>
+          <Link to="/creator">Tạo khóa học</Link>
+        </div>
+      )}
     </nav>
   );
 }

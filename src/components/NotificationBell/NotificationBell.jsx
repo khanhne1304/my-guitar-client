@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NotificationBell.module.css';
+import { getPresenceSocket } from '../../services/presenceSocket';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
@@ -67,12 +68,12 @@ export default function NotificationBell() {
       });
 
       if (response.ok) {
-        // Cập nhật local state - lấy userId từ token
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const uid = user.id || user._id;
         setNotifications(prev => 
           prev.map(notif => 
             notif._id === notificationId 
-              ? { ...notif, readBy: [...(notif.readBy || []), { user: user.id, readAt: new Date() }] }
+              ? { ...notif, readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }] }
               : notif
           )
         );
@@ -97,10 +98,11 @@ export default function NotificationBell() {
       if (response.ok) {
         setUnreadCount(0);
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const uid = user.id || user._id;
         setNotifications(prev => 
           prev.map(notif => ({
             ...notif,
-            readBy: [...(notif.readBy || []), { user: user.id, readAt: new Date() }]
+            readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }]
           }))
         );
       }
@@ -134,6 +136,8 @@ export default function NotificationBell() {
         return '🛍️';
       case 'system':
         return '⚙️';
+      case 'forum':
+        return '🎸';
       default:
         return '📢';
     }
@@ -152,7 +156,10 @@ export default function NotificationBell() {
 
   const isUnread = (notification) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return !notification.readBy?.some(read => read.user === user.id);
+    const uid = user.id || user._id;
+    if (!uid) return true;
+    const reads = notification.readBy || [];
+    return !reads.some((read) => String(read?.user ?? read) === String(uid));
   };
 
   useEffect(() => {
@@ -162,6 +169,26 @@ export default function NotificationBell() {
     const interval = setInterval(fetchUnreadCount, 30000); // 30 giây
     
     return () => clearInterval(interval);
+  }, []);
+
+  // Socket.io: forum events bump unread (and refresh dropdown when open)
+  useEffect(() => {
+    const socket = getPresenceSocket();
+    const onForumEvent = () => {
+      fetchUnreadCount();
+      setIsOpen((open) => {
+        if (open) fetchRecentNotifications();
+        return open;
+      });
+    };
+    socket.on('new_reply', onForumEvent);
+    socket.on('new_like', onForumEvent);
+    socket.on('reply_to_reply', onForumEvent);
+    return () => {
+      socket.off('new_reply', onForumEvent);
+      socket.off('new_like', onForumEvent);
+      socket.off('reply_to_reply', onForumEvent);
+    };
   }, []);
 
   useEffect(() => {

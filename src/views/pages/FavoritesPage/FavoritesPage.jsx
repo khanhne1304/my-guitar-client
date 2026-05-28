@@ -6,7 +6,7 @@ import Footer from '../../components/homeItem/Footer/Footer';
 import ProductCard from '../../components/productCard/productCard';
 import { useFavorites } from '../../../context/FavoritesContext';
 import { useProducts } from '../../../hooks/useProducts';
-import ChatWidget from "../../components/chat/ChatWidget";
+import ChatbotWidget from "../../components/chat/ChatbotWidget";
 export default function FavoritesPage() {
   const { favorites, removeFromFavorites, clearFavorites } = useFavorites();
   const { headerProducts } = useProducts();
@@ -108,7 +108,7 @@ export default function FavoritesPage() {
       </main>
 
       <Footer />
-      <ChatWidget />
+      <ChatbotWidget />
     </div>
   );
 }

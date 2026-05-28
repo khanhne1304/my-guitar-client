@@ -15,6 +15,7 @@ import FriendsListPage from "../views/pages/FriendsPage/FriendsListPage";
 import FriendRequestsPage from "../views/pages/FriendsPage/FriendRequestsPage";
 import SearchPage from "../views/pages/SearchPage/SearchPage";
 import ProtectedNotificationCenter from "../views/pages/NotificationCenter/ProtectedNotificationCenter";
+import MessengerPage from "../views/pages/MessengerPage/MessengerPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -29,6 +30,7 @@ export default function AppRouter() {
     "/profile",
     "/friends",
     "/friends/requests",
+    "/messenger",
     "/search",
     "/notifications",
   ]);
@@ -48,6 +50,7 @@ export default function AppRouter() {
                         <Route path="/profile" element={<ProfilePage embedded />} />
                         <Route path="/friends" element={<FriendsListPage embedded />} />
                         <Route path="/friends/requests" element={<FriendRequestsPage embedded />} />
+                        <Route path="/messenger" element={<MessengerPage />} />
                         <Route path="/search" element={<SearchPage embedded />} />
                         <Route path="/notifications" element={<ProtectedNotificationCenter />} />
                       </Route>

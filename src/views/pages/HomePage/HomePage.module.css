@@ -319,6 +319,32 @@
   background: #ffd700;
 }
 
+.home__forumList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.home__forumHint {
+  color: #666;
+  font-size: 14px;
+  padding: 8px 0;
+}
+
+.home__forumMore {
+  margin-top: 16px;
+}
+
+.home__forumMore a {
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.home__forumMore a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 640px) {
   .home__carouselViewport {
     height: 300px;

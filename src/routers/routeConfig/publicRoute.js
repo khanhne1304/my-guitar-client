@@ -9,7 +9,7 @@ import ViewCategory from "../../views/pages/CategoryPage/CategoryPage";
 import Cart from "../../views/pages/CartPage/CartPage";
 import Checkout from "../../views/pages/CheckoutPage/CheckoutPage";
 import CheckOutHistory from "../../views/pages/CheckOutHistory/CheckOutHistory";
-import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage"; // trang liệt kê/tìm kiếm sản phẩm
+import ProductsCategory from "../../views/pages/ProductsPage/ProductsPage";
 import Account from "../../views/pages/AccountPage/AccountPage";
 import Metronome from "../../views/pages/ToolsPage/MetronomePage/Metronome";
 import Songs from "../../views/pages/SongsPage/SongsPage";
@@ -42,11 +42,23 @@ import FriendRequestsPage from "../../views/pages/FriendsPage/FriendRequestsPage
 import FriendsListPage from "../../views/pages/FriendsPage/FriendsListPage";
 import ProfilePage from "../../views/pages/ProfilePage/ProfilePage";
 import SearchPage from "../../views/pages/SearchPage/SearchPage";
-import ForumPostPage from "../../views/pages/ForumPostPage/ForumPostPage";
+import ForumThreadPage from "../../views/pages/ForumThreadPage/ForumThreadPage";
 import UserProfilePage from "../../views/pages/UserProfilePage/UserProfilePage";
-import LearningPathOnboardingPage from "../../views/pages/LearningPathPage/LearningPathOnboardingPage";
-import LearningRoadmapPage from "../../views/pages/LearningPathPage/LearningRoadmapPage";
-import LearningLessonPage from "../../views/pages/LearningPathPage/LearningLessonPage";
+import { Navigate } from "react-router-dom";
+import LearningDashboardPage from "../../views/pages/courses/LearningDashboardPage";
+import CourseListPage from "../../views/pages/courses/CourseListPage";
+import CourseDetailPage from "../../views/pages/courses/CourseDetailPage";
+import LessonPlayerPage from "../../views/pages/courses/LessonPlayerPage";
+import PracticeRoutinePage from "../../views/pages/courses/PracticeRoutinePage";
+import ChallengeSongPage from "../../views/pages/courses/ChallengeSongPage";
+import ModuleCompletePage from "../../views/pages/courses/ModuleCompletePage";
+import QuizPage from "../../views/pages/courses/QuizPage";
+import CreatorDashboardPage from "../../views/pages/creator/CreatorDashboardPage";
+import CreatorCourseNewPage from "../../views/pages/creator/CreatorCourseNewPage";
+import CreatorCourseEditPage from "../../views/pages/creator/CreatorCourseEditPage";
+import SongSearchPage from "../../views/pages/SongSearchPage/SongSearchPage";
+import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
+
 const publicRoutes = [
   { path: "/", element: <Home /> },
   { path: "/register", element: <Register /> },
@@ -54,15 +66,13 @@ const publicRoutes = [
   { path: "/auth/callback", element: <AuthCallback /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
-  { path: "/products/:slug", element: <ProductDetails /> }, // chi tiết sản phẩm
-  { path: "/products", element: <ProductsCategory /> },     // tìm kiếm/lọc sản phẩm theo ?q=&category=&brand=
-  { path: "/category/:slug", element: <ViewCategory /> },   // list sản phẩm theo :slug
+  { path: "/products/:slug", element: <ProductDetails /> },
+  { path: "/products", element: <ProductsCategory /> },
+  { path: "/category/:slug", element: <ViewCategory /> },
   { path: "/cart", element: <Cart /> },
   { path: "/favorites", element: <FavoritesPage /> },
   { path: "/checkout", element: <Checkout /> },
   { path: "/checkout-history", element: <CheckOutHistory /> },
-
-  // { path: "/productsCategory", element: <ProductsCategory /> }, // (tuỳ chọn) alias cũ, có thể bỏ
   { path: "/account", element: <Account /> },
   { path: "/addresses", element: <AddressPage /> },
   { path: "/tools/metronome", element: <Metronome /> },
@@ -82,22 +92,39 @@ const publicRoutes = [
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },
   { path: "/tools/tuner", element: <TunerPage /> },
+  { path: "/tools/ai-guitar-practice", element: <CompareTwoSongsPage /> },
+  { path: "/tools/compare-song", element: <Navigate to="/tools/ai-guitar-practice" replace /> },
   { path: "/admin/*", element: <AdminPage /> },
   { path: "/songs", element: <Songs />},
   { path: "/songs/:slug", element: <SongDetails /> },
+  { path: "/song-search", element: <SongSearchPage /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/notifications", element: <ProtectedNotificationCenter /> },
   { path: "/chatbot", element: <ChatbotPage /> },
   { path: "/forum", element: <ForumPage /> },
-  { path: "/forum/post/:postId", element: <ForumPostPage /> },
+  { path: "/forum/thread/:threadId", element: <ForumThreadPage /> },
+  { path: "/forum/post/:postId", element: <ForumThreadPage legacyParam="postId" /> },
   { path: "/profile", element: <ProfilePage /> },
   { path: "/u/:username", element: <UserProfilePage /> },
   { path: "/search", element: <SearchPage /> },
   { path: "/friends", element: <FriendsListPage /> },
   { path: "/friends/requests", element: <FriendRequestsPage /> },
-  { path: "/learning/onboarding", element: <LearningPathOnboardingPage /> },
-  { path: "/learning/roadmap", element: <LearningRoadmapPage /> },
-  { path: "/learning/lesson/:lessonId", element: <LearningLessonPage /> },
+
+  { path: "/learn", element: <LearningDashboardPage /> },
+  { path: "/courses", element: <CourseListPage /> },
+  { path: "/courses/:courseId", element: <CourseDetailPage /> },
+  { path: "/courses/:courseId/lesson/:lessonId", element: <LessonPlayerPage /> },
+  { path: "/courses/:courseId/module/:moduleId/practice", element: <PracticeRoutinePage /> },
+  { path: "/courses/:courseId/module/:moduleId/challenge", element: <ChallengeSongPage /> },
+  { path: "/courses/:courseId/module/:moduleId/complete", element: <ModuleCompletePage /> },
+  { path: "/quiz/:quizId", element: <QuizPage /> },
+
+  { path: "/creator", element: <CreatorDashboardPage /> },
+  { path: "/creator/course/new", element: <CreatorCourseNewPage /> },
+  { path: "/creator/course/:courseId/edit", element: <CreatorCourseEditPage /> },
+
+  { path: "/learning/*", element: <Navigate to="/learn" replace /> },
+  { path: "/instructor/*", element: <Navigate to="/creator" replace /> },
 ];
 
 export default publicRoutes;

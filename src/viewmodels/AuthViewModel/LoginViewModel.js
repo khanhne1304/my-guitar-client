@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../../services/authService';
 import { setToken, getUser, setUser, mergeUser } from '../../utils/storage';
 import { useAuth } from '../../context/AuthContext';
-import { needsGuitarOnboarding } from '../../utils/learningOnboarding';
 import { LoginForm } from '../../models/AuthModels/loginModel';
 
 export function useLoginViewModel() {
@@ -57,8 +56,6 @@ export function useLoginViewModel() {
       setTimeout(() => {
         if (merged.role === 'admin') {
           navigate('/admin');
-        } else if (needsGuitarOnboarding(merged)) {
-          navigate('/learning/onboarding');
         } else {
           navigate('/');
         }

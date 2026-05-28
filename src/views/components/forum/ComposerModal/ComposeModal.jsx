@@ -1,41 +1,28 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import styles from "./ComposeModal.module.css";
 
 export default function ComposeModal({
   open,
   onClose,
+  title,
+  setTitle,
+  category,
+  setCategory,
+  tagsText,
+  setTagsText,
   content,
   setContent,
-  images,
-  setImages,
-  onPickImages,
+  videoUrl,
+  setVideoUrl,
+  files = [],
+  onFilesSelected,
+  onRemoveFileAt,
   onSubmit,
   userAvatarUrl,
+  submitting = false,
+  submitError = "",
 }) {
-  const [visOpen, setVisOpen] = useState(false);
-  const [visibility, setVisibility] = useState("Công khai"); // Công khai | Bạn bè | Riêng tư
-  const [mediaWidth, setMediaWidth] = useState(null);
-
-  const removeAt = (idx) => {
-    setImages((prev) => prev.filter((_, i) => i !== idx));
-  };
-
-  // Tính chiều rộng modal theo bức ảnh đầu tiên
-  useEffect(() => {
-    if (!images?.length) {
-      setMediaWidth(null);
-      return;
-    }
-    const img = new Image();
-    img.onload = () => {
-      const vw = Math.max(320, (typeof window !== "undefined" ? window.innerWidth : 1200) - 48);
-      const w = Math.max(360, Math.min(img.naturalWidth, 640, vw));
-      setMediaWidth(w);
-    };
-    img.src = images[0];
-  }, [images]);
-
-  const modalStyle = useMemo(() => (mediaWidth ? { width: mediaWidth } : undefined), [mediaWidth]);
+  const modalStyle = useMemo(() => undefined, []);
 
   if (!open) return null;
 
@@ -43,7 +30,7 @@ export default function ComposeModal({
     <div className={styles.backdrop} onClick={onClose}>
       <div className={styles.modal} style={modalStyle} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <div>Tạo bài viết</div>
+          <div>Tạo chủ đề</div>
           <button className={styles.close} onClick={onClose} aria-label="Đóng">×</button>
         </div>
         <div className={styles.body}>
@@ -55,80 +42,106 @@ export default function ComposeModal({
             )}
             <div className={styles.identity}>
               <div className={styles.name}>Bạn</div>
-              <button
-                type="button"
-                className={styles.visBtn}
-                onClick={() => setVisOpen((v) => !v)}
-                aria-expanded={visOpen}
-              >
-                {visibility}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="m6 9 6 6 6-6"/>
-                </svg>
-              </button>
-              {visOpen && (
-                <div className={styles.visMenu}>
-                  {["Công khai", "Bạn bè", "Riêng tư"].map((opt) => (
-                    <div
-                      key={opt}
-                      className={styles.visItem}
-                      onClick={() => {
-                        setVisibility(opt);
-                        setVisOpen(false);
-                      }}
-                    >
-                      {opt}
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className={styles.hint}>Chọn loại chủ đề & danh mục để dễ học hơn.</div>
             </div>
           </div>
 
-          <textarea
-            className={styles.textarea}
-            placeholder="Bạn đang nghĩ gì?"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+          <input
+            className={styles.input}
+            placeholder="Tiêu đề (bắt buộc)"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             autoFocus
-            tabIndex={0}
+            maxLength={120}
           />
 
-          {!!images.length && images.length === 1 && (
-            <div className={styles.mediaBox}>
-              <img src={images[0]} alt="" />
-              <button
-                className={styles.remove}
-                onClick={() => removeAt(0)}
-                aria-label="Xoá"
-                title="Xoá ảnh"
-              >
-                ×
-              </button>
-            </div>
-          )}
-          {!!images.length && images.length > 1 && (
-            <div className={styles.images}>
-              {images.map((src, idx) => (
-                <div key={idx} className={styles.thumb}>
-                  <img src={src} alt="" />
-                  <button className={styles.remove} onClick={() => removeAt(idx)} aria-label="Xoá">×</button>
-                </div>
-              ))}
-            </div>
-          )}
+          <label className={styles.field}>
+            <span className={styles.label}>Danh mục</span>
+            <select className={styles.select} value={category} onChange={(e) => setCategory(e.target.value)}>
+              <option value="lesson">Học guitar</option>
+              <option value="tab">Tab guitar</option>
+              <option value="chord">Hợp âm</option>
+              <option value="discussion">Thảo luận</option>
+            </select>
+          </label>
+
+          <input
+            className={styles.input}
+            placeholder="Thẻ (vd: bending, barre, metronome) – phân tách bằng dấu phẩy"
+            value={tagsText}
+            onChange={(e) => setTagsText(e.target.value)}
+            maxLength={160}
+          />
+
+          <label className={styles.field}>
+            <span className={styles.label}>Upload file (pdf / ảnh / mp3)</span>
+            <input
+              className={styles.input}
+              type="file"
+              multiple
+              accept="application/pdf,image/*,audio/mpeg"
+              onChange={(e) => {
+                const fl = e.target.files;
+                if (onFilesSelected) onFilesSelected(fl);
+                e.target.value = "";
+              }}
+              disabled={submitting}
+            />
+            {Array.isArray(files) && files.length ? (
+              <div style={{ marginTop: 8, display: "grid", gap: 6 }}>
+                {files.map((f, idx) => (
+                  <div
+                    key={`${f?.url || idx}`}
+                    style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "space-between" }}
+                  >
+                    <div style={{ fontSize: 12, color: "#333", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <b>{String(f?.type || "").toUpperCase()}</b> — {f?.name || f?.url}
+                    </div>
+                    <button
+                      className={styles.secondary}
+                      type="button"
+                      onClick={() => onRemoveFileAt && onRemoveFileAt(idx)}
+                      disabled={submitting}
+                      style={{ padding: "6px 10px" }}
+                    >
+                      Xoá
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </label>
+
+          <input
+            className={styles.input}
+            placeholder="Link YouTube (tuỳ chọn)"
+            value={videoUrl || ""}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            maxLength={300}
+          />
+
+          <textarea
+            className={styles.textarea}
+            placeholder="Nội dung… (mô tả rõ bối cảnh luyện tập, mục tiêu, và vấn đề gặp phải)"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            tabIndex={0}
+            maxLength={5000}
+          />
+
+          {submitError ? <div className={styles.error}>{submitError}</div> : null}
 
           <div className={styles.actions}>
-            <button type="button" className={styles.attachBtn} onClick={onPickImages}>
-              Thêm ảnh/video
+            <button className={styles.secondary} onClick={onClose} type="button" disabled={submitting}>
+              Huỷ
             </button>
             <button
               className={styles.submit}
               onClick={onSubmit}
-              disabled={!content.trim() && images.length === 0}
-              aria-disabled={!content.trim() && images.length === 0}
+              disabled={submitting || !title?.trim() || !content.trim()}
+              aria-disabled={submitting || !title?.trim() || !content.trim()}
             >
-              Đăng
+              {submitting ? "Đang đăng..." : "Đăng"}
             </button>
           </div>
         </div>

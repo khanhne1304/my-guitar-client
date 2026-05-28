@@ -1,0 +1,285 @@
+.page {
+  min-height: 100vh;
+  background: #faf7f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px 16px 40px;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.mainWide {
+  max-width: 1200px;
+}
+
+.card {
+  background: #fffdf7;
+  border: 1px solid #e5dcc8;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 8px 22px rgba(44, 36, 22, 0.06);
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 28px;
+  line-height: 1.2;
+  color: #2c2416;
+}
+
+.h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #2c2416;
+}
+
+.lead {
+  margin: 0 0 12px;
+  color: #5c5346;
+  line-height: 1.55;
+}
+
+.muted {
+  margin: 0;
+  color: #7a7165;
+}
+
+.error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #f2c7c7;
+  background: #fff1f1;
+  color: #8b1a1a;
+}
+
+.success {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #9ccc9c;
+  background: #f0faf0;
+  color: #1e5c2a;
+}
+
+.btnPrimary,
+.btnGhost,
+.linkBtn {
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  user-select: none;
+  font-size: 14px;
+}
+
+.btnPrimary {
+  background: #2c2416;
+  color: #fffdf7;
+  border-color: #2c2416;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnGhost,
+.linkBtn {
+  background: #fff;
+  color: #2c2416;
+  border-color: #e5dcc8;
+}
+
+.progressBarWrap {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #efe4cf;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2c2416, #8b6914);
+}
+
+.lessonList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #efe4cf;
+  color: #2c2416;
+}
+
+.badgeDone {
+  background: #e7f7ea;
+  color: #1e6b2f;
+}
+
+.option {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #e5dcc8;
+  background: #fff;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.option:focus {
+  border-color: #8b6914;
+  box-shadow: 0 0 0 3px rgba(139, 105, 20, 0.18);
+}
+
+.optionActive {
+  border-color: #8b6914;
+  background: #fffbf0;
+}
+
+.statGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 20px 0;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #e5dcc8;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: #2c2416;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: #7a7165;
+  margin-top: 6px;
+}
+
+.moduleNavItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: #2c2416;
+  text-decoration: none;
+}
+
+.moduleNavItem:hover,
+.moduleNavActive {
+  background: #f5efd9;
+}
+
+.moduleSection {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #efe4cf;
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.checkDone {
+  color: #1e6b2f;
+  font-weight: 700;
+}
+
+.markdown {
+  color: #3d3428;
+  line-height: 1.65;
+  margin-top: 16px;
+}
+
+.markdown h2,
+.markdown h3 {
+  color: #2c2416;
+  margin: 1em 0 0.5em;
+}
+
+.markdown p {
+  margin: 0 0 0.75em;
+}
+
+.markdown ul {
+  padding-left: 1.25em;
+  margin: 0 0 0.75em;
+}
+
+.completeBanner {
+  text-align: center;
+  padding: 32px 20px;
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.completeIcon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 16px 12px 34px;
+  }
+  .title {
+    font-size: 24px;
+  }
+}

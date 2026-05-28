@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveSession } from '../../../utils/storage';
 import { useAuth } from '../../../context/AuthContext';
-import { needsGuitarOnboarding } from '../../../utils/learningOnboarding';
 
 export default function AuthCallback() {
 	const navigate = useNavigate();
@@ -23,8 +22,8 @@ export default function AuthCallback() {
 				// Điều hướng theo flow:
 				if (user?.role === 'admin' && state !== 'register') {
 					navigate('/admin', { replace: true });
-				} else if (state === 'register' || needsGuitarOnboarding(user)) {
-					navigate('/learning/onboarding', { replace: true });
+				} else if (state === 'register') {
+					navigate('/courses', { replace: true });
 				} else {
 					navigate('/', { replace: true });
 				}

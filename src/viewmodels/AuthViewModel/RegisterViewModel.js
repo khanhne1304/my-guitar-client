@@ -140,7 +140,7 @@ export function useRegisterViewModel() {
       saveSession({ token: result?.token || result?.data?.token, user });
       setOk('Đăng ký thành công! Đang chuyển hướng...');
       setShowOTPModal(false);
-      setTimeout(() => navigate('/learning/onboarding'), 1000);
+      setTimeout(() => navigate('/courses'), 1000);
     } catch (error) {
       const message =
         error?.data?.message ||
@@ -179,7 +179,7 @@ export function useRegisterViewModel() {
       saveSession({ token: result?.token || result?.data?.token, user });
       setOk('Đăng ký thành công! Đang chuyển hướng...');
       setShowOTPModal(false);
-      setTimeout(() => navigate('/learning/onboarding'), 2000);
+      setTimeout(() => navigate('/courses'), 2000);
     } catch (error) {
       const message = error?.message || 'Xác thực OTP thất bại. Vui lòng thử lại.';
       throw new Error(message);
