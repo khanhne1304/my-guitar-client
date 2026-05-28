@@ -46,10 +46,10 @@ function ChordLyricViewer({ song }) {
         if (line.kind === 'empty') {
           return <div key={idx} className={styles.lyricLineWrap} aria-hidden />;
         }
-        if (line.kind === 'section') {
+        if (line.kind === 'section' || line.kind === 'info') {
           return (
             <p key={idx} className={styles.lyricSection}>
-              {line.section}
+              {line.section || line.info}
             </p>
           );
         }
@@ -410,6 +410,21 @@ export default function SongSearchPage() {
                   <SongAudioComparePanel
                     title={displayedSong.title}
                     artist={displayedSong.artist}
+                    directMode
+                    chordPracticeMode
+                    hopamSong={
+                      selected
+                        ? {
+                            url: selected.url,
+                            title: selected.title,
+                            artist: selected.artist,
+                            tempo: song?.tempo ?? tempo,
+                            rhythm: song?.rhythm,
+                          }
+                        : null
+                    }
+                    referenceBpm={tempo}
+                    transpose={transpose}
                   />
                 </article>
               ) : null}

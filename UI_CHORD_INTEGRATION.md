@@ -2,11 +2,12 @@
 
 ## ✅ Các thay đổi đã thực hiện
 
-### 1. Cập nhật Service (`src/services/aiPracticeService.js`)
-- ✅ Thêm method `analyzeAudioWithChords()` để gọi API endpoint mới
+### 1. Service (`src/services/chordPracticeService.js`)
+- ✅ `analyzeAndCompare({ file, hopamUrl })` → `POST /api/chord-practice/analyze`
+- ✅ `analyzeOnly({ file })` → `POST /api/chord-practice/analyze-only`
 
-### 2. Cập nhật Component (`src/views/pages/ToolsPage/AIPracticePage/AIPracticePage.jsx`)
-- ✅ Thay đổi `handleAnalyze()` để sử dụng `analyzeAudioWithChords()` thay vì `analyzeAudioClip()`
+### 2. Component (`SongAudioComparePanel.jsx`, trang AI practice & Song Search)
+- ✅ Nút **Phân tích & so sánh hợp âm** khi có `chordPracticeMode` + `hopamSong`
 - ✅ Thêm hiển thị card "Nhận diện hợp âm" với:
   - Chord metrics (accuracy, confidence, coverage, số segments)
   - Timeline của predicted chords với timestamps và confidence
@@ -74,11 +75,13 @@ User uploads audio
     ↓
 Click "Phân tích với nhận diện hợp âm"
     ↓
-Frontend calls: aiPracticeService.analyzeAudioWithChords()
+Frontend calls: chordPracticeService.analyzeAndCompare()
     ↓
-API: POST /api/ai/practice/analyze-with-chords
+API: POST /api/chord-practice/analyze
     ↓
-Backend processes with chord recognition
+Backend → ChordMini API (https://www.chordmini.me/api/recognize-chords)
+    ↓
+So sánh với hợp âm HopAmChuan
     ↓
 Response with chordRecognition + scores
     ↓

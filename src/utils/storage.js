@@ -47,9 +47,20 @@ export function saveSession({ token, user }) {
   if (user) setUser(user);
 }
 
+const LEGACY_CHAT_KEY = 'gm.chat.conversations';
+
+export function clearChatCache() {
+  try {
+    localStorage.removeItem(LEGACY_CHAT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 export function clearSession() {
   removeToken();
   removeUser();
+  clearChatCache();
 }
 
 // ---- UTILS ----

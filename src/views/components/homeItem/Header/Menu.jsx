@@ -76,7 +76,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
         </div>
       </div>
       <div className={styles.home__menuItem}>
-        <Link to="/songs">Bài hát</Link>
+        <Link to="/song-search">Bài hát</Link>
       </div>
       <div className={styles.home__menuItem}>
         <Link to="/forum">Diễn đàn</Link>

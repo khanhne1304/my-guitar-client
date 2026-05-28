@@ -12,7 +12,7 @@ import QtySelector from '../../components/product/QtySelector';
 import MetaInfo from '../../components/product/MetaInfo';
 import Tabs from '../../components/product/Tabs';
 import RelatedProducts from '../../components/product/RelatedProducts';
-import ChatWidget from "../../components/chat/ChatWidget";
+import ChatbotWidget from "../../components/chat/ChatbotWidget";
 import { useProductDetailsViewModel } from '../../../viewmodels/ProductDetailsViewModel';
 import { useFavorites } from '../../../context/FavoritesContext';
 import { getUser } from '../../../utils/storage';
@@ -163,7 +163,7 @@ export default function ProductDetailsPage() {
       </main>
 
       <Footer />
-      <ChatWidget />
+      <ChatbotWidget />
     </div>
   );
 }

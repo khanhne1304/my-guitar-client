@@ -1,10 +1,11 @@
-import { FaUser, FaUserFriends, FaUserPlus, FaSearch, FaBell } from "react-icons/fa";
+import { FaUser, FaUserFriends, FaUserPlus, FaSearch, FaBell, FaFacebookMessenger } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import styles from "./LeftSidebar.module.css";
 
 export default function LeftSidebar() {
   const items = [
     { icon: <FaUser />, label: "Trang cá nhân", to: "/profile" },
+    { icon: <FaFacebookMessenger />, label: "Tin nhắn", to: "/messenger" },
     { icon: <FaUserFriends />, label: "Danh sách bạn bè", to: "/friends" },
     { icon: <FaUserPlus />, label: "Lời mời kết bạn", to: "/friends/requests" },
     { icon: <FaSearch />, label: "Tìm kiếm", to: "/search" },

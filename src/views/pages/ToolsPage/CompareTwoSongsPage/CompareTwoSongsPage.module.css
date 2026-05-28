@@ -16,6 +16,27 @@
   line-height: 1.5;
 }
 
+.practiceSelectRow {
+  margin-bottom: 16px;
+}
+
+.practiceSelectLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.practiceSelect {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+}
+
 .selectLabel {
   display: block;
   font-size: 14px;

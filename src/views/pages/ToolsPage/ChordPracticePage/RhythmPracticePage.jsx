@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../../../components/homeItem/Header/Header";
 import Footer from "../../../components/homeItem/Footer/Footer";
 import useRhythmPracticeVM from "../../../../viewmodels/RhythmPracticeViewModel";
@@ -13,6 +13,14 @@ export default function RhythmPracticePage() {
   const { getProgressStats } = usePractice();
   const { isAuthenticated: authIsAuthenticated, authChecked, checkAuthStatus } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const bpmFromUrl = Number(searchParams.get('bpm'));
+    if (bpmFromUrl >= 30 && bpmFromUrl <= 300) {
+      vm.setBpm(bpmFromUrl);
+    }
+  }, [searchParams, vm.setBpm]);
 
   useEffect(() => {
     checkAuthStatus();

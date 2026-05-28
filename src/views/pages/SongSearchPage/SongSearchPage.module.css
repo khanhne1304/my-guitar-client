@@ -508,10 +508,26 @@
   cursor: pointer;
 }
 
+.lyricScroll {
+  margin-bottom: 1.25rem;
+}
+
+.lyricMeta {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .lyricBlock {
   font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
   line-height: 1.55;
   font-size: 0.95rem;
+  max-height: min(70vh, 720px);
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
 }
 
 .lyricSection {

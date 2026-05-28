@@ -10,7 +10,7 @@ import ProductGrid from "../../components/home/ProductGrid";
 import ThreadCard from "../../components/forum/ThreadCard/ThreadCard";
 import { useHomeViewModel } from "../../../viewmodels/HomeViewModel";
 import { useCategory } from "../../../context/CategoryContext";
-import ChatWidget from "../../components/chat/ChatWidget";
+import ChatbotWidget from "../../components/chat/ChatbotWidget";
 import { forumApi } from "../../../services/forumApi";
 
 const HOME_FORUM_PREVIEW = 6;
@@ -142,7 +142,7 @@ export default function HomePage() {
       </main>
 
       <Footer />
-      <ChatWidget />
+      <ChatbotWidget showMessengerFab />
     </div>
   );
 }

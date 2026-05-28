@@ -1,7 +1,12 @@
-.bubble {
+.bubbleWrap {
     position: fixed;
     right: 20px;
     bottom: 20px;
+    z-index: 1000;
+  }
+
+  .bubble {
+    position: relative;
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -13,9 +18,27 @@
     border: none;
     cursor: pointer;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    z-index: 1000;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .bubbleBadge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 10px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
   }
   .bubble:focus,
   .bubble:focus-visible {
@@ -57,29 +80,32 @@
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 1000;
   }
   
   .modal {
-    width: 1200px;
-    max-width: calc(100% - 24px);
-    margin: 12px;
+    position: fixed;
+    right: 20px;
+    bottom: 88px;
+    width: min(1200px, calc(100vw - 40px));
+    max-width: calc(100vw - 40px);
+    margin: 0;
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 12px 28px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
-    max-height: 85vh;
-    position: relative; /* để đặt toast ở giữa modal */
+    max-height: min(720px, calc(100vh - 120px));
+    position: relative;
+    z-index: 1001;
   }
   .chat2col {
     display: flex;
-    min-height: 620px;
-    height: 75vh;
+    min-height: 360px;
+    height: min(580px, calc(100vh - 200px));
+    flex: 1 1 auto;
+    overflow: hidden;
   }
   .leftPane {
     width: 360px;
@@ -524,8 +550,10 @@
   
   @media (max-width: 420px) {
     .modal {
-      margin: 8px;
-      width: calc(100% - 16px);
+      right: 12px;
+      bottom: 80px;
+      width: calc(100vw - 24px);
+      max-width: none;
     }
     .chat2col {
       flex-direction: column;
@@ -541,6 +569,19 @@
       height: 100%;
     }
   }
-  
-  
-  
+
+  .chatError {
+    margin: 0 16px 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 13px;
+  }
+
+  .chatHint {
+    padding: 16px;
+    color: #6b7280;
+    font-size: 14px;
+    list-style: none;
+  }

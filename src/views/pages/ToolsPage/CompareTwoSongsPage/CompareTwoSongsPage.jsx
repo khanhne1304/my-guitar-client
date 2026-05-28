@@ -259,7 +259,7 @@ export default function CompareTwoSongsPage() {
             )}
           </section>
 
-          <AiPracticeAudioSection />
+          <AiPracticeAudioSection practiceSongs={practiceSongs} />
 
           {toast && (
             <div className={styles.toast} role="status">
