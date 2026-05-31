@@ -132,6 +132,70 @@ function AdviceDetailBlock({ title, items, ordered }) {
   );
 }
 
+const LEVEL_LABELS = {
+  Beginner: 'Cơ bản',
+  Intermediate: 'Trung cấp',
+  Advanced: 'Nâng cao',
+};
+
+function LevelBadge({ level }) {
+  if (!level) return null;
+  const label = LEVEL_LABELS[level] || level;
+  const levelClass =
+    level === 'Advanced'
+      ? styles.levelAdvanced
+      : level === 'Intermediate'
+        ? styles.levelIntermediate
+        : styles.levelBeginner;
+  return (
+    <span className={`${styles.levelBadge} ${levelClass}`}>
+      Trình độ: {label}
+    </span>
+  );
+}
+
+function MainProblemsBlock({ problems }) {
+  if (!problems?.length) return null;
+  return (
+    <div className={styles.aiAdviceGroup}>
+      <strong className={styles.aiAdviceGroupTitle}>Cần cải thiện</strong>
+      <ul className={styles.problemList}>
+        {problems.map((p) => (
+          <li key={p.problem} className={styles.problemItem}>
+            <p className={styles.problemTitle}>{p.problem}</p>
+            {p.cause && <p className={styles.problemDetail}><em>Nguyên nhân:</em> {p.cause}</p>}
+            {p.impact && <p className={styles.problemDetail}><em>Ảnh hưởng:</em> {p.impact}</p>}
+            {p.solution && <p className={styles.problemSolution}><em>Cách luyện:</em> {p.solution}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PracticePlanBlock({ plan }) {
+  if (!plan?.length) return null;
+  return (
+    <div className={styles.aiAdviceGroup}>
+      <strong className={styles.aiAdviceGroupTitle}>Kế hoạch luyện tập</strong>
+      <ol className={styles.practicePlanList}>
+        {plan.map((item) => (
+          <li key={`${item.title}-${item.exercise}`} className={styles.practicePlanItem}>
+            <p className={styles.practicePlanTitle}>
+              {item.title}
+              {item.durationMinutes ? (
+                <span className={styles.practicePlanDuration}> · {item.durationMinutes} phút</span>
+              ) : null}
+            </p>
+            {item.reason && <p className={styles.problemDetail}>{item.reason}</p>}
+            {item.exercise && <p className={styles.problemSolution}>{item.exercise}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 function collectImprovementExercises(tempoComparison, chordComparison) {
   const items = [];
   const seen = new Set();
@@ -291,16 +355,16 @@ function ImprovementSuggestionsSection({
       </div>
 
       <div className={styles.aiAdviceBlock}>
-        <span className={styles.improvementColTitle}>Phân tích chuyên sâu</span>
+        <span className={styles.improvementColTitle}>Huấn luyện viên AI</span>
         {aiLoading && (
-          <p className={styles.chordHint}>Đang tạo gợi ý luyện tập (AI)…</p>
+          <p className={styles.chordHint}>Đang đánh giá buổi luyện tập của bạn…</p>
         )}
         {!aiLoading && aiError && (
           <p className={styles.chordHint}>{aiError}</p>
         )}
         {!aiLoading && aiAdvice && !aiAdvice.available && (
           <p className={styles.chordHint}>
-            {aiAdvice.message || 'Chưa tạo được gợi ý — thử phân tích lại.'}
+            {aiAdvice.message || 'Chưa tạo được đánh giá — thử phân tích lại.'}
           </p>
         )}
         {!aiLoading && aiAdvice?.available && (
@@ -310,33 +374,25 @@ function ImprovementSuggestionsSection({
             )}
             {aiAdvice.source === 'local' && !aiAdvice.aiWarning && (
               <p className={styles.chordHint}>
-                Gợi ý dựa trên kết quả phân tích hợp âm và nhịp của bạn.
+                Đánh giá dựa trên buổi luyện của bạn — vẫn đầy đủ gợi ý luyện tập.
               </p>
             )}
-            {isCleanOverviewText(aiAdvice.overview || aiAdvice.summary) && (
-              <p className={styles.aiAdviceSummary}>
-                {aiAdvice.overview || aiAdvice.summary}
-              </p>
+            <LevelBadge level={aiAdvice.level} />
+            {isCleanOverviewText(aiAdvice.overview) && (
+              <p className={styles.aiAdviceSummary}>{aiAdvice.overview}</p>
             )}
-            <AdviceDetailBlock title="Âm sắc & cách đánh" items={aiAdvice.toneAndTimbre} />
-            <AdviceDetailBlock title="Tempo & nhịp" items={aiAdvice.tempoAndRhythm} />
-            <AdviceDetailBlock
-              title="Hợp âm & chuyển đoạn"
-              items={aiAdvice.chordsAndTransitions}
-            />
-            <AdviceDetailBlock title="Điểm tốt" items={aiAdvice.strengths} />
-            {aiAdvice.improvements?.length > 0 &&
-              !aiAdvice.chordsAndTransitions?.length && (
-                <AdviceDetailBlock
-                  title="Kỹ năng cần cải thiện"
-                  items={aiAdvice.improvements}
-                />
-              )}
-            <AdviceDetailBlock
-              title="Kế hoạch luyện tập"
-              items={aiAdvice.practiceSteps}
-              ordered
-            />
+            <AdviceDetailBlock title="Điểm mạnh" items={aiAdvice.strengths} />
+            <MainProblemsBlock problems={aiAdvice.mainProblems} />
+            <PracticePlanBlock plan={aiAdvice.practicePlan} />
+            {aiAdvice.nextGoal && (
+              <div className={styles.aiAdviceGroup}>
+                <strong className={styles.aiAdviceGroupTitle}>Mục tiêu lần sau</strong>
+                <p className={styles.nextGoalText}>{aiAdvice.nextGoal}</p>
+              </div>
+            )}
+            {aiAdvice.encouragement && (
+              <p className={styles.encouragementText}>{aiAdvice.encouragement}</p>
+            )}
           </>
         )}
       </div>
