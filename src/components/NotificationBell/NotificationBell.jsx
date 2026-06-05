@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NotificationBell.module.css';
 import { getPresenceSocket } from '../../services/presenceSocket';
-
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+import { apiClient } from '../../services/apiClient';
+import { getToken } from '../../utils/storage';
 
 export default function NotificationBell() {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -12,100 +12,66 @@ export default function NotificationBell() {
   const [loading, setLoading] = useState(false);
 
   const fetchUnreadCount = async () => {
+    if (!getToken()) return;
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      const response = await fetch(`${API_BASE}/api/notifications/unread-count`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUnreadCount(data.unreadCount);
-      }
+      const data = await apiClient.get('/notifications/unread-count');
+      setUnreadCount(data?.unreadCount ?? 0);
     } catch (error) {
+      if (error.status === 401) {
+        setUnreadCount(0);
+        return;
+      }
       console.error('Error fetching unread count:', error);
     }
   };
 
   const fetchRecentNotifications = async () => {
+    if (!getToken()) return;
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      const response = await fetch(`${API_BASE}/api/notifications?limit=5`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setNotifications(data.notifications);
-      }
+      const data = await apiClient.get('/notifications?limit=5');
+      setNotifications(data?.notifications ?? []);
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      if (error.status !== 401) {
+        console.error('Error fetching notifications:', error);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const markAsRead = async (notificationId) => {
+    if (!getToken()) return;
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE}/api/notifications/${notificationId}/read`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const uid = user.id || user._id;
-        setNotifications(prev => 
-          prev.map(notif => 
-            notif._id === notificationId 
-              ? { ...notif, readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }] }
-              : notif
-          )
-        );
-        setUnreadCount(prev => Math.max(0, prev - 1));
-      }
+      await apiClient.put(`/notifications/${notificationId}/read`);
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const uid = user.id || user._id;
+      setNotifications((prev) =>
+        prev.map((notif) =>
+          notif._id === notificationId
+            ? { ...notif, readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }] }
+            : notif,
+        ),
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
       console.error('Error marking as read:', error);
     }
   };
 
   const markAllAsRead = async () => {
+    if (!getToken()) return;
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE}/api/notifications/mark-all-read`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        setUnreadCount(0);
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const uid = user.id || user._id;
-        setNotifications(prev => 
-          prev.map(notif => ({
-            ...notif,
-            readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }]
-          }))
-        );
-      }
+      await apiClient.put('/notifications/mark-all-read');
+      setUnreadCount(0);
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const uid = user.id || user._id;
+      setNotifications((prev) =>
+        prev.map((notif) => ({
+          ...notif,
+          readBy: [...(notif.readBy || []), { user: uid, readAt: new Date() }],
+        })),
+      );
     } catch (error) {
       console.error('Error marking all as read:', error);
     }
