@@ -1,7 +1,15 @@
 import styles from '../../pages/CheckoutPage/CheckoutPage.module.css';
 import { fmtVND } from '../../../utils/currency';
 
-export default function Summary({ subtotal, shipFee, discount = 0, total, onPlace }) {
+export default function Summary({
+  subtotal,
+  shipFee,
+  discount = 0,
+  total,
+  onPlace,
+  placeBtnClass,
+  placing = false,
+}) {
   return (
     <div className={styles['checkout__box']}>
       <div className={styles['checkout__box-head']}>
@@ -23,10 +31,11 @@ export default function Summary({ subtotal, shipFee, discount = 0, total, onPlac
         <b>{fmtVND(total)}</b>
       </div>
       <button
-        className={styles['checkout__place-btn']}
+        className={placeBtnClass || styles['checkout__place-btn']}
         onClick={onPlace}
+        disabled={placing}
       >
-        Đặt hàng
+        {placing ? 'Đang xử lý...' : 'Đặt hàng'}
       </button>
     </div>
   );

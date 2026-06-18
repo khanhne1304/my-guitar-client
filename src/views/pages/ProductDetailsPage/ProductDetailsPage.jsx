@@ -96,24 +96,6 @@ export default function ProductDetailsPage() {
                 <span><b>Model/SKU:</b> {prod.sku}</span>
               </div>
 
-              {/* Nút thêm yêu thích */}
-              <div className={styles['product-details__fav-container']}>
-                <button
-                  className={`${styles['product-details__fav-btn']} ${favorited ? styles['active'] : ''}`}
-                  onClick={handleFavoriteClick}
-                  aria-label="Yêu thích"
-                >
-                  {favorited ? (
-                    <FaHeart className={styles['product-details__fav-icon']} />
-                  ) : (
-                    <FaRegHeart className={styles['product-details__fav-icon']} />
-                  )}
-                </button>
-                <span className={styles['product-details__fav-text']}>
-                  {favorited ? "Đã thêm vào danh sách yêu thích" : "Thêm vào danh sách yêu thích"}
-                </span>
-              </div>
-
               <PriceBlock priceNow={priceNow} oldPrice={oldPrice} discount={discount} />
 
               <FeatureList
@@ -132,7 +114,12 @@ export default function ProductDetailsPage() {
                 items={prod.gifts}
               />
 
-              <QtyWithActions stock={prod.stock} onSubmit={handleAddToCart} />
+              <QtyWithActions
+                stock={prod.stock}
+                onSubmit={handleAddToCart}
+                favorited={favorited}
+                onToggleFavorite={handleFavoriteClick}
+              />
 
               <MetaInfo
                 classNameMeta={styles['product-details__meta']}
@@ -168,8 +155,25 @@ export default function ProductDetailsPage() {
   );
 }
 
-function QtyWithActions({ stock, onSubmit }) {
+function QtyWithActions({ stock, onSubmit, favorited, onToggleFavorite }) {
   const [qty, setQty] = useState(1);
+
+  const favButton = (
+    <button
+      type="button"
+      className={`${styles['product-details__fav-btn']} ${favorited ? styles['active'] : ''}`}
+      onClick={onToggleFavorite}
+      aria-label={favorited ? 'Bỏ khỏi danh sách yêu thích' : 'Thêm vào danh sách yêu thích'}
+      title={favorited ? 'Đã thêm vào danh sách yêu thích' : 'Thêm vào danh sách yêu thích'}
+    >
+      {favorited ? (
+        <FaHeart className={styles['product-details__fav-icon']} />
+      ) : (
+        <FaRegHeart className={styles['product-details__fav-icon']} />
+      )}
+    </button>
+  );
+
   return (
     <div>
       <QtySelector
@@ -198,11 +202,15 @@ function QtyWithActions({ stock, onSubmit }) {
             >
               Thêm vào giỏ
             </button>
+            {favButton}
           </>
         ) : (
-          <button className={styles['product-details__btn']} disabled>
-            Hết hàng
-          </button>
+          <>
+            <button className={styles['product-details__btn']} disabled>
+              Hết hàng
+            </button>
+            {favButton}
+          </>
         )}
       </div>
     </div>

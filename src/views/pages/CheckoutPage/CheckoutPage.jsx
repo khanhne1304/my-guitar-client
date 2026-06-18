@@ -11,7 +11,6 @@ import ShipMethods from '../../components/checkout/ShipMethods';
 import PaymentMethods from '../../components/checkout/PaymentMethods';
 import NoteBox from '../../components/checkout/NoteBox';
 import OrderItems from '../../components/checkout/OrderItems';
-import VnpayQR from '../../components/checkout/VnpayQR';
 import Summary from '../../components/checkout/Summary';
 import SuccessModal from '../../components/Modal/SuccessModal/SuccessModal';
 
@@ -68,10 +67,6 @@ export default function CheckoutPage() {
                 <PaymentMethods
                   method={vm.form.method}
                   setMethod={(m) => vm.setForm({ ...vm.form, method: m })}
-                  onSwitch={() => {
-                    vm.setPaid(false);
-                    vm.setShowQR(false);
-                  }}
                 />
               </div>
 
@@ -107,18 +102,6 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <VnpayQR
-                visible={vm.payIsOnline}
-                showQR={vm.showQR}
-                setShowQR={vm.setShowQR}
-                paid={vm.paid}
-                setPaid={vm.setPaid}
-                orderId={vm.order.orderId}
-                total={vm.total}
-                orderInfo={vm.orderInfo}
-                qrUrl={vm.qrUrl}
-              />
-
               <div className={styles['checkout__coupon-box']}>
                 <div className={styles['checkout__cart-title']}>Mã khuyến mãi</div>
                 <div className={styles['checkout__coupon-row']}>
@@ -147,6 +130,7 @@ export default function CheckoutPage() {
                 total={vm.order.total}
                 onPlace={vm.placeOrder}
                 placeBtnClass={styles['checkout__place-btn']}
+                placing={vm.placingOrder}
               />
             </aside>
           </div>

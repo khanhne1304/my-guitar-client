@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './productCard.module.css';
+import { derivePriceShape } from '../../../utils/pricing';
 
 /**
  * ProductCard – hỗ trợ nhiều định dạng ảnh và link chi tiết theo slug
@@ -15,6 +16,7 @@ export default function ProductCard({
   model,
   price,
   oldPrice,
+  discount,
   href,
   slug,
   onView,
@@ -88,6 +90,9 @@ export default function ProductCard({
     return 'Liên hệ';
   };
 
+  const derived = derivePriceShape({ price, oldPrice });
+  const resolvedOldPrice = oldPrice ?? derived.oldPrice;
+  const resolvedDiscount = discount ?? derived.discount;
   const displayPrice = getDisplayPrice(price);
 
   const ImageTag = (
@@ -136,15 +141,24 @@ export default function ProductCard({
             </div>
           )}
 
-          {/* Tên sản phẩm */}
-          {name && <div className={styles.productCard__name}>{name}</div>}
+          {/* Tên sản phẩm + badge giảm giá */}
+          {name && (
+            <div className={styles.productCard__nameRow}>
+              <div className={styles.productCard__name}>{name}</div>
+              {resolvedDiscount > 0 ? (
+                <span className={styles.productCard__discount}>
+                  -{resolvedDiscount}%
+                </span>
+              ) : null}
+            </div>
+          )}
 
           {/* Giá */}
           <div className={styles.productCard__prices}>
             <span className={styles.productCard__price}>{displayPrice}</span>
-            {oldPrice ? (
+            {resolvedOldPrice ? (
               <span className={styles.productCard__oldPrice}>
-                {formatVND(oldPrice)}
+                {formatVND(resolvedOldPrice)}
               </span>
             ) : null}
           </div>

@@ -76,6 +76,38 @@
   text-overflow: ellipsis;
 }
 
+.productCard__nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 2px;
+}
+
+.productCard__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.92;
+}
+
+.productCard__discount {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #e63946, #ff6b6b);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  box-shadow: 0 1px 4px rgba(230, 57, 70, 0.45);
+}
+
 .productCard__prices {
   margin-top: 4px;
   display: flex;

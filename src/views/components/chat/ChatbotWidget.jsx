@@ -19,6 +19,9 @@ export default function ChatbotWidget({ showMessengerFab = false }) {
 	const [messages, setMessages] = useState([]);
 	const listRef = useRef(null);
 	const inputRef = useRef(null);
+	const sessionIdRef = useRef(
+		`web-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+	);
 
 	useEffect(() => {
 		if (!open) return;
@@ -41,7 +44,7 @@ export default function ChatbotWidget({ showMessengerFab = false }) {
 		setMessages((prev) => [...prev, userMsg]);
 		setLoading(true);
 		try {
-			const res = await chatService.ask({ message: text });
+			const res = await chatService.ask({ message: text, sessionId: sessionIdRef.current });
 			const botMsg = {
 				id: `b-${Date.now()}`,
 				role: "bot",

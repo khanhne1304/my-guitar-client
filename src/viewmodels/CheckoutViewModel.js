@@ -59,20 +59,7 @@ export function useCheckoutViewModel() {
   const order = new CheckoutOrder({ orderId, subtotal, shipFee, total });
 
   // ===== PAYMENT =====
-  const payIsOnline = ['onpay-atm', 'onpay-visa'].includes(form.method);
-  const [showQR, setShowQR] = useState(false);
-  const [paid, setPaid] = useState(false);
-
-  const methodLabel =
-    form.method === 'onpay-atm'
-      ? 'VNPay ATM'
-      : form.method === 'onpay-visa'
-      ? 'VNPay VISA/Master'
-      : 'VNPay';
-  const orderInfo = `Thanh toan ${methodLabel} ${order.orderId}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
-    `VNPAY|ORDER=${order.orderId}|AMOUNT=${order.total}|METHOD=${methodLabel}|INFO=${orderInfo}`
-  )}`;
+  const [placingOrder, setPlacingOrder] = useState(false);
 
   // ===== SUCCESS MODAL STATE =====
   const [showSuccess, setShowSuccess] = useState(false);
@@ -181,18 +168,6 @@ export function useCheckoutViewModel() {
       return;
     }
 
-    // Validate payment
-    if (payIsOnline) {
-      if (!showQR) {
-        setShowQR(true);
-        return;
-      }
-      if (!paid) {
-        alert("Vui lòng quét QR VNPay và bấm 'Tôi đã thanh toán'.");
-        return;
-      }
-    }
-
     // Build payload for API
     const payload = {
       cart: cartItems.map((i) => ({
@@ -224,24 +199,25 @@ export function useCheckoutViewModel() {
         method: form.method,
       },
       pricing: {
+        subtotal,
+        shipFee,
         total,
       },
+      couponCode: couponInfo ? (couponCode || '').trim() : null,
     };
 
     try {
+      setPlacingOrder(true);
       const orderRes = await checkoutOrderApi(payload);
+
       console.log('✅ Order created:', orderRes);
-
-      // Lưu lại để hiển thị trong modal
       setLastOrder(orderRes);
-
-      // Clear cart local
       clearCart();
-
-      // Mở modal
       setShowSuccess(true);
     } catch (e) {
       alert(e?.message || 'Không thể tạo đơn hàng.');
+    } finally {
+      setPlacingOrder(false);
     }
   };
 
@@ -266,8 +242,6 @@ export function useCheckoutViewModel() {
     shipFee,
     total,
     order,
-    orderInfo,
-    qrUrl,
     shipMethods,
     // Coupon
     couponCode,
@@ -278,11 +252,7 @@ export function useCheckoutViewModel() {
     removeCoupon,
 
     // Payment
-    payIsOnline,
-    showQR,
-    setShowQR,
-    paid,
-    setPaid,
+    placingOrder,
 
     // Modal
     showSuccess,

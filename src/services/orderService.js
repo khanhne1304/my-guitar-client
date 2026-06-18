@@ -8,7 +8,7 @@ import { getToken as getStoredToken } from '../utils/storage';
  * {
  *   items: [{ product, name, price, qty }],
  *   shippingAddress: { phone, city, district, address? },
- *   paymentMethod: 'cod' | 'vnpay',
+ *   paymentMethod: 'cod',
  *   total: number
  * }
  */
@@ -68,17 +68,20 @@ function mapCheckoutToOrderDoc(payload) {
   }
 
   // Map payment method
-  const rawMethod = (payload?.payment?.method || '').toLowerCase();
-  const paymentMethod = rawMethod === 'cod' ? 'cod' : 'vnpay';
+  const paymentMethod = 'cod';
 
   // Tổng tiền
   const total = Number(payload?.pricing?.total) || 0;
+  const shipFee = Number(payload?.pricing?.shipFee) || 0;
+  const couponCode = payload?.couponCode || null;
 
   return {
     items,
     shippingAddress,
     paymentMethod,
     total,
+    shipFee,
+    couponCode,
   };
 }
 
