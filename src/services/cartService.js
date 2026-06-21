@@ -7,7 +7,7 @@ export async function getMyCart(token) {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response;
 }
 
 // Thêm sản phẩm vào giỏ hàng
@@ -21,7 +21,7 @@ export async function addItemToCart(productId, qty = 1, token) {
       },
     }
   );
-  return response.data;
+  return response;
 }
 
 // Cập nhật số lượng sản phẩm trong giỏ hàng
@@ -35,7 +35,7 @@ export async function updateItemQty(productId, qty, token) {
       },
     }
   );
-  return response.data;
+  return response;
 }
 
 // Xóa sản phẩm khỏi giỏ hàng
@@ -45,7 +45,7 @@ export async function removeItemInCart(productId, token) {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response;
 }
 
 // Xóa toàn bộ giỏ hàng
@@ -55,5 +55,5 @@ export async function clearCart(token) {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response;
 }
