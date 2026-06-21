@@ -55,7 +55,7 @@ export const FavoritesProvider = ({ children }) => {
       try {
         setLoading(true);
         const res = await getMyFavorites();
-        const mapped = (res.data?.data || []).map((f) =>
+        const mapped = (res?.data || []).map((f) =>
           normalizeProduct(f.product || f)
         );
         setFavorites(mapped);
