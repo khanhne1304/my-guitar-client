@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { chatService } from "../../../services/chatService";
 import styles from "./ChatbotPage.module.css";
 import { Link } from "react-router-dom";
@@ -9,6 +9,9 @@ export default function ChatbotPage() {
 	const [loading, setLoading] = useState(false);
 	const [items, setItems] = useState([]);
 	const [error, setError] = useState("");
+	const sessionIdRef = useRef(
+		`page-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+	);
 
 	async function handleAsk(e) {
 		e?.preventDefault?.();
@@ -17,7 +20,7 @@ export default function ChatbotPage() {
 		setItems([]);
 		try {
 			setLoading(true);
-			const res = await chatService.ask({ message });
+			const res = await chatService.ask({ message, sessionId: sessionIdRef.current });
 			setAnswer(res?.answer || "");
 			setItems(Array.isArray(res?.items) ? res.items : []);
 		} catch (err) {

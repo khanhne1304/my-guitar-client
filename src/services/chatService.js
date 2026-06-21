@@ -2,12 +2,13 @@
 import { apiClient } from './apiClient';
 
 export const chatService = {
-	async ask({ message, budgetMin, budgetMax }) {
+	async ask({ message, budgetMin, budgetMax, sessionId }) {
 		if (!message) throw new Error('message is required');
 		return apiClient.post('/chat', {
 			message,
 			budgetMin,
 			budgetMax,
+			sessionId,
 		});
 	},
 	async reindex() {

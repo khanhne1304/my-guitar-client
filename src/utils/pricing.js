@@ -18,11 +18,10 @@ return { priceNow: now, oldPrice: old, discount };
 export function topDiscounts(items = [], n = 3) {
 return items
 .map((p) => {
-const { discount } = derivePriceShape(p);
-return { ...p, _discount: discount };
+const { discount, oldPrice } = derivePriceShape(p);
+return { ...p, discount, oldPrice };
 })
-.filter((p) => p._discount > 0)
-.sort((a, b) => b._discount - a._discount)
-.slice(0, n)
-.map((p) => ({ ...p, name: `${p.name} • -${p._discount}%` }));
+.filter((p) => p.discount > 0)
+.sort((a, b) => b.discount - a.discount)
+.slice(0, n);
 }
