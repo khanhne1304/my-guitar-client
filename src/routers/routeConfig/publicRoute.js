@@ -58,9 +58,11 @@ import CreatorCourseNewPage from "../../views/pages/creator/CreatorCourseNewPage
 import CreatorCourseEditPage from "../../views/pages/creator/CreatorCourseEditPage";
 import SongSearchPage from "../../views/pages/SongSearchPage/SongSearchPage";
 import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
+import PrivacyPolicyPage from "../../views/pages/PrivacyPolicyPage/PrivacyPolicyPage";
 
 const publicRoutes = [
   { path: "/", element: <Home /> },
+  { path: "/privacy-policy", element: <PrivacyPolicyPage /> },
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
   { path: "/auth/callback", element: <AuthCallback /> },
