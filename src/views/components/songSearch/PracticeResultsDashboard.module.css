@@ -1,0 +1,228 @@
+.dashboard {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sectionTitle {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.skillCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.skillCard {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  text-align: center;
+}
+
+.skillCardOverall {
+  background: linear-gradient(135deg, rgba(232, 93, 4, 0.12), rgba(232, 93, 4, 0.04));
+  border-color: rgba(232, 93, 4, 0.25);
+}
+
+.skillLabel {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted, #666);
+  margin-bottom: 0.35rem;
+}
+
+.skillValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent, #e85d04);
+}
+
+.skillValueOverall {
+  font-size: 1.75rem;
+}
+
+.chartSection {
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+}
+
+.chartWrap {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  height: 280px;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 720px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sectionTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.sectionTable th,
+.sectionTable td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+}
+
+.sectionTable th {
+  font-weight: 700;
+  color: var(--muted, #666);
+  font-size: 0.8rem;
+}
+
+.sectionScore {
+  font-weight: 700;
+}
+
+.sectionScoreGood {
+  color: #2e7d32;
+}
+
+.sectionScoreWarn {
+  color: #ed6c02;
+}
+
+.sectionScoreBad {
+  color: #d32f2f;
+}
+
+.problemCard {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  margin-bottom: 0.65rem;
+}
+
+.problemTitle {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.problemMeta {
+  margin: 0.2rem 0;
+  font-size: 0.85rem;
+  color: var(--text, #333);
+  line-height: 1.45;
+}
+
+.problemMeta em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--muted, #666);
+}
+
+.planList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.planItem {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: rgba(46, 125, 50, 0.06);
+  border: 1px solid rgba(46, 125, 50, 0.15);
+}
+
+.planDuration {
+  font-weight: 700;
+  color: var(--accent, #e85d04);
+  font-size: 0.85rem;
+}
+
+.planExercise {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.planGoal {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted, #666);
+}
+
+.adviceBlock {
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+}
+
+.adviceOverview {
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text, #333);
+}
+
+.levelBadge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.levelBeginner {
+  background: rgba(33, 150, 243, 0.15);
+  color: #1565c0;
+}
+
+.levelIntermediate {
+  background: rgba(237, 108, 2, 0.15);
+  color: #e65100;
+}
+
+.levelAdvanced {
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted, #666);
+}
+
+.tempoRec {
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+}
+
+.tempoRec strong {
+  color: var(--accent, #e85d04);
+}
+
+.emptyState {
+  font-size: 0.85rem;
+  color: var(--muted, #666);
+  margin: 0;
+}

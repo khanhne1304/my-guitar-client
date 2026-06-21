@@ -27,8 +27,22 @@ export const chordPracticeService = {
   },
 
   /**
-   * Gợi ý luyện tập chuyên sâu (Google Gemini) từ kết quả phân tích.
-   * @param {object} analysisPayload — object `data` trả về từ analyzeAndCompare
+   * Gợi ý luyện tập từ kết quả phân tích (DeepSeek / fallback local).
+   * @param {object} analysisPayload — object `data` từ analyzeAndCompare, gồm practiceMetrics
+   * @returns {Promise<{
+   *   available: boolean,
+   *   performanceLevel?: string,
+   *   overview?: string,
+   *   strengths?: string[],
+   *   weaknesses?: string[],
+   *   mainProblems?: Array<{ problem: string, cause: string, impact: string, solution: string }>,
+   *   practicePlan?: Array<{ exercise: string, durationMinutes: number, goal?: string }>,
+   *   nextSessionGoal?: string,
+   *   recommendedTempo?: number,
+   *   skillAssessment?: object,
+   *   skillScores?: object,
+   *   practiceMetrics?: object
+   * }>}
    */
   async getPracticeAdvice(analysisPayload) {
     const response = await apiClient.post('/chord-practice/advice', {

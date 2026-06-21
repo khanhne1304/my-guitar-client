@@ -7,29 +7,12 @@ import { referenceSongService } from '../../../services/referenceSongService';
 import { chordPracticeService } from '../../../services/chordPracticeService';
 import { validateAudioFile } from '../../../utils/audioFileValidation';
 import styles from './SongAudioComparePanel.module.css';
+import PracticeResultsDashboard from './PracticeResultsDashboard';
 
 const formatNumber = (value, digits = 2) => {
   if (value === null || value === undefined || Number.isNaN(value)) return '--';
   return Number(value).toFixed(digits);
 };
-
-function practiceLink(suggestion) {
-  if (!suggestion?.practicePath) return null;
-  const params = new URLSearchParams();
-  if (suggestion.practiceQuery) {
-    Object.entries(suggestion.practiceQuery).forEach(([k, v]) => {
-      if (v != null) params.set(k, String(v));
-    });
-  }
-  const q = params.toString();
-  return q ? `${suggestion.practicePath}?${q}` : suggestion.practicePath;
-}
-
-function roundBpm(value) {
-  const n = Number(value);
-  if (!Number.isFinite(n) || n <= 0) return null;
-  return Math.round(n);
-}
 
 function ReferenceChordColumn({ comparison, transpose = 0 }) {
   const displaySeq = useMemo(() => {
@@ -103,299 +86,6 @@ function DetectedChordColumn({ comparison }) {
     <div className={styles.chordSeqCol}>
       <h5>Nhận diện từ audio</h5>
       <p className={styles.chordSeq}>{display || '—'}</p>
-    </div>
-  );
-}
-
-function isCleanOverviewText(text) {
-  const s = String(text || '').trim();
-  if (!s || s.length < 10) return false;
-  if (/^```\s*json/i.test(s)) return false;
-  if (/^\{\s*"/.test(s)) return false;
-  if (/^"summary"\s*:/.test(s)) return false;
-  return true;
-}
-
-function AdviceDetailBlock({ title, items, ordered }) {
-  if (!items?.length) return null;
-  const ListTag = ordered ? 'ol' : 'ul';
-  const listClass = ordered ? styles.aiAdviceOrderedList : styles.aiAdviceList;
-  return (
-    <div className={styles.aiAdviceGroup}>
-      <strong className={styles.aiAdviceGroupTitle}>{title}</strong>
-      <ListTag className={listClass}>
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ListTag>
-    </div>
-  );
-}
-
-const LEVEL_LABELS = {
-  Beginner: 'Cơ bản',
-  Intermediate: 'Trung cấp',
-  Advanced: 'Nâng cao',
-};
-
-function LevelBadge({ level }) {
-  if (!level) return null;
-  const label = LEVEL_LABELS[level] || level;
-  const levelClass =
-    level === 'Advanced'
-      ? styles.levelAdvanced
-      : level === 'Intermediate'
-        ? styles.levelIntermediate
-        : styles.levelBeginner;
-  return (
-    <span className={`${styles.levelBadge} ${levelClass}`}>
-      Trình độ: {label}
-    </span>
-  );
-}
-
-function MainProblemsBlock({ problems }) {
-  if (!problems?.length) return null;
-  return (
-    <div className={styles.aiAdviceGroup}>
-      <strong className={styles.aiAdviceGroupTitle}>Cần cải thiện</strong>
-      <ul className={styles.problemList}>
-        {problems.map((p) => (
-          <li key={p.problem} className={styles.problemItem}>
-            <p className={styles.problemTitle}>{p.problem}</p>
-            {p.cause && <p className={styles.problemDetail}><em>Nguyên nhân:</em> {p.cause}</p>}
-            {p.impact && <p className={styles.problemDetail}><em>Ảnh hưởng:</em> {p.impact}</p>}
-            {p.solution && <p className={styles.problemSolution}><em>Cách luyện:</em> {p.solution}</p>}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function PracticePlanBlock({ plan }) {
-  if (!plan?.length) return null;
-  return (
-    <div className={styles.aiAdviceGroup}>
-      <strong className={styles.aiAdviceGroupTitle}>Kế hoạch luyện tập</strong>
-      <ol className={styles.practicePlanList}>
-        {plan.map((item) => (
-          <li key={`${item.title}-${item.exercise}`} className={styles.practicePlanItem}>
-            <p className={styles.practicePlanTitle}>
-              {item.title}
-              {item.durationMinutes ? (
-                <span className={styles.practicePlanDuration}> · {item.durationMinutes} phút</span>
-              ) : null}
-            </p>
-            {item.reason && <p className={styles.problemDetail}>{item.reason}</p>}
-            {item.exercise && <p className={styles.problemSolution}>{item.exercise}</p>}
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-
-function collectImprovementExercises(tempoComparison, chordComparison) {
-  const items = [];
-  const seen = new Set();
-
-  const add = (label, path, practiceQuery) => {
-    const href = practiceLink({ practicePath: path, practiceQuery });
-    if (!href || seen.has(href)) return;
-    seen.add(href);
-    items.push({ label, href });
-  };
-
-  for (const s of tempoComparison?.suggestions || []) {
-    if (!s.practicePath) continue;
-    const bpm = s.practiceQuery?.bpm;
-    let label = 'Luyện tập theo nhịp';
-    if (String(s.practicePath).includes('rhythm') && bpm) {
-      label = `Luyện tập theo nhịp (${Math.round(bpm)} BPM)`;
-    }
-    add(label, s.practicePath, s.practiceQuery);
-  }
-
-  const chordAcc = chordComparison?.accuracyPercent;
-  if (chordAcc != null && chordAcc < 85) {
-    add('Luyện tập ghi nhớ hợp âm', '/tools/chord-practice', null);
-  }
-
-  if (items.length === 0 && tempoComparison?.referenceBpm) {
-    add('Luyện tập theo nhịp', '/tools/chord-practice/rhythm', {
-      bpm: roundBpm(tempoComparison.referenceBpm),
-    });
-  }
-
-  return items;
-}
-
-function ImprovementSuggestionsSection({
-  tempoComparison,
-  chordComparison,
-  referenceSong,
-  chordRecognition,
-}) {
-  const tc = tempoComparison;
-  const refRounded = roundBpm(tc?.referenceBpm);
-  const yourRounded = roundBpm(tc?.detectedBpm);
-  const exercises = collectImprovementExercises(tc, chordComparison);
-
-  const [aiAdvice, setAiAdvice] = useState(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState('');
-
-  const adviceKey = useMemo(() => {
-    if (!chordComparison) return '';
-    return [
-      chordComparison.matched,
-      chordComparison.referenceLen,
-      chordComparison.accuracyPercent,
-      tc?.detectedBpm,
-      tc?.referenceBpm,
-      referenceSong?.title,
-    ].join('|');
-  }, [chordComparison, tc?.detectedBpm, tc?.referenceBpm, referenceSong?.title]);
-
-  useEffect(() => {
-    if (!adviceKey || !chordComparison) return undefined;
-
-    let cancelled = false;
-    setAiAdvice(null);
-    setAiError('');
-    setAiLoading(true);
-
-    chordPracticeService
-      .getPracticeAdvice({
-        referenceSong,
-        comparison: chordComparison,
-        tempoComparison: tc,
-        chordRecognition,
-      })
-      .then((data) => {
-        if (!cancelled) setAiAdvice(data);
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setAiError(err?.message || 'Không tải được gợi ý AI.');
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setAiLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [adviceKey, chordComparison, referenceSong, chordRecognition, tc]);
-
-  const deviationPct =
-    tc?.deviationPercent != null ? Math.round(tc.deviationPercent) : null;
-  const deviationClass =
-    tc?.rating === 'good'
-      ? styles.ok
-      : tc?.rating === 'high'
-        ? styles.bad
-        : tc?.rating === 'moderate' || tc?.rating === 'mild'
-          ? styles.warn
-          : '';
-
-  const showTempo = refRounded != null || yourRounded != null || deviationPct != null;
-  const hasAiBlock = aiLoading || aiAdvice?.available || aiError || aiAdvice?.message;
-  if (!showTempo && exercises.length === 0 && !hasAiBlock) return null;
-
-  return (
-    <div className={styles.improvementFrame}>
-      <h5 className={styles.improvementTitle}>Gợi ý cải thiện</h5>
-      <div className={styles.improvementGrid}>
-        <div className={styles.improvementTempoCol}>
-          <div className={styles.improvementRow}>
-            <span className={styles.improvementLabel}>Tempo gốc</span>
-            <strong className={styles.improvementValue}>
-              {refRounded != null ? `${refRounded} BPM` : '—'}
-            </strong>
-          </div>
-          <div className={styles.improvementRow}>
-            <span className={styles.improvementLabel}>Tempo của bạn</span>
-            <strong className={styles.improvementValue}>
-              {yourRounded != null ? `${yourRounded} BPM` : '—'}
-            </strong>
-          </div>
-          {deviationPct != null && (
-            <div className={styles.improvementRow}>
-              <span className={styles.improvementLabel}>Độ lệch so với bài gốc</span>
-              <strong className={`${styles.improvementValue} ${deviationClass}`}>
-                {deviationPct}%
-              </strong>
-            </div>
-          )}
-          {tc?.beatDetectionError && (
-            <p className={styles.chordHint}>
-              Không đo được nhịp từ audio: {tc.beatDetectionError}
-            </p>
-          )}
-        </div>
-        <div className={styles.improvementExerciseCol}>
-          <span className={styles.improvementColTitle}>Bài tập cải thiện</span>
-          {exercises.length > 0 ? (
-            <ul className={styles.improvementExerciseList}>
-              {exercises.map((ex) => (
-                <li key={ex.href}>
-                  <Link to={ex.href} className={styles.improvementExerciseLink}>
-                    {ex.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.chordHint}>Tiếp tục luyện tập để giữ nhịp ổn định.</p>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.aiAdviceBlock}>
-        <span className={styles.improvementColTitle}>Huấn luyện viên AI</span>
-        {aiLoading && (
-          <p className={styles.chordHint}>Đang đánh giá buổi luyện tập của bạn…</p>
-        )}
-        {!aiLoading && aiError && (
-          <p className={styles.chordHint}>{aiError}</p>
-        )}
-        {!aiLoading && aiAdvice && !aiAdvice.available && (
-          <p className={styles.chordHint}>
-            {aiAdvice.message || 'Chưa tạo được đánh giá — thử phân tích lại.'}
-          </p>
-        )}
-        {!aiLoading && aiAdvice?.available && (
-          <>
-            {aiAdvice.aiWarning && (
-              <p className={styles.chordHint}>{aiAdvice.aiWarning}</p>
-            )}
-            {aiAdvice.source === 'local' && !aiAdvice.aiWarning && (
-              <p className={styles.chordHint}>
-                Đánh giá dựa trên buổi luyện của bạn — vẫn đầy đủ gợi ý luyện tập.
-              </p>
-            )}
-            <LevelBadge level={aiAdvice.level} />
-            {isCleanOverviewText(aiAdvice.overview) && (
-              <p className={styles.aiAdviceSummary}>{aiAdvice.overview}</p>
-            )}
-            <AdviceDetailBlock title="Điểm mạnh" items={aiAdvice.strengths} />
-            <MainProblemsBlock problems={aiAdvice.mainProblems} />
-            <PracticePlanBlock plan={aiAdvice.practicePlan} />
-            {aiAdvice.nextGoal && (
-              <div className={styles.aiAdviceGroup}>
-                <strong className={styles.aiAdviceGroupTitle}>Mục tiêu lần sau</strong>
-                <p className={styles.nextGoalText}>{aiAdvice.nextGoal}</p>
-              </div>
-            )}
-            {aiAdvice.encouragement && (
-              <p className={styles.encouragementText}>{aiAdvice.encouragement}</p>
-            )}
-          </>
-        )}
-      </div>
     </div>
   );
 }
@@ -882,12 +572,7 @@ export default function SongAudioComparePanel({
               </div>
             </div>
 
-            <ImprovementSuggestionsSection
-              tempoComparison={chordResult.tempoComparison}
-              chordComparison={chordResult.comparison}
-              referenceSong={chordResult.referenceSong}
-              chordRecognition={chordResult.chordRecognition}
-            />
+            <PracticeResultsDashboard chordResult={chordResult} />
 
             <div className={styles.chordCompareBlock}>
               <ReferenceChordColumn
@@ -899,7 +584,7 @@ export default function SongAudioComparePanel({
 
             {chordResult.chordRecognition?.predicted_chords?.length > 0 && (
               <div className={styles.chordTimeline}>
-                <h5>Timeline nhận diện</h5>
+                <h5>Dòng thời gian nhận diện</h5>
                 <ul className={styles.chordTimelineList}>
                   {chordResult.chordRecognition.predicted_chords.map((seg, idx) => (
                     <li key={idx} className={styles.chordTimelineItem}>
@@ -1203,12 +888,7 @@ export default function SongAudioComparePanel({
               </strong>
             </div>
           </div>
-          <ImprovementSuggestionsSection
-            tempoComparison={chordResult.tempoComparison}
-            chordComparison={chordResult.comparison}
-            referenceSong={chordResult.referenceSong}
-            chordRecognition={chordResult.chordRecognition}
-          />
+          <PracticeResultsDashboard chordResult={chordResult} />
 
           <div className={styles.chordCompareBlock}>
             <ReferenceChordColumn
