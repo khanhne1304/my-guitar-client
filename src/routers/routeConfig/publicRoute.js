@@ -59,6 +59,7 @@ import CreatorCourseEditPage from "../../views/pages/creator/CreatorCourseEditPa
 import SongSearchPage from "../../views/pages/SongSearchPage/SongSearchPage";
 import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
 import PrivacyPolicyPage from "../../views/pages/PrivacyPolicyPage/PrivacyPolicyPage";
+import PaymentResultPage from "../../views/pages/PaymentResultPage/PaymentResultPage";
 
 const publicRoutes = [
   { path: "/", element: <Home /> },
@@ -75,6 +76,7 @@ const publicRoutes = [
   { path: "/favorites", element: <FavoritesPage /> },
   { path: "/checkout", element: <Checkout /> },
   { path: "/checkout-history", element: <CheckOutHistory /> },
+  { path: "/payment-result", element: <PaymentResultPage /> },
   { path: "/account", element: <Account /> },
   { path: "/addresses", element: <AddressPage /> },
   { path: "/tools/metronome", element: <Metronome /> },

@@ -3,6 +3,7 @@ import styles from '../../pages/CheckoutPage/CheckoutPage.module.css';
 export default function PaymentMethods({ method, setMethod, onSwitch }) {
   const opt = [
     { id: 'cod', label: 'Thanh toán khi giao hàng (COD)' },
+    { id: 'vnpay', label: 'Thanh toán online qua VNPay (ATM nội địa / QR)' },
   ];
 
   return (

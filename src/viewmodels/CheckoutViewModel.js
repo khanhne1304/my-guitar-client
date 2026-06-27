@@ -7,7 +7,7 @@ import { useStoresEligibility } from '../hooks/useStoresEligibility';
 import { listStores } from '../services/storeService';
 import { getUser } from '../utils/storage';
 import { CheckoutForm, CheckoutOrder } from '../models/checkoutModel';
-import { checkoutOrderApi } from '../services/orderService';
+import { checkoutOrderApi, createVnpayUrlApi } from '../services/orderService';
 import { calculateDistanceToStore, calculateShippingMethods } from '../helpers/shippingHelper';
 import { applyCouponApi } from '../services/couponService';
 
@@ -211,6 +211,23 @@ export function useCheckoutViewModel() {
       const orderRes = await checkoutOrderApi(payload);
 
       console.log('✅ Order created:', orderRes);
+
+      // Thanh toán online qua VNPay: chuyển hướng sang cổng thanh toán
+      if (form.method === 'vnpay') {
+        const orderId = orderRes?._id || orderRes?.id;
+        if (!orderId) {
+          throw new Error('Không lấy được mã đơn hàng để thanh toán.');
+        }
+        const paymentUrl = await createVnpayUrlApi(orderId);
+        if (!paymentUrl) {
+          throw new Error('Không tạo được liên kết thanh toán VNPay.');
+        }
+        clearCart();
+        window.location.href = paymentUrl; // rời trang sang VNPay
+        return;
+      }
+
+      // COD: hiển thị modal thành công như cũ
       setLastOrder(orderRes);
       clearCart();
       setShowSuccess(true);

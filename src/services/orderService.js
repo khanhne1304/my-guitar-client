@@ -67,8 +67,8 @@ function mapCheckoutToOrderDoc(payload) {
     };
   }
 
-  // Map payment method
-  const paymentMethod = 'cod';
+  // Map payment method (cod | vnpay)
+  const paymentMethod = payload?.payment?.method === 'vnpay' ? 'vnpay' : 'cod';
 
   // Tổng tiền
   const total = Number(payload?.pricing?.total) || 0;
@@ -134,6 +134,22 @@ export async function checkoutOrderApi(viewPayload) {
     // Các lỗi khác
     const msg =
       err?.response?.data?.message || err?.message || 'Không thể tạo đơn hàng.';
+    throw new Error(msg);
+  }
+}
+
+// ✅ Tạo URL thanh toán VNPay cho một đơn hàng đã tạo (status = pending)
+export async function createVnpayUrlApi(orderId, bankCode) {
+  try {
+    const res = await apiClient.post(
+      '/payment/vnpay/create',
+      { orderId, bankCode },
+      { headers: buildAuthHeader() },
+    );
+    return res?.paymentUrl || res?.data?.paymentUrl || null;
+  } catch (err) {
+    const msg =
+      err?.response?.data?.message || err?.message || 'Không tạo được liên kết thanh toán VNPay.';
     throw new Error(msg);
   }
 }
