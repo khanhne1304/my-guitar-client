@@ -60,10 +60,36 @@ import SongSearchPage from "../../views/pages/SongSearchPage/SongSearchPage";
 import CompareTwoSongsPage from "../../views/pages/ToolsPage/CompareTwoSongsPage/CompareTwoSongsPage";
 import PrivacyPolicyPage from "../../views/pages/PrivacyPolicyPage/PrivacyPolicyPage";
 import PaymentResultPage from "../../views/pages/PaymentResultPage/PaymentResultPage";
+import ShippingReturnsPage from "../../views/pages/PolicyPages/ShippingReturnsPage";
+import HowToBuyPage from "../../views/pages/PolicyPages/HowToBuyPage";
+import PaymentSecurityPage from "../../views/pages/PolicyPages/PaymentSecurityPage";
+import WarrantyPolicyPage from "../../views/pages/PolicyPages/WarrantyPolicyPage";
+import WarrantyLookupPage from "../../views/pages/PolicyPages/WarrantyLookupPage";
+import PolicyHubPage from "../../views/pages/PolicyPages/PolicyHubPage";
+import AboutPage from "../../views/pages/CompanyPages/AboutPage";
+import ShowroomsPage from "../../views/pages/CompanyPages/ShowroomsPage";
+import ContactPage from "../../views/pages/CompanyPages/ContactPage";
+import InstallmentPage from "../../views/pages/CompanyPages/InstallmentPage";
+import LoyaltyPage from "../../views/pages/CompanyPages/LoyaltyPage";
+import TermsPage from "../../views/pages/CompanyPages/TermsPage";
+import CareersPage from "../../views/pages/CompanyPages/CareersPage";
 
 const publicRoutes = [
   { path: "/", element: <Home /> },
+  { path: "/policies", element: <PolicyHubPage /> },
   { path: "/privacy-policy", element: <PrivacyPolicyPage /> },
+  { path: "/shipping-returns", element: <ShippingReturnsPage /> },
+  { path: "/how-to-buy", element: <HowToBuyPage /> },
+  { path: "/payment-security", element: <PaymentSecurityPage /> },
+  { path: "/warranty-policy", element: <WarrantyPolicyPage /> },
+  { path: "/warranty", element: <WarrantyLookupPage /> },
+  { path: "/about", element: <AboutPage /> },
+  { path: "/showrooms", element: <ShowroomsPage /> },
+  { path: "/contact", element: <ContactPage /> },
+  { path: "/installment", element: <InstallmentPage /> },
+  { path: "/loyalty", element: <LoyaltyPage /> },
+  { path: "/terms", element: <TermsPage /> },
+  { path: "/careers", element: <CareersPage /> },
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
   { path: "/auth/callback", element: <AuthCallback /> },

@@ -5,7 +5,14 @@
   aspect-ratio: 3 / 2;
   background: #f3f3f3;
   overflow: hidden;
-  border-radius: 8px 8px 0 0;
+  border-radius: 16px 16px 0 0;
+}
+
+/* Link bọc ảnh phải lấp đầy khung để ảnh không bị hụt chiều cao */
+.productCard__media a {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .productCard__media img {
@@ -37,7 +44,7 @@
 
 .productCard {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
   box-sizing: border-box;
@@ -47,21 +54,17 @@
   display: flex;
   flex-direction: column;
   min-height: 320px;  /* chiều cao tối thiểu */
-  max-height: 400px;  /* chiều cao tối đa (nếu cần) */
 }
 
 /* Để phần footer luôn đẩy xuống cuối */
 .productCard__footer {
   margin-top: auto;
-  display: grid;
-  grid-template-columns: minmax(0,1fr) max-content;
-  align-items: center;
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   background: #3a3a3a;
   color: #fff;
   padding: 12px 14px;
-  /* Đảm bảo chiều cao đồng nhất giữa các thẻ */
-  min-height: 64px;
 }
 
 
@@ -70,15 +73,15 @@
 .productCard__title {
   font-weight: 800;
   letter-spacing: .2px;
-  font-size: 0.95rem;         /* ↓ giảm kích cỡ tên sản phẩm */
-  white-space: nowrap;         /* luôn 1 dòng */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.95rem;
+  /* Cho phép hiển thị đầy đủ, xuống dòng nếu dài */
+  white-space: normal;
+  word-break: break-word;
 }
 
 .productCard__nameRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;     /* badge canh đỉnh khi tên xuống dòng */
   gap: 6px;
   min-width: 0;
   margin-top: 2px;
@@ -87,11 +90,11 @@
 .productCard__name {
   flex: 1;
   min-width: 0;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Hiển thị toàn bộ tên sản phẩm */
+  white-space: normal;
+  word-break: break-word;
   opacity: 0.92;
 }
 
@@ -135,24 +138,18 @@
   color: #000;
   border: none;
   border-radius: 6px;
-  padding: 8px 12px;          /* ↓ ngắn hơn */
+  padding: 9px 12px;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
-  min-width: 92px;            /* ↓ rút ngắn chiều dài nút */
+  display: block;
+  box-sizing: border-box;     /* gồm padding trong chiều rộng -> không tràn mép */
+  width: 100%;                /* nút trải hết chiều ngang, căn đều 2 mép */
   text-align: center;
+  margin-top: 2px;
   transition: transform .08s ease, filter .12s ease;
 }
 
 .productCard__cta:hover { filter: brightness(.95); }
 .productCard__cta:active { transform: translateY(1px); }
-
-/* Responsive */
-@media (max-width: 480px) {
-  .productCard__footer {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .productCard__cta { width: 100%; }
-}

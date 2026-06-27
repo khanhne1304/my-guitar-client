@@ -8,7 +8,7 @@ export default function Footer() {
         {/* Hàng cột trên */}
         <div className={styles.footer__cols}>
           <div className={styles.footer__col}>
-            <h4 className={styles.footer__title}>THÔNG TIN ABC</h4>
+            <h4 className={styles.footer__title}>CÔNG TY TNHH GUITARMASTER</h4>
             <ul className={styles.footer__list}>
               <li><Link to="/about">Giới thiệu công ty</Link></li>
               <li><Link to="/showrooms">Hệ thống showroom, đại lý</Link></li>
@@ -101,7 +101,7 @@ export default function Footer() {
         <div className={styles.footer__bottom}>
           <div className={styles.footer__company}>
             <h5 className={styles.footer__companyTitle}>
-              CÔNG TY CỔ PHẦN ABC
+              CÔNG TY TNHH GUITARMASTER
             </h5>
             <p>GPKD số 12345678 do Sở Kế hoạch Đầu tư TPHCM cấp ngày 01/01/2007</p>
             <p>
@@ -114,26 +114,16 @@ export default function Footer() {
               Hotline:{" "}
               <a className={styles.footer__hotline} href="tel:0972066123">0972066123</a>
             </p>
-            <p>
-              Website:{" "}
-              <a
-                href="https://myapp.vn"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                myapp.vn
-              </a>
-            </p>
           </div>
 
           <div className={styles.footer__payments}>
             <h5 className={styles.footer__chipTitle}>CÁCH THỨC THANH TOÁN</h5>
             <div className={styles.footer__chips}>
-              <span className={styles.chip}>VISA</span>
-              <span className={styles.chip}>MasterCard</span>
               <span className={styles.chip}>COD</span>
+              <span className={styles.chip}>VNPay</span>
+              <span className={styles.chip}>ATM nội địa</span>
               <span className={styles.chip}>napas</span>
-              <span className={styles.chip}>123Pay</span>
+              <span className={styles.chip}>QR Code</span>
             </div>
 
             <h5 className={styles.footer__chipTitle}>CHỨNG NHẬN</h5>

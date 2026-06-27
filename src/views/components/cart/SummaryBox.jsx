@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styles from '../../pages/CartPage/CartPage.module.css';
 import { fmtVND } from '../../../utils/currency';
 
@@ -11,18 +12,25 @@ export default function SummaryBox({ subtotal, agree, setAgree, onCheckout }) {
         <b className={styles['cart__total']}>{fmtVND(subtotal)}</b>
       </div>
 
-      <ul className={styles['cart__notes']}>
-        <li>Phí vận chuyển sẽ được tính ở trang thanh toán.</li>
-        <li>Bạn cũng có thể nhập mã giảm giá ở trang thanh toán.</li>
-      </ul>
-
       <label className={styles['cart__agree']}>
         <input
           type="checkbox"
           checked={agree}
           onChange={(e) => setAgree(e.target.checked)}
         />
-        <span>Tôi đã đọc và đồng ý với các điều khoản của đơn vị.</span>
+        <span>
+          Tôi đã đọc và đồng ý với{' '}
+          <Link
+            to="/shipping-returns"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{ color: '#b45309', textDecoration: 'underline', fontWeight: 600 }}
+          >
+            các điều khoản
+          </Link>{' '}
+          của đơn vị.
+        </span>
       </label>
 
       <button

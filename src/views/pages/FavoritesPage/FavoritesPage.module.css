@@ -1,10 +1,11 @@
 .favoritesPage {
   background: #fffbe8;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .favoritesPage__main {
-  padding: 24px 0;
+  padding: 24px 0 32px;
 }
 
 .favoritesPage__container {
@@ -54,8 +55,9 @@
 
 .favoritesPage__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 420px));
   gap: 24px;
+  justify-content: center;
 }
 
 .favoritesPage__item {
@@ -135,7 +137,7 @@
   }
   
   .favoritesPage__grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 150px));
     gap: 16px;
   }
   

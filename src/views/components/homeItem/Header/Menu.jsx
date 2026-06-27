@@ -86,6 +86,17 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
           <Link to="/creator">Tạo khóa học</Link>
         </div>
       )}
+        <div className={styles.home__menuItem}>
+        <Link to="/policies">Chính sách</Link>
+        <div className={styles.home__submenu}>
+          <Link to="/shipping-returns">GIAO HÀNG - ĐỔI TRẢ</Link>
+          <Link to="/how-to-buy">HƯỚNG DẪN MUA HÀNG</Link>
+          <Link to="/payment-security">THANH TOÁN &amp; BẢO MẬT</Link>
+          <Link to="/warranty-policy">CHÍNH SÁCH BẢO HÀNH</Link>
+          <Link to="/warranty">TRA CỨU - KÍCH HOẠT BẢO HÀNH</Link>
+          <Link to="/privacy-policy">QUYỀN RIÊNG TƯ</Link>
+        </div>
+      </div>
     </nav>
   );
 }
