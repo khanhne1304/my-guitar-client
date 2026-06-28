@@ -56,10 +56,8 @@ export async function verifyOTPAndRegister(userData, otp) {
       ...userData,
       otp
     });
-    console.log('otpService - Response data:', data);
     return data;
   } catch (error) {
-    console.log('otpService - Error:', error);
     throw new Error(error.data?.message || 'Xác thực OTP thất bại');
   }
 }

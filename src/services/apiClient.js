@@ -3,9 +3,10 @@ import { getToken } from '../utils/storage';
 
 const BASE_URL =
   process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
-  
-async function request(path, { method = 'GET', headers = {}, body } = {}) {
-  // 👇 Lấy token từ localStorage
+
+const REQUEST_TIMEOUT_MS = 30_000;
+
+async function request(path, { method = 'GET', headers = {}, body, timeoutMs = REQUEST_TIMEOUT_MS } = {}) {
   const token = getToken();
 
   const authHeaders = token
@@ -14,20 +15,38 @@ async function request(path, { method = 'GET', headers = {}, body } = {}) {
 
   const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers: {
-      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-      ...authHeaders, // 👈 Đính kèm token vào request
-      ...headers,
-    },
-    body: body
-      ? isFormData
-        ? body
-        : JSON.stringify(body)
-      : undefined,
-    credentials: 'include', // nếu bạn cần cookie cho cross-origin
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, {
+      method,
+      headers: {
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        ...authHeaders,
+        ...headers,
+      },
+      body: body
+        ? isFormData
+          ? body
+          : JSON.stringify(body)
+        : undefined,
+      credentials: 'include',
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      const err = new Error('Máy chủ phản hồi quá chậm. Vui lòng thử lại sau.');
+      err.status = 408;
+      throw err;
+    }
+    const err = new Error('Không thể kết nối máy chủ. Kiểm tra backend đang chạy và cấu hình API.');
+    err.status = 0;
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   let data = null;
   try {

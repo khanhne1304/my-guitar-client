@@ -64,7 +64,9 @@ export function useRegisterViewModel() {
       const message =
         error?.data?.message ||
         error?.message ||
-        'Không thể gửi OTP. Vui lòng thử lại.';
+        (error?.status === 0
+          ? 'Không thể kết nối máy chủ. Hãy đảm bảo backend đang chạy.'
+          : 'Không thể gửi OTP. Vui lòng thử lại.');
       setErr(message);
     } finally {
       setSendingOTP(false);
