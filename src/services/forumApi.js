@@ -94,5 +94,19 @@ export const forumApi = {
   listReports: async () => {
     return await apiClient.get('/forum/reports');
   },
+
+  remindThreadAuthor: async (threadId, message) => {
+    return await apiClient.post(
+      `/forum/reports/thread/${encodeURIComponent(threadId)}/remind`,
+      message ? { message } : {},
+    );
+  },
+
+  lockThreadAuthor: async (threadId) => {
+    return await apiClient.post(
+      `/forum/reports/thread/${encodeURIComponent(threadId)}/lock-author`,
+      {},
+    );
+  },
 };
 

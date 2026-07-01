@@ -24,14 +24,11 @@ import ChordDetailPage from "../../views/pages/ChordDetailPage";
 import ChordPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticePage";
 import ChordPracticeDetailPage from "../../views/pages/ToolsPage/ChordPracticePage/ChordPracticeDetailPage";
 import RhythmPracticePage from "../../views/pages/ToolsPage/ChordPracticePage/RhythmPracticePage";
-import FingerPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/FingerPracticePage";
 import LeftHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHandPracticePage";
 import RightHandPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/RightHandPracticePage";
 import IndependencePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/IndependencePage";
 import LegatoPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPage";
 import LegatoPracticePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/LegatoPracticePage";
-import StretchShiftPage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/StretchShiftPage";
-import BarrePage from "../../views/pages/ToolsPage/FingerPracticePage/LeftHand/BarrePage";
 import ArpeggioPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/ArpeggioPage";
 import StrummingPage from "../../views/pages/ToolsPage/FingerPracticePage/RightHand/StrummingPage";
 import ProtectedNotificationCenter from "../../views/pages/NotificationCenter/ProtectedNotificationCenter";
@@ -111,13 +108,11 @@ const publicRoutes = [
   { path: "/tools/chord-practice", element: <ChordPracticePage /> },
   { path: "/tools/chord-practice/:id", element: <ChordPracticeDetailPage /> },
   { path: "/tools/chord-practice/rhythm", element: <RhythmPracticePage /> },
-  { path: "/tools/finger-practice", element: <FingerPracticePage /> },
+  { path: "/tools/finger-practice", element: <Navigate to="/tools/finger-practice/left/independence" replace /> },
   { path: "/tools/finger-practice/left", element: <LeftHandPracticePage /> },
   { path: "/tools/finger-practice/left/independence", element: <IndependencePage /> },
   { path: "/tools/finger-practice/left/legato", element: <LegatoPage /> },
   { path: "/tools/finger-practice/left/legato/practice/:lessonId", element: <LegatoPracticePage /> },
-  { path: "/tools/finger-practice/left/stretch-shift", element: <StretchShiftPage /> },
-  { path: "/tools/finger-practice/left/barre", element: <BarrePage /> },
   { path: "/tools/finger-practice/right", element: <RightHandPracticePage /> },
   { path: "/tools/finger-practice/right/arpeggio", element: <ArpeggioPage /> },
   { path: "/tools/finger-practice/right/strumming", element: <StrummingPage /> },

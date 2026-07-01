@@ -150,10 +150,12 @@ export default function NotificationBell() {
     socket.on('new_reply', onForumEvent);
     socket.on('new_like', onForumEvent);
     socket.on('reply_to_reply', onForumEvent);
+    socket.on('admin_reminder', onForumEvent);
     return () => {
       socket.off('new_reply', onForumEvent);
       socket.off('new_like', onForumEvent);
       socket.off('reply_to_reply', onForumEvent);
+      socket.off('admin_reminder', onForumEvent);
     };
   }, []);
 

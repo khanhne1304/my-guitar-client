@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './ThreadCard.module.css';
 import { forumApi } from '../../../../services/forumApi';
+import { getToken } from '../../../../utils/storage';
+import ReportThreadModal from '../ReportThreadModal/ReportThreadModal';
 
 function getCurrentUser() {
   try {
@@ -13,16 +15,21 @@ function getCurrentUser() {
 }
 
 export default function ThreadCard({ thread, onDeleted }) {
+  const navigate = useNavigate();
   const threadId = thread?._id || thread?.id;
   const likeCount = typeof thread?.likeCount === 'number' ? thread.likeCount : 0;
   const answersCount = typeof thread?.answersCount === 'number' ? thread.answersCount : null;
   const hasBest = !!(thread?.bestAnswer || thread?.bestAnswerId);
   const isAnswered = (answersCount ?? 0) > 0;
   const me = getCurrentUser();
-  const myId = String(me?.id || me?._id || me?.userId || 'self');
+  const isLoggedIn = !!getToken() && !!me;
+  const myId = String(me?.id || me?._id || me?.userId || '');
   const ownerId = String(thread?.user?._id || thread?.userId || '');
-  const isOwner = !!threadId && ownerId && ownerId === myId;
+  const isOwner = !!threadId && ownerId && myId && ownerId === myId;
+  const canManage = isLoggedIn && (isOwner || (!isOwner && ownerId));
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reporting, setReporting] = useState(false);
 
   async function handleDelete(e) {
     e?.preventDefault?.();
@@ -36,6 +43,29 @@ export default function ThreadCard({ thread, onDeleted }) {
     } catch (err) {
       window.alert(err?.message || 'Không thể xoá bài viết.');
     }
+  }
+
+  async function handleReportSubmit(reason) {
+    if (!threadId) return;
+    setReporting(true);
+    try {
+      await forumApi.reportThread({ threadId: String(threadId), reason });
+      setReportOpen(false);
+      window.alert('Đã gửi báo cáo. Cảm ơn bạn!');
+    } finally {
+      setReporting(false);
+    }
+  }
+
+  function openReportModal(e) {
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    setMenuOpen(false);
+    if (!isLoggedIn) {
+      navigate('/login?redirect=/forum');
+      return;
+    }
+    setReportOpen(true);
   }
 
   const typeLabel =
@@ -62,7 +92,7 @@ export default function ThreadCard({ thread, onDeleted }) {
 
   return (
     <article className={styles._card} style={{ position: 'relative' }}>
-      {isOwner ? (
+      {canManage ? (
         <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 3 }}>
           <button
             type="button"
@@ -92,7 +122,7 @@ export default function ThreadCard({ thread, onDeleted }) {
                 position: 'absolute',
                 top: 36,
                 right: 0,
-                minWidth: 140,
+                minWidth: 180,
                 background: '#fff',
                 border: '1px solid #eee',
                 borderRadius: 12,
@@ -100,30 +130,56 @@ export default function ThreadCard({ thread, onDeleted }) {
                 overflow: 'hidden',
               }}
             >
-              <button
-                type="button"
-                onClick={(e) => {
-                  setMenuOpen(false);
-                  handleDelete(e);
-                }}
-                role="menuitem"
-                style={{
-                  width: '100%',
-                  textAlign: 'left',
-                  border: 'none',
-                  background: '#fff',
-                  padding: '10px 12px',
-                  cursor: 'pointer',
-                  fontWeight: 900,
-                  color: '#b91c1c',
-                }}
-              >
-                Xoá bài viết
-              </button>
+              {isOwner ? (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    setMenuOpen(false);
+                    handleDelete(e);
+                  }}
+                  role="menuitem"
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    border: 'none',
+                    background: '#fff',
+                    padding: '10px 12px',
+                    cursor: 'pointer',
+                    fontWeight: 900,
+                    color: '#b91c1c',
+                  }}
+                >
+                  Xoá bài viết
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={openReportModal}
+                  role="menuitem"
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    border: 'none',
+                    background: '#fff',
+                    padding: '10px 12px',
+                    cursor: 'pointer',
+                    fontWeight: 900,
+                    color: '#111',
+                  }}
+                >
+                  Báo cáo với quản trị viên
+                </button>
+              )}
             </div>
           ) : null}
         </div>
       ) : null}
+      <ReportThreadModal
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        onSubmit={handleReportSubmit}
+        submitting={reporting}
+      />
       <div className={styles._top}>
         <div className={styles._votes} aria-label="Số lượt thích">
           <div className={styles._score}>{likeCount}</div>
@@ -186,4 +242,3 @@ export default function ThreadCard({ thread, onDeleted }) {
     </article>
   );
 }
-

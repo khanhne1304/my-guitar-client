@@ -40,7 +40,7 @@ export default function FingerPracticePage() {
   const cards = [
     {
       title: "Luyện tập tay trái",
-      description: "Độc lập ngón, legato, stretch, shift vị trí",
+      description: "Độc lập ngón và legato",
       color: "#ffd700",
       to: "/tools/finger-practice/left"
     },

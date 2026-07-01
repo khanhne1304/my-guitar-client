@@ -18,7 +18,7 @@ export default function RightHandPracticePage() {
       <Header />
       <main className={styles.detailPage}>
         <div className={styles.container}>
-          <button onClick={() => navigate("/tools/finger-practice")} className={styles.backButton}>
+          <button onClick={() => navigate("/learn")} className={styles.backButton}>
             ← Quay lại
           </button>
 

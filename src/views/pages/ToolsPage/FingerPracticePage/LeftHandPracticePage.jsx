@@ -8,8 +8,6 @@ export default function LeftHandPracticePage() {
   const items = [
     { name: "Luyện tập chạy ngón", to: "/tools/finger-practice/left/independence" },
     { name: "Legato (HO/PO/Trill)", to: "/tools/finger-practice/left/legato" },
-    { name: "Stretch & dịch vị trí", to: "/tools/finger-practice/left/stretch-shift" },
-    { name: "Barre & giữ lực", to: "/tools/finger-practice/left/barre" }
   ];
 
   const total = items.length;
@@ -20,13 +18,13 @@ export default function LeftHandPracticePage() {
       <Header />
       <main className={styles.detailPage}>
         <div className={styles.container}>
-          <button onClick={() => navigate("/tools/finger-practice")} className={styles.backButton}>
+          <button onClick={() => navigate("/learn")} className={styles.backButton}>
             ← Quay lại
           </button>
 
           <div className={styles.header}>
             <h1 className={styles.title}>Luyện tập tay trái</h1>
-            <p className={styles.description}>Độc lập ngón, legato, stretch, chuyển vị trí.</p>
+            <p className={styles.description}>Độc lập ngón và legato.</p>
           </div>
 
           <div className={styles.progressSection}>

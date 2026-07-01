@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
 import { forumApi } from '../../../services/forumApi';
+import ReportThreadModal from '../../components/forum/ReportThreadModal/ReportThreadModal';
 
 function getCurrentUser() {
   try {
@@ -130,6 +131,8 @@ export default function ForumThreadPage({ legacyParam }) {
   const [error, setError] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reporting, setReporting] = useState(false);
 
   useEffect(() => {
     const reload = () => setMe(getCurrentUser());
@@ -218,8 +221,9 @@ export default function ForumThreadPage({ legacyParam }) {
     return [best, ...list.filter((a) => String(a._id || a.id) !== String(best._id || best.id))];
   }, [answers, thread?.bestAnswer]);
 
-  const myId = String(me?.id || me?._id || me?.userId || 'self');
+  const myId = String(me?.id || me?._id || me?.userId || '');
   const isOwner = thread ? String(thread?.user?._id || thread?.userId || '') === myId : false;
+  const canManageThread = isOwner || (me && !isOwner);
 
   async function deleteThisThread() {
     if (!threadId) return;
@@ -232,6 +236,18 @@ export default function ForumThreadPage({ legacyParam }) {
       navigate('/forum');
     } catch (e) {
       window.alert(e?.message || 'Không thể xoá bài viết.');
+    }
+  }
+
+  async function handleReportSubmit(reason) {
+    if (!threadId) return;
+    setReporting(true);
+    try {
+      await forumApi.reportThread({ threadId: String(threadId), reason });
+      setReportOpen(false);
+      window.alert('Đã gửi báo cáo. Cảm ơn bạn!');
+    } finally {
+      setReporting(false);
     }
   }
 
@@ -472,6 +488,7 @@ export default function ForumThreadPage({ legacyParam }) {
 
                 <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', justifyContent: 'space-between' }}>
                   <h1 style={{ margin: 0, fontSize: 22, fontWeight: 900, flex: 1 }}>{thread.title}</h1>
+                  {canManageThread ? (
                   <div style={{ position: 'relative' }}>
                     <button
                       type="button"
@@ -514,29 +531,23 @@ export default function ForumThreadPage({ legacyParam }) {
                           >
                             Xoá bài viết
                           </button>
+                        ) : me ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMenuOpen(false);
+                              setReportOpen(true);
+                            }}
+                            role="menuitem"
+                            style={{ width: '100%', textAlign: 'left', border: 'none', background: '#fff', padding: '10px 12px', cursor: 'pointer', fontWeight: 900, color: '#111' }}
+                          >
+                            Báo cáo với quản trị viên
+                          </button>
                         ) : null}
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            setMenuOpen(false);
-                            const reason = window.prompt('Lý do báo cáo chủ đề này?');
-                            const text = (reason || '').trim();
-                            if (!text) return;
-                            try {
-                              await forumApi.reportThread({ threadId: String(threadId), reason: text });
-                              window.alert('Đã gửi báo cáo. Cảm ơn bạn!');
-                            } catch (e) {
-                              window.alert(e?.message || 'Không thể gửi báo cáo.');
-                            }
-                          }}
-                          role="menuitem"
-                          style={{ width: '100%', textAlign: 'left', border: 'none', background: '#fff', padding: '10px 12px', cursor: 'pointer', fontWeight: 900, color: '#111' }}
-                        >
-                          Báo cáo
-                        </button>
                       </div>
                     ) : null}
                   </div>
+                  ) : null}
                 </div>
                 <div style={{ marginTop: 8, color: '#444', whiteSpace: 'pre-wrap' }}>
                   {renderTextWithLinks(thread.content)}
@@ -725,6 +736,12 @@ export default function ForumThreadPage({ legacyParam }) {
         </div>
       </main>
       <Footer />
+      <ReportThreadModal
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        onSubmit={handleReportSubmit}
+        submitting={reporting}
+      />
     </div>
   );
 }

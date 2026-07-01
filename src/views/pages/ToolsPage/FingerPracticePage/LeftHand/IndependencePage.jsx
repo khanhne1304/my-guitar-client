@@ -124,7 +124,7 @@ export default function IndependencePage() {
       <Header />
       <main className={styles.detailPage}>
         <div className={styles.container}>
-          <button onClick={() => navigate("/tools/finger-practice/left")} className={styles.backButton}>
+          <button onClick={() => navigate("/learn")} className={styles.backButton}>
             ← Quay lại
           </button>
 

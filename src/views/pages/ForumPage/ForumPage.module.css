@@ -36,14 +36,13 @@
 /* Layout */
 .forum__grid {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr) 300px;
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: 16px;
   align-items: start;
 }
 
 .forum__left,
-.forum__center,
-.forum__right {
+.forum__center {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -95,9 +94,6 @@
 @media (max-width: 1200px) {
   .forum__grid {
     grid-template-columns: 240px 1fr;
-  }
-  .forum__right {
-    display: none;
   }
 }
 

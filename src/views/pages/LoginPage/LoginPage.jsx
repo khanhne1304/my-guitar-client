@@ -1,6 +1,6 @@
 // LoginPage.jsx
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import styles from './LoginPage.module.css';
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
@@ -14,6 +14,19 @@ export default function LoginPage() {
   const { form, err, ok, loading, onChange, onSubmit } = useLoginViewModel();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [lockedMsg, setLockedMsg] = useState('');
+
+  useEffect(() => {
+    if (searchParams.get('error') === 'locked') {
+      const msg = searchParams.get('message');
+      if (msg) {
+        setLockedMsg(decodeURIComponent(msg));
+      } else {
+        setLockedMsg('Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.');
+      }
+    }
+  }, [searchParams]);
 
   // Nếu đã đăng nhập rồi mà vẫn vào trang /login, tự động chuyển về trang chủ
   useEffect(() => {
@@ -42,6 +55,7 @@ export default function LoginPage() {
 
             <h1 className={styles.login__title}>ĐĂNG NHẬP</h1>
 
+            {lockedMsg && <div className={styles.login__alertError}>{lockedMsg}</div>}
             {err && <div className={styles.login__alertError}>{err}</div>}
             {ok && <div className={styles.login__alertSuccess}>{ok}</div>}
 

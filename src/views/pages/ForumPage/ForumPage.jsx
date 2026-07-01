@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
 import styles from "./ForumPage.module.css";
-import RightSidebar from "../../components/forum/RightSidebar/RightSidebar";
 import LeftSidebar from "../../components/forum/LeftSidebar/LeftSidebar";
 import Composer from "../../components/forum/Composer/Composer";
 import ChatWidget from "../../components/chat/ChatWidget";
@@ -164,9 +163,6 @@ export default function ForumPage() {
                   />
                 ))
               )}
-            </div>
-            <div className={styles.forum__right}>
-              <RightSidebar />
             </div>
           </div>
         </div>

@@ -60,12 +60,12 @@ export default function AdminSidebar() {
             Quản lý sản phẩm
           </NavLink>
           <NavLink
-            to="/admin/songs"
+            to="/admin/banners"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.active : ""}`
             }
           >
-            Quản lý bài hát
+            Quản lý banner
           </NavLink>
           {/* <NavLink
             to="/admin/reference-songs"

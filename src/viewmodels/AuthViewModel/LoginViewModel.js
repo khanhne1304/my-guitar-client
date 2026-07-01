@@ -61,7 +61,7 @@ export function useLoginViewModel() {
         }
       }, 800);
     } catch (error) {
-      setErr(error.message);
+      setErr(error?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
@@ -74,5 +74,6 @@ export function useLoginViewModel() {
     loading,
     onChange,
     onSubmit,
+    setErr,
   };
 }

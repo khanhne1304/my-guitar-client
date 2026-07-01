@@ -1,5 +1,11 @@
 // src/context/FavoritesContext.jsx
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import {
   getMyFavorites,
   addToFavorites as apiAdd,
@@ -7,6 +13,13 @@ import {
   toggleFavorite as apiToggle,
 } from "../services/favoriteService";
 import { getUser, getToken } from "../utils/storage";
+import {
+  getStoredFavorites,
+  setStoredFavorites,
+  clearStoredFavorites,
+  resolveUserId,
+} from "../utils/favoriteStorage";
+import { useAuth } from "./AuthContext";
 
 const FavoritesContext = createContext();
 
@@ -16,9 +29,9 @@ export const useFavorites = () => {
   return ctx;
 };
 
-// ---- Chuẩn hóa dữ liệu để tránh mất ảnh / slug ----
 const normalizeProduct = (p) => {
-  // Xử lý ảnh từ nhiều định dạng khác nhau
+  if (!p) return null;
+
   let image = '';
   if (Array.isArray(p.images) && p.images.length > 0) {
     image = p.images[0].url || p.images[0];
@@ -30,128 +43,153 @@ const normalizeProduct = (p) => {
     image = p.cover;
   }
 
+  const id = p._id || p.id;
+  if (!id) return null;
+
   return {
-    id: p._id || p.id,
+    id,
     name: p.name,
     brand: p.brand,
     model: p.model,
     price: p.price,
     oldPrice: p.oldPrice,
-    image: image,
+    image,
     slug: p.slug,
   };
 };
 
+const readAuthSnapshot = (authUser) => {
+  const user = authUser || getUser();
+  const token = getToken();
+  const userId = resolveUserId(user);
+  return { token, userId };
+};
+
 export const FavoritesProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState([]);
+  const { user: authUser, authChecked } = useAuth();
+
+  const [favorites, setFavorites] = useState(() => {
+    const { token, userId } = readAuthSnapshot(null);
+    return getStoredFavorites(token && userId ? userId : null);
+  });
   const [loading, setLoading] = useState(false);
 
-  const user = getUser();
-  const token = getToken();
+  const persistFavorites = useCallback((items, token, userId) => {
+    if (token && userId) {
+      setStoredFavorites(items, userId);
+      return;
+    }
+    if (!token) {
+      setStoredFavorites(items, null);
+    }
+  }, []);
 
-  // ---- Load favorites từ BE hoặc localStorage ----
-  async function loadFavorites() {
-    if (token && user?.id) {
+  const loadFavorites = useCallback(async () => {
+    const { token, userId } = readAuthSnapshot(authUser);
+
+    if (token && userId) {
       try {
         setLoading(true);
         const res = await getMyFavorites();
-        const mapped = (res?.data || []).map((f) =>
-          normalizeProduct(f.product || f)
-        );
+        const mapped = (res?.data || [])
+          .map((f) => normalizeProduct(f.product || f))
+          .filter(Boolean);
         setFavorites(mapped);
+        setStoredFavorites(mapped, userId);
       } catch (err) {
         console.error("Load favorites error:", err);
-        setFavorites([]); // fallback
+        const cached = getStoredFavorites(userId);
+        if (cached.length > 0) {
+          setFavorites(cached);
+        }
       } finally {
         setLoading(false);
       }
-    } else {
-      // Guest: đọc từ localStorage nếu có
-      const raw = localStorage.getItem("favorites_guest");
-      setFavorites(raw ? JSON.parse(raw) : []);
+      return;
     }
-  }
 
-  // ---- Load favorites khi component mount ----
+    const cached = getStoredFavorites(null);
+    setFavorites(cached);
+  }, [authUser]);
+
   useEffect(() => {
+    if (!authChecked) return;
     loadFavorites();
-  }, [user?.id, token]);
+  }, [authChecked, authUser, loadFavorites]);
 
-
-  // ---- Lưu cho guest khi favorites thay đổi ----
   useEffect(() => {
-    if (!token) {
-      localStorage.setItem("favorites_guest", JSON.stringify(favorites));
-    }
-  }, [favorites, token]);
+    const { token, userId } = readAuthSnapshot(authUser);
+    persistFavorites(favorites, token, userId);
+  }, [favorites, authUser, persistFavorites]);
 
-  // ---- Add ----
   const addToFavorites = async (product) => {
     const data = normalizeProduct(product);
+    if (!data) return;
+
     setFavorites((prev) => {
       if (prev.some((x) => x.id === data.id)) return prev;
       return [...prev, data];
     });
-    if (token) {
-      try {
-        await apiAdd(data.id);
-      } catch (err) {
-        console.error(err);
-        setFavorites((prev) => prev.filter((p) => p.id !== data.id)); // rollback
-      }
+
+    const { token } = readAuthSnapshot(authUser);
+    if (!token) return;
+
+    try {
+      await apiAdd(data.id);
+    } catch (err) {
+      console.error(err);
+      setFavorites((prev) => prev.filter((p) => p.id !== data.id));
     }
   };
 
-  // ---- Remove ----
   const removeFromFavorites = async (id) => {
     setFavorites((prev) => prev.filter((p) => p.id !== id));
-    if (token) {
-      try {
-        await apiRemove(id);
-      } catch (err) {
-        console.error(err);
-        loadFavorites(); // rollback
-      }
+
+    const { token } = readAuthSnapshot(authUser);
+    if (!token) return;
+
+    try {
+      await apiRemove(id);
+    } catch (err) {
+      console.error(err);
+      loadFavorites();
     }
   };
 
-  // ---- Clear ----
   const clearFavorites = async () => {
+    const { token, userId } = readAuthSnapshot(authUser);
     setFavorites([]);
-    if (token) {
-      try {
-        // Nếu có endpoint clearAllFavorites thì gọi ở đây
-        // await apiClearAllFavorites();
-      } catch (err) {
-        console.error(err);
-        loadFavorites(); // rollback
-      }
-    } else {
-      localStorage.removeItem("favorites_guest");
+
+    if (token && userId) {
+      clearStoredFavorites(userId);
+      return;
     }
+
+    clearStoredFavorites(null);
   };
 
-  // ---- Toggle ----
   const toggleFavorite = async (product) => {
-  const data = normalizeProduct(product);
-  const exists = favorites.some((x) => x.id === data.id);
+    const data = normalizeProduct(product);
+    if (!data) return;
 
-  // Optimistic update
-  if (exists) {
-    setFavorites(prev => prev.filter(x => x.id !== data.id));
-  } else {
-    setFavorites(prev => [...prev, data]);
-  }
+    const exists = favorites.some((x) => x.id === data.id);
 
-  try {
-    await apiToggle(data.id);
-  } catch (err) {
-    console.error("Toggle favorite error", err);
-    // rollback: reload lại từ server để đồng bộ chính xác
-    loadFavorites();
-  }
-};
+    if (exists) {
+      setFavorites((prev) => prev.filter((x) => x.id !== data.id));
+    } else {
+      setFavorites((prev) => [...prev, data]);
+    }
 
+    const { token } = readAuthSnapshot(authUser);
+    if (!token) return;
+
+    try {
+      await apiToggle(data.id);
+    } catch (err) {
+      console.error("Toggle favorite error", err);
+      loadFavorites();
+    }
+  };
 
   const isFavorite = (id) =>
     favorites.some((p) => p.id === id || p._id === id || p.product?._id === id);
@@ -160,6 +198,7 @@ export const FavoritesProvider = ({ children }) => {
     <FavoritesContext.Provider
       value={{
         favorites,
+        favoritesCount: favorites.length,
         addToFavorites,
         removeFromFavorites,
         clearFavorites,
