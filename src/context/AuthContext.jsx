@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { getUser, getToken } from "../utils/storage";
+import { getUser, getToken, clearSession } from "../utils/storage";
 
 const AuthContext = createContext();
 
@@ -48,15 +48,18 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const login = (userData, token) => {
+  const login = useCallback((userData) => {
     setUser(userData);
     setIsAuthenticated(true);
-  };
+    setAuthChecked(true);
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
+    clearSession();
     setUser(null);
     setIsAuthenticated(false);
-  };
+    setAuthChecked(true);
+  }, []);
 
   const value = {
     user,

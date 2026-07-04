@@ -8,40 +8,22 @@ import SearchBox from "./SearchBox";
 import AuthButtons from "./AuthButtons";
 import { useBrands } from "../../../../hooks/useBrands";
 import { useAuth } from "../../../../context/AuthContext";
-import { clearSession } from "../../../../utils/storage";
 
 export default function Header() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { logout } = useAuth();
-
-  // User state
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch {
-        localStorage.removeItem("user");
-      }
-    }
-  }, []);
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    // Xoá session lưu trữ và cập nhật AuthContext
-    clearSession();
     logout();
-    setUser(null);
-    navigate("/login");
+    navigate("/", { replace: true });
   };
 
   // Brands
   const { brands, loading, loadBrandsFor } = useBrands();
   useEffect(() => {
-    // Chỉ load một lần khi component mount
     loadBrandsFor("guitar");
-  }, []); // Bỏ dependency loadBrandsFor để tránh re-render
+  }, []);
 
   // Search state
   const [keyword, setKeyword] = useState(searchParams.get("q") ?? "");
@@ -57,7 +39,6 @@ export default function Header() {
     navigate(`/products?${params.toString()}`);
   };
 
-  // Cart context
   const { cartCount } = useCart();
 
   return (

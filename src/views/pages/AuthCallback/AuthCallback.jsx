@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveSession } from '../../../utils/storage';
 import { useAuth } from '../../../context/AuthContext';
@@ -7,6 +7,7 @@ import { apiClient } from '../../../services/apiClient';
 export default function AuthCallback() {
   const navigate = useNavigate();
   const { checkAuthStatus } = useAuth();
+  const exchangeStarted = useRef(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -18,12 +19,18 @@ export default function AuthCallback() {
       return;
     }
 
-    let cancelled = false;
+    if (exchangeStarted.current) return;
+    exchangeStarted.current = true;
+
+    // Xóa code khỏi URL ngay để tránh exchange trùng khi component remount
+    const cleanUrl = state
+      ? `/auth/callback?state=${encodeURIComponent(state)}`
+      : '/auth/callback';
+    window.history.replaceState({}, '', cleanUrl);
 
     (async () => {
       try {
         const data = await apiClient.post('/auth/oauth/exchange', { code });
-        if (cancelled) return;
 
         const { token, user } = data;
         if (!token || !user) {
@@ -42,15 +49,13 @@ export default function AuthCallback() {
           navigate('/', { replace: true });
         }
       } catch (e) {
-        if (cancelled) return;
         console.error('Auth callback exchange error', e);
-        navigate('/login', { replace: true });
+        const msg = encodeURIComponent(
+          e?.message || 'Không thể hoàn tất đăng nhập. Vui lòng thử lại.',
+        );
+        navigate(`/login?error=oauth&message=${msg}`, { replace: true });
       }
     })();
-
-    return () => {
-      cancelled = true;
-    };
   }, [navigate, checkAuthStatus]);
 
   return (
