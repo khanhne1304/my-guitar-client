@@ -16,6 +16,7 @@ import FriendRequestsPage from "../views/pages/FriendsPage/FriendRequestsPage";
 import SearchPage from "../views/pages/SearchPage/SearchPage";
 import ProtectedNotificationCenter from "../views/pages/NotificationCenter/ProtectedNotificationCenter";
 import MessengerPage from "../views/pages/MessengerPage/MessengerPage";
+import NotFoundPage from "../views/pages/NotFoundPage/NotFoundPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -60,7 +61,7 @@ export default function AppRouter() {
                         .map((route) => (
                           <Route key={route.path} path={route.path} element={route.element} />
                         ))}
-                      <Route path="*" element={<div style={{ padding: 16 }}>404</div>} />
+                      <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                   </PracticeProvider>
                 </AddressProvider>

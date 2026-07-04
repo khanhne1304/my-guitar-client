@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import AdminOnly from "./AdminOnly";
 import AdminLayout from "../../layouts/admin/AdminLayout/AdminLayout";
 import ProductManager from "../../components/admin/ProductManager/ProductManager";
 import OrderManager from "../../components/admin/OrderManager/OrderManager";
@@ -13,8 +14,9 @@ import ForumReportManager from "../../components/admin/ForumReportManager/ForumR
 
 export default function AdminPage() {
   return (
-    <Routes>
-      <Route element={<AdminLayout />}>
+    <AdminOnly>
+      <Routes>
+        <Route element={<AdminLayout />}>
         <Route index element={<Navigate to="statistics" />} />
         <Route path="statistics" element={<StatisticsReport />} />
         <Route path="users" element={<UserManager />} />
@@ -26,7 +28,8 @@ export default function AdminPage() {
         <Route path="coupons" element={<CouponManager />} />
         <Route path="notifications" element={<NotificationManager />} />
         <Route path="forum-reports" element={<ForumReportManager />} />
-      </Route>
-    </Routes>
+        </Route>
+      </Routes>
+    </AdminOnly>
   );
 }
