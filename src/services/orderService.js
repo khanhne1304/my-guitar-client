@@ -24,11 +24,8 @@ export async function adminListOrdersApi() {
 }
 
 function mapCheckoutToOrderDoc(payload) {
-  // Map cart -> items
   const items = (payload?.cart || []).map((i) => ({
-    product: i._id || i.id || i.productId, // ObjectId string
-    name: i.name,
-    price: Number(i.price) || 0,
+    product: i._id || i.id || i.productId,
     qty: Number(i.qty ?? i.quantity) || 0,
   }));
 
@@ -67,20 +64,17 @@ function mapCheckoutToOrderDoc(payload) {
     };
   }
 
-  // Map payment method (cod | vnpay)
   const paymentMethod = payload?.payment?.method === 'vnpay' ? 'vnpay' : 'cod';
-
-  // Tổng tiền
-  const total = Number(payload?.pricing?.total) || 0;
-  const shipFee = Number(payload?.pricing?.shipFee) || 0;
   const couponCode = payload?.couponCode || null;
+  const shippingMode = payload?.shipping?.mode === 'pickup' ? 'pickup' : 'delivery';
+  const shipMethod = payload?.shipping?.shipMethod || 'standard';
 
   return {
     items,
     shippingAddress,
     paymentMethod,
-    total,
-    shipFee,
+    shippingMode,
+    shipMethod,
     couponCode,
   };
 }

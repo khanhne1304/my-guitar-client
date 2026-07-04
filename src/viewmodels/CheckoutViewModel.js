@@ -183,6 +183,7 @@ export function useCheckoutViewModel() {
       },
       shipping: {
         mode,
+        shipMethod: mode === 'pickup' ? undefined : shipMethod,
         address:
           mode === 'delivery'
             ? {
