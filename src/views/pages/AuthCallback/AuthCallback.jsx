@@ -1,47 +1,67 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveSession } from '../../../utils/storage';
 import { useAuth } from '../../../context/AuthContext';
+import { apiClient } from '../../../services/apiClient';
 
 export default function AuthCallback() {
-	const navigate = useNavigate();
-	const { checkAuthStatus } = useAuth();
+  const navigate = useNavigate();
+  const { checkAuthStatus } = useAuth();
+  const exchangeStarted = useRef(false);
 
-	useEffect(() => {
-		try {
-			const params = new URLSearchParams(window.location.search);
-			const tokenParam = params.get('token');
-			const userParam = params.get('user');
-			const state = params.get('state'); // 'register' nếu flow bắt đầu từ trang đăng ký
-			if (tokenParam && userParam) {
-				const token = decodeURIComponent(tokenParam);
-				const userJson = atob(decodeURIComponent(userParam));
-				const user = JSON.parse(userJson);
-				saveSession({ token, user });
-				checkAuthStatus();
-				// Điều hướng theo flow:
-				if (user?.role === 'admin' && state !== 'register') {
-					navigate('/admin', { replace: true });
-				} else if (state === 'register') {
-					navigate('/courses', { replace: true });
-				} else {
-					navigate('/', { replace: true });
-				}
-				return;
-			}
-		} catch (e) {
-			// eslint-disable-next-line no-console
-			console.error('Auth callback parse error', e);
-		}
-		// fallback về trang đăng nhập nếu không có dữ liệu
-		navigate('/login', { replace: true });
-	}, [navigate, checkAuthStatus]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
 
-	return (
-		<div style={{ padding: 24, textAlign: 'center' }}>
-			<h2>Đang xử lý đăng nhập...</h2>
-			<p>Vui lòng đợi trong giây lát.</p>
-		</div>
-	);
+    if (!code) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    if (exchangeStarted.current) return;
+    exchangeStarted.current = true;
+
+    // Xóa code khỏi URL ngay để tránh exchange trùng khi component remount
+    const cleanUrl = state
+      ? `/auth/callback?state=${encodeURIComponent(state)}`
+      : '/auth/callback';
+    window.history.replaceState({}, '', cleanUrl);
+
+    (async () => {
+      try {
+        const data = await apiClient.post('/auth/oauth/exchange', { code });
+
+        const { token, user } = data;
+        if (!token || !user) {
+          throw new Error('Invalid session');
+        }
+
+        saveSession({ token, user });
+        checkAuthStatus();
+
+        const flowState = data.state || state;
+        if (user?.role === 'admin' && flowState !== 'register') {
+          navigate('/admin', { replace: true });
+        } else if (flowState === 'register') {
+          navigate('/courses', { replace: true });
+        } else {
+          navigate('/', { replace: true });
+        }
+      } catch (e) {
+        console.error('Auth callback exchange error', e);
+        const msg = encodeURIComponent(
+          e?.message || 'Không thể hoàn tất đăng nhập. Vui lòng thử lại.',
+        );
+        navigate(`/login?error=oauth&message=${msg}`, { replace: true });
+      }
+    })();
+  }, [navigate, checkAuthStatus]);
+
+  return (
+    <div style={{ padding: 24, textAlign: 'center' }}>
+      <h2>Đang xử lý đăng nhập...</h2>
+      <p>Vui lòng đợi trong giây lát.</p>
+    </div>
+  );
 }
-

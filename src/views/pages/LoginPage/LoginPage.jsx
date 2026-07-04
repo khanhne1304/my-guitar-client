@@ -12,28 +12,37 @@ import Footer from '../../components/homeItem/Footer/Footer';
 
 export default function LoginPage() {
   const { form, err, ok, loading, onChange, onSubmit } = useLoginViewModel();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, authChecked } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [lockedMsg, setLockedMsg] = useState('');
 
   useEffect(() => {
-    if (searchParams.get('error') === 'locked') {
+    const err = searchParams.get('error');
+    if (err === 'locked') {
       const msg = searchParams.get('message');
       if (msg) {
         setLockedMsg(decodeURIComponent(msg));
       } else {
         setLockedMsg('Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.');
       }
+      return;
+    }
+    if (err === 'facebook' || err === 'google') {
+      setLockedMsg('Đăng nhập mạng xã hội thất bại. Vui lòng thử lại.');
+      return;
+    }
+    if (err === 'oauth') {
+      const msg = searchParams.get('message');
+      setLockedMsg(msg ? decodeURIComponent(msg) : 'Không thể hoàn tất đăng nhập. Vui lòng thử lại.');
     }
   }, [searchParams]);
 
-  // Nếu đã đăng nhập rồi mà vẫn vào trang /login, tự động chuyển về trang chủ
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authChecked && isAuthenticated) {
       navigate('/', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [authChecked, isAuthenticated, navigate]);
   const onLoginWithFacebook = () => {
     const startUrl = apiClient.ensureAbsolute('/api/auth/facebook');
     window.location.href = startUrl;

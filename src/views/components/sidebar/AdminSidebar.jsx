@@ -2,23 +2,19 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./AdminSidebar.module.css";
 import { useCart } from "../../../context/CartContext";
 import { usePractice } from "../../../context/PracticeContext";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function AdminSidebar() {
   const navigate = useNavigate();
   const { clearCartOnLogout } = useCart();
   const { resetProgress } = usePractice();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    // Xóa giỏ hàng trước khi đăng xuất
     clearCartOnLogout();
-    
-    // Reset practice progress
     resetProgress();
-    
-    // Xóa thông tin user & token
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
+    logout();
+    navigate("/", { replace: true });
   };
 
   return (

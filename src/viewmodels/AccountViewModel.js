@@ -52,15 +52,10 @@ export function useAccountViewModel() {
   const val = (v) => (v && String(v).trim() ? v : "—");
 
   const handleLogout = () => {
-    // Xóa giỏ hàng trước khi đăng xuất
     clearCartOnLogout();
-    
-    // Reset practice progress
     resetProgress();
-    
-    // Sử dụng AuthContext logout
     authLogout();
-    navigate("/login");
+    navigate("/", { replace: true });
   };
 
   return {
