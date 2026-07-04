@@ -16,7 +16,6 @@ export default function ForumPage() {
   const [category, setCategory] = useState("All");
   const [q, setQ] = useState(""); // committed query
   const [draftQ, setDraftQ] = useState(""); // typing state
-  const [searchOpen, setSearchOpen] = useState(false);
   const searchInputRef = useRef(null);
   const [reloadKey, setReloadKey] = useState(0);
 
@@ -60,16 +59,6 @@ export default function ForumPage() {
     };
   }, [sort, category, q, reloadKey]);
 
-  useEffect(() => {
-    if (!searchOpen) return;
-    const id = setTimeout(() => {
-      try {
-        searchInputRef.current?.focus?.();
-      } catch {}
-    }, 0);
-    return () => clearTimeout(id);
-  }, [searchOpen]);
-
   const commitSearch = () => {
     setQ((draftQ || "").trim());
   };
@@ -90,29 +79,38 @@ export default function ForumPage() {
             </div>
             <div className={styles.forum__center}>
               <Composer />
-              <div className={styles.forum__controls}>
-                <select className={styles.forum__select} value={sort} onChange={(e) => setSort(e.target.value)}>
-                  <option value="newest">Mới nhất</option>
-                  <option value="top">Nhiều lượt thích nhất</option>
-                  <option value="unanswered">Chưa có trả lời</option>
-                </select>
-                <select className={styles.forum__select} value={category} onChange={(e) => setCategory(e.target.value)}>
-                  <option value="All">Tất cả danh mục</option>
-                  <option value="lesson">Học guitar</option>
-                  <option value="tab">Tab guitar</option>
-                  <option value="chord">Hợp âm</option>
-                  <option value="discussion">Thảo luận</option>
-                </select>
-                <button
-                  type="button"
-                  className={styles.forum__select}
-                  onClick={() => setSearchOpen((v) => !v)}
-                  style={{ fontWeight: 900, cursor: "pointer" }}
-                >
-                  {searchOpen ? "Đóng tìm kiếm" : "Tìm kiếm"}
-                </button>
-                {searchOpen ? (
-                  <>
+              <div className={styles.forum__filters}>
+                <div className={styles.forum__filterBlock}>
+                  <span className={styles.forum__filterLabel}>Sắp xếp</span>
+                  <select
+                    className={styles.forum__select}
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                  >
+                    <option value="newest">Mới nhất</option>
+                    <option value="top">Nhiều lượt thích nhất</option>
+                    <option value="unanswered">Chưa có trả lời</option>
+                  </select>
+                </div>
+
+                <div className={styles.forum__filterBlock}>
+                  <span className={styles.forum__filterLabel}>Danh mục</span>
+                  <select
+                    className={styles.forum__select}
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    <option value="All">Tất cả danh mục</option>
+                    <option value="lesson">Học guitar</option>
+                    <option value="tab">Tab guitar</option>
+                    <option value="chord">Hợp âm</option>
+                    <option value="discussion">Thảo luận</option>
+                  </select>
+                </div>
+
+                <div className={styles.forum__filterBlock}>
+                  <span className={styles.forum__filterLabel}>Tìm kiếm</span>
+                  <div className={styles.forum__searchRow}>
                     <input
                       ref={searchInputRef}
                       className={styles.forum__search}
@@ -121,29 +119,26 @@ export default function ForumPage() {
                       onChange={(e) => setDraftQ(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") commitSearch();
-                        if (e.key === "Escape") setSearchOpen(false);
                       }}
                     />
                     <button
                       type="button"
-                      className={styles.forum__select}
+                      className={styles.forum__actionBtn}
                       onClick={commitSearch}
                       disabled={!String(draftQ || "").trim()}
-                      style={{ fontWeight: 900, cursor: "pointer" }}
                     >
                       Tìm
                     </button>
                     <button
                       type="button"
-                      className={styles.forum__select}
+                      className={styles.forum__actionBtn}
                       onClick={clearSearch}
                       disabled={!String(draftQ || "").trim() && !String(q || "").trim()}
-                      style={{ fontWeight: 900, cursor: "pointer" }}
                     >
                       Xoá
                     </button>
-                  </>
-                ) : null}
+                  </div>
+                </div>
               </div>
 
               {error ? (
