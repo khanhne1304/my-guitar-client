@@ -1,5 +1,5 @@
 // src/views/pages/HomePage/HomeView.jsx  (giữ nguyên đường dẫn file của bạn)
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import styles from "./HomePage.module.css";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
@@ -11,22 +11,11 @@ import { useCategory } from "../../../context/CategoryContext";
 import ChatbotWidget from "../../components/chat/ChatbotWidget";
 
 export default function HomePage() {
-  const {
-    products,
-    loading,
-    err,
-    discountedTop3,
-    selectedCategory,
-    selectedBrand,
-  } = useHomeViewModel();
+  const { products, loading, err, discountedTop3 } = useHomeViewModel();
   const { clearFilters } = useCategory();
-  const hasClearedFilters = useRef(false);
 
   useEffect(() => {
-    if (!hasClearedFilters.current) {
-      clearFilters();
-      hasClearedFilters.current = true;
-    }
+    clearFilters();
   }, [clearFilters]);
 
   return (
@@ -41,33 +30,7 @@ export default function HomePage() {
           {err && <div className={styles.home__error}>{err}</div>}
 
           {!loading && !err && (
-            <Section
-              title={
-                selectedCategory
-                  ? `Sản phẩm ${selectedCategory.toUpperCase()}${
-                      selectedBrand ? ` - ${selectedBrand}` : ""
-                    }`
-                  : "Các sản phẩm"
-              }
-            >
-              {selectedCategory && (
-                <div style={{ marginBottom: "16px" }}>
-                  <button
-                    onClick={clearFilters}
-                    style={{
-                      padding: "8px 16px",
-                      backgroundColor: "#ff6b6b",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Xóa bộ lọc
-                  </button>
-                </div>
-              )}
+            <Section title="Các sản phẩm">
               <ProductGrid items={products} />
             </Section>
           )}

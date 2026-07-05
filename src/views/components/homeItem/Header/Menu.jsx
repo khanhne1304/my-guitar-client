@@ -1,21 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
-import { useCategory } from "../../../../context/CategoryContext";
 import { useAuth } from "../../../../context/AuthContext";
 
 export default function Menu({ brands, loading, loadBrandsFor }) {
-  const { selectCategory, selectBrand } = useCategory();
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleCategoryClick = (categorySlug) => {
-    selectCategory(categorySlug);
     navigate(`/products?category=${encodeURIComponent(categorySlug)}`);
   };
 
   const handleBrandClick = (categorySlug, brandSlug) => {
-    selectCategory(categorySlug);
-    selectBrand(brandSlug);
     const params = new URLSearchParams({
       category: categorySlug,
       brand: brandSlug,
@@ -53,7 +48,7 @@ export default function Menu({ brands, loading, loadBrandsFor }) {
           className={styles.home__menuLink}
           onClick={() => handleCategoryClick("guitar")}
         >
-          Guitar
+          Thương hiệu
         </button>
         {renderSubmenu("guitar", brands.guitar, loading.guitar)}
       </div>
