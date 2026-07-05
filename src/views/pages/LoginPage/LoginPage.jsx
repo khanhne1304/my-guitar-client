@@ -1,6 +1,6 @@
 // LoginPage.jsx
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './LoginPage.module.css';
 import BackIcon from '../../components/icons/BackIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
@@ -9,13 +9,31 @@ import { useLoginViewModel } from '../../../viewmodels/AuthViewModel/LoginViewMo
 import { apiClient } from '../../../services/apiClient';
 import { useAuth } from '../../../context/AuthContext';
 import Footer from '../../components/homeItem/Footer/Footer';
+import AdminRoleChoice from '../../components/auth/AdminRoleChoice/AdminRoleChoice';
 
 export default function LoginPage() {
-  const { form, err, ok, loading, onChange, onSubmit } = useLoginViewModel();
+  const {
+    form,
+    err,
+    ok,
+    loading,
+    showRoleChoice,
+    onChange,
+    onSubmit,
+    continueAsCustomer,
+    continueAsAdmin,
+  } = useLoginViewModel();
   const { isAuthenticated, authChecked } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [lockedMsg, setLockedMsg] = useState('');
+  const hadRoleChoiceRef = useRef(false);
+
+  useEffect(() => {
+    if (showRoleChoice) {
+      hadRoleChoiceRef.current = true;
+    }
+  }, [showRoleChoice]);
 
   useEffect(() => {
     const err = searchParams.get('error');
@@ -39,10 +57,10 @@ export default function LoginPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (authChecked && isAuthenticated) {
+    if (authChecked && isAuthenticated && !showRoleChoice && !hadRoleChoiceRef.current) {
       navigate('/', { replace: true });
     }
-  }, [authChecked, isAuthenticated, navigate]);
+  }, [authChecked, isAuthenticated, navigate, showRoleChoice]);
   const onLoginWithFacebook = () => {
     const startUrl = apiClient.ensureAbsolute('/api/auth/facebook');
     window.location.href = startUrl;
@@ -66,8 +84,17 @@ export default function LoginPage() {
 
             {lockedMsg && <div className={styles.login__alertError}>{lockedMsg}</div>}
             {err && <div className={styles.login__alertError}>{err}</div>}
-            {ok && <div className={styles.login__alertSuccess}>{ok}</div>}
+            {ok && !showRoleChoice && <div className={styles.login__alertSuccess}>{ok}</div>}
 
+            {showRoleChoice ? (
+              <div className={styles.login__container}>
+                {ok && <div className={styles.login__alertSuccess}>{ok}</div>}
+                <AdminRoleChoice
+                  onContinueAsCustomer={continueAsCustomer}
+                  onContinueAsAdmin={continueAsAdmin}
+                />
+              </div>
+            ) : (
             <div className={styles.login__container}>
               <form className={styles.login__form} onSubmit={onSubmit}>
                 <input
@@ -130,6 +157,7 @@ export default function LoginPage() {
                 </Link>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../../services/authService';
-import { setToken, getUser, setUser, mergeUser } from '../../utils/storage';
+import { setToken, getUser, setUser, mergeUser, setAdminViewMode } from '../../utils/storage';
 import { useAuth } from '../../context/AuthContext';
 import { LoginForm } from '../../models/AuthModels/loginModel';
 
@@ -14,6 +14,7 @@ export function useLoginViewModel() {
   const [err, setErr] = useState('');
   const [ok, setOk] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showRoleChoice, setShowRoleChoice] = useState(false);
 
   const onChange = (e) =>
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
@@ -52,14 +53,13 @@ export function useLoginViewModel() {
       // Cập nhật AuthContext
       authLogin(merged, data.token);
 
-      setOk('Đăng nhập thành công! Đang chuyển hướng...');
-      setTimeout(() => {
-        if (merged.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
-      }, 800);
+      if (merged.role === 'admin') {
+        setOk('Đăng nhập thành công!');
+        setShowRoleChoice(true);
+      } else {
+        setOk('Đăng nhập thành công! Đang chuyển hướng...');
+        setTimeout(() => navigate('/'), 800);
+      }
     } catch (error) {
       setErr(error?.data?.message || error.message);
     } finally {
@@ -67,13 +67,26 @@ export function useLoginViewModel() {
     }
   };
 
+  const continueAsCustomer = () => {
+    setAdminViewMode('customer');
+    navigate('/', { replace: true });
+  };
+
+  const continueAsAdmin = () => {
+    setAdminViewMode('admin');
+    navigate('/admin', { replace: true });
+  };
+
   return {
     form,
     err,
     ok,
     loading,
+    showRoleChoice,
     onChange,
     onSubmit,
     setErr,
+    continueAsCustomer,
+    continueAsAdmin,
   };
 }
