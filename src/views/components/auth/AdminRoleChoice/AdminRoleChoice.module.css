@@ -1,0 +1,54 @@
+.roleChoice {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.roleChoice__message {
+  margin: 0;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #111;
+}
+
+.roleChoice__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roleChoice__btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.roleChoice__btn:hover {
+  transform: translateY(-1px);
+}
+
+.roleChoice__btnCustomer {
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.roleChoice__btnCustomer:hover {
+  background: #f5f5f5;
+}
+
+.roleChoice__btnAdmin {
+  background: #000;
+  color: #ffd700;
+}
+
+.roleChoice__btnAdmin:hover {
+  background: #333;
+}

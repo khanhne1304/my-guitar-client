@@ -6,6 +6,11 @@ import { productService } from "../services/productService";
 const globalBrandsCache = new Map();
 const globalLoadingCache = new Set();
 
+export function clearBrandsCache() {
+  globalBrandsCache.clear();
+  globalLoadingCache.clear();
+}
+
 export function useBrands() {
   const [brands, setBrands] = useState({});
   const [loading, setLoading] = useState({});

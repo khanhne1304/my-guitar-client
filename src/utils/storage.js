@@ -3,7 +3,10 @@
 export const STORAGE_KEYS = {
   TOKEN: 'token',
   USER: 'user',
+  ADMIN_VIEW_MODE: 'adminViewMode',
 };
+
+/** @typedef {'customer' | 'admin'} AdminViewMode */
 
 // ---- TOKEN ----
 export function setToken(token) {
@@ -60,7 +63,24 @@ export function clearChatCache() {
 export function clearSession() {
   removeToken();
   removeUser();
+  removeAdminViewMode();
   clearChatCache();
+}
+
+// ---- ADMIN VIEW MODE ----
+/** @returns {AdminViewMode | null} */
+export function getAdminViewMode() {
+  const mode = localStorage.getItem(STORAGE_KEYS.ADMIN_VIEW_MODE);
+  return mode === 'customer' || mode === 'admin' ? mode : null;
+}
+
+/** @param {AdminViewMode} mode */
+export function setAdminViewMode(mode) {
+  localStorage.setItem(STORAGE_KEYS.ADMIN_VIEW_MODE, mode);
+}
+
+export function removeAdminViewMode() {
+  localStorage.removeItem(STORAGE_KEYS.ADMIN_VIEW_MODE);
 }
 
 // ---- UTILS ----

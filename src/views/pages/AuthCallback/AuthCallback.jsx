@@ -1,13 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { saveSession } from '../../../utils/storage';
+import { saveSession, setAdminViewMode } from '../../../utils/storage';
 import { useAuth } from '../../../context/AuthContext';
 import { apiClient } from '../../../services/apiClient';
+import AdminRoleChoice from '../../components/auth/AdminRoleChoice/AdminRoleChoice';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
   const { checkAuthStatus } = useAuth();
   const exchangeStarted = useRef(false);
+  const [showRoleChoice, setShowRoleChoice] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -42,8 +44,11 @@ export default function AuthCallback() {
 
         const flowState = data.state || state;
         if (user?.role === 'admin' && flowState !== 'register') {
-          navigate('/admin', { replace: true });
-        } else if (flowState === 'register') {
+          setShowRoleChoice(true);
+          return;
+        }
+
+        if (flowState === 'register') {
           navigate('/courses', { replace: true });
         } else {
           navigate('/', { replace: true });
@@ -57,6 +62,28 @@ export default function AuthCallback() {
       }
     })();
   }, [navigate, checkAuthStatus]);
+
+  const continueAsCustomer = () => {
+    setAdminViewMode('customer');
+    navigate('/', { replace: true });
+  };
+
+  const continueAsAdmin = () => {
+    setAdminViewMode('admin');
+    navigate('/admin', { replace: true });
+  };
+
+  if (showRoleChoice) {
+    return (
+      <div style={{ padding: 24, maxWidth: 560, margin: '80px auto' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Đăng nhập thành công</h2>
+        <AdminRoleChoice
+          onContinueAsCustomer={continueAsCustomer}
+          onContinueAsAdmin={continueAsAdmin}
+        />
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: 24, textAlign: 'center' }}>

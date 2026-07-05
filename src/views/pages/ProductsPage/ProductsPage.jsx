@@ -8,7 +8,16 @@ import { useProductsViewModel } from '../../../viewmodels/ProductsViewModel';
 import { useMemo, useState, useEffect, Fragment } from 'react';
 import ChatbotWidget from "../../components/chat/ChatbotWidget";
 export default function ProductsPage() {
-  const { products, categories, handleSelect, isFiltered, q, loading, err } = useProductsViewModel();
+  const {
+    products,
+    categories,
+    handleSelect,
+    isFiltered,
+    q,
+    brandSlug,
+    loading,
+    err,
+  } = useProductsViewModel();
   const [sortBy, setSortBy] = useState('default');
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 15; // 3 sp / hàng x 5 hàng
@@ -55,6 +64,20 @@ export default function ProductsPage() {
     }
   };
 
+  const getFilteredTitle = () => {
+    if (q) return `Kết quả cho "${q}"`;
+
+    if (brandSlug) {
+      const count = sortedProducts.length;
+      const brandName =
+        sortedProducts.find((p) => p?.brand?.name)?.brand?.name ||
+        brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1);
+      return `Có ${count} sản phẩm thuộc thương hiệu ${brandName}`;
+    }
+
+    return 'Kết quả lọc sản phẩm';
+  };
+
   return (
     <div className={styles['products-page']}>
       <Header />
@@ -64,7 +87,7 @@ export default function ProductsPage() {
           {isFiltered ? (
             <>
               <h1 className={styles['products-page__title']}>
-                {q ? `Kết quả cho "${q}"` : 'Kết quả lọc sản phẩm'}
+                {getFilteredTitle()}
               </h1>
               <div className={styles['products-page__sortbar']}>
                 <label>Sắp xếp theo:</label>

@@ -56,6 +56,14 @@ export default function AdminSidebar() {
             Quản lý sản phẩm
           </NavLink>
           <NavLink
+            to="/admin/brands"
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ""}`
+            }
+          >
+            Quản lý thương hiệu
+          </NavLink>
+          <NavLink
             to="/admin/banners"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.active : ""}`
