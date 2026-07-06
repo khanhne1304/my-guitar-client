@@ -5,6 +5,7 @@ import { useProductBySlug } from '../hooks/useProductBySlug';
 import { useProducts } from '../hooks/useProducts';
 import { usePrice } from '../hooks/usePrice';
 import { useRelatedProducts } from '../hooks/useRelatedProduct'; // ✅ Đổi sang file mới chuẩn API
+import { useAlert } from '../context/AlertContext';
 
 const FILE_BASE = process.env.REACT_APP_FILE_BASE_URL || 'http://localhost:4000';
 const ensureAbsolute = (u) =>
@@ -14,6 +15,7 @@ export function useProductDetailsViewModel() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { success } = useAlert();
 
   // Lấy thông tin sản phẩm hiện tại
   const { prod, images } = useProductBySlug(slug);
@@ -48,7 +50,7 @@ export function useProductDetailsViewModel() {
       qty
     );
 
-    goToCart ? navigate('/cart') : alert('Đã thêm sản phẩm vào giỏ hàng!');
+    goToCart ? navigate('/cart') : success('Đã thêm sản phẩm vào giỏ hàng!');
   };
 
   return {

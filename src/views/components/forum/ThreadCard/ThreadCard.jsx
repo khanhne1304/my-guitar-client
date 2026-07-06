@@ -4,6 +4,8 @@ import styles from './ThreadCard.module.css';
 import { forumApi } from '../../../../services/forumApi';
 import { getToken } from '../../../../utils/storage';
 import ReportThreadModal from '../ReportThreadModal/ReportThreadModal';
+import { useAlert } from '../../../../context/AlertContext';
+import { useConfirm } from '../../../../context/ConfirmContext';
 
 function getCurrentUser() {
   try {
@@ -16,6 +18,8 @@ function getCurrentUser() {
 
 export default function ThreadCard({ thread, onDeleted }) {
   const navigate = useNavigate();
+  const { alert, success } = useAlert();
+  const { confirm } = useConfirm();
   const threadId = thread?._id || thread?.id;
   const likeCount = typeof thread?.likeCount === 'number' ? thread.likeCount : 0;
   const answersCount = typeof thread?.answersCount === 'number' ? thread.answersCount : null;
@@ -35,13 +39,13 @@ export default function ThreadCard({ thread, onDeleted }) {
     e?.preventDefault?.();
     e?.stopPropagation?.();
     if (!threadId) return;
-    const ok = window.confirm('Bạn có chắc muốn xoá bài viết này không? Hành động này không thể hoàn tác.');
+    const ok = await confirm('Bạn có chắc muốn xoá bài viết này không? Hành động này không thể hoàn tác.');
     if (!ok) return;
     try {
       await forumApi.deleteThread(String(threadId));
       onDeleted?.(String(threadId));
     } catch (err) {
-      window.alert(err?.message || 'Không thể xoá bài viết.');
+      await alert(err?.message || 'Không thể xoá bài viết.', 'error');
     }
   }
 
@@ -51,7 +55,7 @@ export default function ThreadCard({ thread, onDeleted }) {
     try {
       await forumApi.reportThread({ threadId: String(threadId), reason });
       setReportOpen(false);
-      window.alert('Đã gửi báo cáo. Cảm ơn bạn!');
+      await success('Đã gửi báo cáo. Cảm ơn bạn!');
     } finally {
       setReporting(false);
     }

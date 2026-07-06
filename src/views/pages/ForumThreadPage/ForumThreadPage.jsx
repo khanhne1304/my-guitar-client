@@ -4,6 +4,8 @@ import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
 import { forumApi } from '../../../services/forumApi';
 import ReportThreadModal from '../../components/forum/ReportThreadModal/ReportThreadModal';
+import { useAlert } from '../../../context/AlertContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 function getCurrentUser() {
   try {
@@ -119,6 +121,8 @@ function renderTextWithLinks(text) {
 export default function ForumThreadPage({ legacyParam }) {
   const params = useParams();
   const navigate = useNavigate();
+  const { alert, success } = useAlert();
+  const { confirm } = useConfirm();
   const threadId = legacyParam ? params?.[legacyParam] : params?.threadId;
   const [me, setMe] = useState(() => getCurrentUser());
   const [thread, setThread] = useState(null);
@@ -228,14 +232,14 @@ export default function ForumThreadPage({ legacyParam }) {
   async function deleteThisThread() {
     if (!threadId) return;
     if (!isOwner) return;
-    const ok = window.confirm('Bạn có chắc muốn xoá bài viết này không? Hành động này không thể hoàn tác.');
+    const ok = await confirm('Bạn có chắc muốn xoá bài viết này không? Hành động này không thể hoàn tác.');
     if (!ok) return;
     try {
       await forumApi.deleteThread(String(threadId));
-      window.alert('Đã xoá bài viết.');
+      await success('Đã xoá bài viết.');
       navigate('/forum');
     } catch (e) {
-      window.alert(e?.message || 'Không thể xoá bài viết.');
+      await alert(e?.message || 'Không thể xoá bài viết.', 'error');
     }
   }
 
@@ -245,7 +249,7 @@ export default function ForumThreadPage({ legacyParam }) {
     try {
       await forumApi.reportThread({ threadId: String(threadId), reason });
       setReportOpen(false);
-      window.alert('Đã gửi báo cáo. Cảm ơn bạn!');
+      await success('Đã gửi báo cáo. Cảm ơn bạn!');
     } finally {
       setReporting(false);
     }
@@ -761,6 +765,7 @@ function AnswerItem({
   onDeleteReply,
   onReply,
 }) {
+  const { confirm } = useConfirm();
   const [replyText, setReplyText] = useState('');
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState(answer?.content || '');
@@ -868,7 +873,7 @@ function AnswerItem({
                         type="button"
                         onClick={async () => {
                           setMenuOpen(false);
-                          const ok = window.confirm('Bạn có chắc muốn xoá câu trả lời này không?');
+                          const ok = await confirm('Bạn có chắc muốn xoá câu trả lời này không?');
                           if (!ok) return;
                           await onDelete?.();
                         }}
@@ -959,6 +964,7 @@ function AnswerItem({
 }
 
 function ReplyItem({ reply, myId, onUpdate, onDelete }) {
+  const { confirm } = useConfirm();
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(reply?.content || '');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -1017,7 +1023,7 @@ function ReplyItem({ reply, myId, onUpdate, onDelete }) {
                   type="button"
                   onClick={async () => {
                     setMenuOpen(false);
-                    const ok = window.confirm('Bạn có chắc muốn xoá phản hồi này không?');
+                    const ok = await confirm('Bạn có chắc muốn xoá phản hồi này không?');
                     if (!ok) return;
                     await onDelete?.();
                   }}

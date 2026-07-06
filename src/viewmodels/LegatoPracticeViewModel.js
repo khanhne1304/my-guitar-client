@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useAlert } from "../context/AlertContext";
 
 /**
  * ViewModel cho luyện tập Legato
@@ -9,6 +10,7 @@ import { useAuth } from "../context/AuthContext";
  */
 export default function useLegatoPracticeViewModel(lesson) {
   const { user } = useAuth();
+  const { warning } = useAlert();
   
   // Practice state
   const [isRunning, setIsRunning] = useState(false);
@@ -200,9 +202,9 @@ export default function useLegatoPracticeViewModel(lesson) {
       rafIdRef.current = requestAnimationFrame(detectLoop);
     } catch (error) {
       console.error("Không thể truy cập microphone:", error);
-      alert("Vui lòng cho phép truy cập microphone để sử dụng tính năng này.");
+      warning("Vui lòng cho phép truy cập microphone để sử dụng tính năng này.");
     }
-  }, [isRunning, metronomeEnabled, startMetronome, detectLoop]);
+  }, [isRunning, metronomeEnabled, startMetronome, detectLoop, warning]);
   
   // Stop practice
   const stop = useCallback(async () => {

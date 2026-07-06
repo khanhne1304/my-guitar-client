@@ -6,6 +6,7 @@ import {
   deleteBanner,
 } from "../../../../services/bannerApi";
 import styles from "./BannerManager.module.css";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 const emptyForm = {
   imageUrl: "",
@@ -16,6 +17,7 @@ const emptyForm = {
 };
 
 export default function BannerManager() {
+  const { confirm } = useConfirm();
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -81,7 +83,7 @@ export default function BannerManager() {
   }
 
   async function handleDelete(banner) {
-    if (!window.confirm("Xóa banner này?")) return;
+    if (!(await confirm("Xóa banner này?"))) return;
     try {
       await deleteBanner(banner._id);
       fetchBanners();

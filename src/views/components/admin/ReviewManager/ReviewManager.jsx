@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./ReviewManager.module.css";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 export default function ReviewManager() {
+  const { confirm } = useConfirm();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,7 +57,7 @@ export default function ReviewManager() {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
+    if (!(await confirm('Bạn có chắc chắn muốn xóa bình luận này?'))) {
       return;
     }
 

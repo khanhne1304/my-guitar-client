@@ -10,6 +10,7 @@ import { CheckoutForm, CheckoutOrder } from '../models/checkoutModel';
 import { checkoutOrderApi, createVnpayUrlApi } from '../services/orderService';
 import { calculateDistanceToStore, calculateShippingMethods } from '../helpers/shippingHelper';
 import { applyCouponApi } from '../services/couponService';
+import { useAlert } from '../context/AlertContext';
 
 // Dynamic based on distance/subtotal; fallback initial values
 const DEFAULT_SHIP_METHODS = [
@@ -21,6 +22,7 @@ const DEFAULT_SHIP_METHODS = [
 export function useCheckoutViewModel() {
   const navigate = useNavigate();
   const { cartItems, subtotal, clearCart } = useCart();
+  const { alert, success, error } = useAlert();
 
   // ===== SHIPPING / FORM =====
   const { mode, setMode, shipMethod, setShipMethod, delivery } = useDeliveryState();
@@ -131,15 +133,15 @@ export function useCheckoutViewModel() {
   const applyCoupon = async () => {
     const code = (couponCode || '').trim();
     if (!code) {
-      alert('Vui lòng nhập mã giảm giá');
+      await alert('Vui lòng nhập mã giảm giá', 'warning');
       return;
     }
     try {
       const res = await applyCouponApi({ code, orderTotal: preDiscountTotal });
       setCouponInfo(res);
-      alert('Áp dụng mã thành công');
+      await success('Áp dụng mã thành công');
     } catch (e) {
-      alert(e?.message || 'Không áp dụng được mã');
+      await error(e?.message || 'Không áp dụng được mã');
       setCouponInfo(null);
     }
   };
@@ -152,7 +154,7 @@ export function useCheckoutViewModel() {
   // ===== PLACE ORDER FUNCTION =====
   const placeOrder = async () => {
     if (cartItems.length === 0) {
-      alert('Giỏ hàng trống.');
+      await alert('Giỏ hàng trống.', 'warning');
       navigate('/cart');
       return;
     }
@@ -160,11 +162,11 @@ export function useCheckoutViewModel() {
     // Validate shipping info
     if (mode === 'delivery') {
       if (!form.name || !form.phone || !form.address || !form.city || !form.district) {
-        alert('Vui lòng nhập đầy đủ thông tin giao hàng!');
+        await alert('Vui lòng nhập đầy đủ thông tin giao hàng!', 'warning');
         return;
       }
     } else if (mode === 'pickup' && !storeId) {
-      alert('Vui lòng chọn cửa hàng để nhận!');
+      await alert('Vui lòng chọn cửa hàng để nhận!', 'warning');
       return;
     }
 
@@ -233,7 +235,7 @@ export function useCheckoutViewModel() {
       clearCart();
       setShowSuccess(true);
     } catch (e) {
-      alert(e?.message || 'Không thể tạo đơn hàng.');
+      await error(e?.message || 'Không thể tạo đơn hàng.');
     } finally {
       setPlacingOrder(false);
     }

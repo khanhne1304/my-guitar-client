@@ -3,8 +3,10 @@ import { songService } from "../../../../services/songService";
 import AddSongModal from "./AddSongModal";
 import EditSongModal from "./EditSongModal";
 import styles from "./SongManager.module.css";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 export default function SongManager() {
+  const { confirm } = useConfirm();
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -35,7 +37,7 @@ export default function SongManager() {
   };
 
   const handleDelete = async (song) => {
-    if (window.confirm(`Xóa bài hát "${song.title}"?`)) {
+    if (await confirm(`Xóa bài hát "${song.title}"?`)) {
       try {
         await songService.remove(song._id);
         fetchSongs();

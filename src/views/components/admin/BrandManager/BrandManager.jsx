@@ -7,6 +7,7 @@ import {
 } from "../../../../services/brandApi";
 import { clearBrandsCache } from "../../../../hooks/useBrands";
 import styles from "./BrandManager.module.css";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 const emptyForm = {
   name: "",
@@ -14,6 +15,7 @@ const emptyForm = {
 };
 
 export default function BrandManager() {
+  const { confirm } = useConfirm();
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -83,7 +85,7 @@ export default function BrandManager() {
   }
 
   async function handleDelete(brand) {
-    if (!window.confirm(`Xóa thương hiệu "${brand.name}"?`)) return;
+    if (!(await confirm(`Xóa thương hiệu "${brand.name}"?`))) return;
     try {
       await deleteBrand(brand._id);
       clearBrandsCache();

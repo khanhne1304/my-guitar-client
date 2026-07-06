@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import styles from "./ForumReportManager.module.css";
 import { useNavigate } from "react-router-dom";
 import { forumApi } from "../../../../services/forumApi";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 function authorName(user) {
   return user?.fullName || user?.username || user?.email || "Ẩn danh";
 }
 
 export default function ForumReportManager() {
+  const { confirm } = useConfirm();
   const [reports, setReports] = useState([]);
   const [viewingDetails, setViewingDetails] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -70,7 +72,7 @@ export default function ForumReportManager() {
   async function deleteThread(g) {
     const tid = g?.thread?._id || g?.thread;
     if (!tid) return;
-    if (!window.confirm("Xoá chủ đề này?")) return;
+    if (!(await confirm("Xoá chủ đề này?"))) return;
     try {
       await forumApi.deleteThread(String(tid));
       setReports((prev) => (prev || []).filter((r) => String(r?.thread?._id || r?.thread) !== String(tid)));
@@ -105,7 +107,7 @@ export default function ForumReportManager() {
       setActionMsg("Tài khoản này đã bị khóa trước đó.");
       return;
     }
-    const ok = window.confirm(
+    const ok = await confirm(
       `Khóa tài khoản "${authorName(author)}"? Người dùng sẽ không thể đăng nhập cho đến khi được mở khóa thủ công.`,
     );
     if (!ok) return;

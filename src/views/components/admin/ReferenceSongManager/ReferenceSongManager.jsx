@@ -3,8 +3,12 @@ import { referenceSongService } from "../../../../services/referenceSongService"
 import AddReferenceSongModal from "./AddReferenceSongModal";
 import EditReferenceSongModal from "./EditReferenceSongModal";
 import styles from "./ReferenceSongManager.module.css";
+import { useAlert } from "../../../../context/AlertContext";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 export default function ReferenceSongManager() {
+  const { error: showError } = useAlert();
+  const { confirm } = useConfirm();
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -45,13 +49,13 @@ export default function ReferenceSongManager() {
   };
 
   const handleDelete = async (song) => {
-    if (window.confirm(`Xóa bài hát gốc "${song.title}"? Hành động này sẽ xóa cả file audio trên Cloudinary.`)) {
+    if (await confirm(`Xóa bài hát gốc "${song.title}"? Hành động này sẽ xóa cả file audio trên Cloudinary.`)) {
       try {
         await referenceSongService.delete(song._id);
         fetchSongs(pagination.page);
       } catch (err) {
         console.error("Xóa bài hát gốc thất bại:", err);
-        alert(err?.message || "Không thể xóa bài hát gốc");
+        await showError(err?.message || "Không thể xóa bài hát gốc");
       }
     }
   };
