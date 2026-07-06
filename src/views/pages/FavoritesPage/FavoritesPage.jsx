@@ -5,10 +5,12 @@ import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
 import ProductCard from '../../components/productCard/productCard';
 import { useFavorites } from '../../../context/FavoritesContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 import { useProducts } from '../../../hooks/useProducts';
 import ChatbotWidget from "../../components/chat/ChatbotWidget";
 export default function FavoritesPage() {
   const { favorites, removeFromFavorites, clearFavorites } = useFavorites();
+  const { confirm } = useConfirm();
   const { headerProducts } = useProducts();
   const navigate = useNavigate();
 
@@ -16,8 +18,8 @@ export default function FavoritesPage() {
     removeFromFavorites(productId);
   };
 
-  const handleClearAll = () => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm yêu thích?')) {
+  const handleClearAll = async () => {
+    if (await confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm yêu thích?')) {
       clearFavorites();
     }
   };

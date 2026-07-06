@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react";
 import styles from "./AddProductModal.module.css"; // tái sử dụng style của AddProductModal
 import { productService } from "../../../../services/productService";
+import { useAlert } from "../../../../context/AlertContext";
 
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=800&auto=format&fit=crop";
 
 export default function UpdateProductModal({ isOpen, onClose, product, onSuccess }) {
+  const { error: showError } = useAlert();
   const [formData, setFormData] = useState({
     name: "",
     sku: "",
@@ -66,7 +68,7 @@ export default function UpdateProductModal({ isOpen, onClose, product, onSuccess
       onClose();
     } catch (err) {
       console.error("Lỗi khi cập nhật sản phẩm:", err);
-      alert("Không thể cập nhật sản phẩm. Kiểm tra console để xem chi tiết.");
+      await showError("Không thể cập nhật sản phẩm. Kiểm tra console để xem chi tiết.");
     } finally {
       setLoading(false);
     }

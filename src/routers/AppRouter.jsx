@@ -9,6 +9,7 @@ import { PracticeProvider } from "../context/PracticeContext";
 import { AuthProvider } from "../context/AuthContext";
 import { ToastProvider } from "../context/ToastContext";
 import { ConfirmProvider } from "../context/ConfirmContext";
+import { AlertProvider } from "../context/AlertContext";
 import SocialLayout from "../views/layouts/SocialLayout/SocialLayout";
 import ProfilePage from "../views/pages/ProfilePage/ProfilePage";
 import FriendsListPage from "../views/pages/FriendsPage/FriendsListPage";
@@ -40,6 +41,7 @@ export default function AppRouter() {
     <AuthProvider>
       <ToastProvider>
         <ConfirmProvider>
+          <AlertProvider>
           <CartProvider>
             <CategoryProvider>
               <FavoritesProvider>
@@ -68,6 +70,7 @@ export default function AppRouter() {
               </FavoritesProvider>
             </CategoryProvider>
           </CartProvider>
+          </AlertProvider>
         </ConfirmProvider>
       </ToastProvider>
     </AuthProvider>

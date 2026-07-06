@@ -3,10 +3,12 @@ import { productService } from "../../../../services/productService";
 import styles from "./ProductManager.module.css";
 import AddProductModal from "./AddProductModal";
 import UpdateProductModal from "./UpdateProductModal.jsx";
+import { useConfirm } from "../../../../context/ConfirmContext";
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=800&auto=format&fit=crop";
 
 export default function ProductManager() {
+  const { confirm } = useConfirm();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +40,7 @@ export default function ProductManager() {
     setShowEditModal(true);
   };
   const handleDelete = async (p) => {
-    if (window.confirm(`Xóa sản phẩm "${p.name}"?`)) {
+    if (await confirm(`Xóa sản phẩm "${p.name}"?`)) {
       try {
         await productService.delete(p._id);
         fetchProducts(); // reload danh sách

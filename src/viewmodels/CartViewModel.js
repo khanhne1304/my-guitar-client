@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { getUser } from '../utils/storage';
 import { CartState } from '../models/cartModel';
+import { useConfirm } from '../context/ConfirmContext';
 
 export function useCartViewModel() {
   const {
@@ -18,6 +19,7 @@ export function useCartViewModel() {
   } = useCart();
 
   const navigate = useNavigate();
+  const { confirm } = useConfirm();
   const [note, setNote] = useState('');
   const [invoice, setInvoice] = useState(false);
   const [agree, setAgree] = useState(false);
@@ -52,12 +54,12 @@ export function useCartViewModel() {
       updateQty(id, getItemQty(item) + 1);
   };
 
-  const handleDec = (item) => {
+  const handleDec = async (item) => {
     const id = getItemId(item);
     if (!id) return;
     const current = getItemQty(item);
     if (current <= 1) {
-      if (window.confirm('Xoá sản phẩm này khỏi giỏ hàng?')) {
+      if (await confirm('Xoá sản phẩm này khỏi giỏ hàng?')) {
         if (typeof removeItem === 'function') removeItem(id);
       }
       return;
@@ -66,13 +68,13 @@ export function useCartViewModel() {
     else if (typeof updateQty === 'function') updateQty(id, current - 1);
   };
 
-  const handleUpdateQty = (item, nextQty) => {
+  const handleUpdateQty = async (item, nextQty) => {
     const id = getItemId(item);
     const q = Math.max(0, Number(nextQty) || 0);
     if (!id) return;
 
     if (q === 0) {
-      if (window.confirm('Xoá sản phẩm này khỏi giỏ hàng?')) {
+      if (await confirm('Xoá sản phẩm này khỏi giỏ hàng?')) {
         if (typeof removeItem === 'function') removeItem(id);
       }
       return;
@@ -89,10 +91,10 @@ export function useCartViewModel() {
     }
   };
 
-  const handleRemove = (item) => {
+  const handleRemove = async (item) => {
     const id = getItemId(item);
     if (!id) return;
-    if (window.confirm('Bạn chắc chắn muốn xoá sản phẩm này?')) {
+    if (await confirm('Bạn chắc chắn muốn xoá sản phẩm này?')) {
       if (typeof removeItem === 'function') removeItem(id);
     }
   };

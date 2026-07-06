@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./NotificationManager.module.css";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 export default function NotificationManager() {
+  const { confirm } = useConfirm();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -129,7 +131,7 @@ export default function NotificationManager() {
   };
 
   const handleDeleteNotification = async (notificationId) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa thông báo này?')) {
+    if (!(await confirm('Bạn có chắc chắn muốn xóa thông báo này?'))) {
       return;
     }
 

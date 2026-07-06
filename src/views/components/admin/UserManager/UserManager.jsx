@@ -4,10 +4,14 @@ import AddUserModal from "./AddUserModal";
 import UpdateUserModal from "./UpdateUserModal";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { apiClient } from "../../../../services/apiClient";
+import { useAlert } from "../../../../context/AlertContext";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 const API_BASE = (process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api').replace('/api', '') || 'http://localhost:4000';
 
 export default function UserManager() {
+  const { alert, error: showError } = useAlert();
+  const { confirm } = useConfirm();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -79,10 +83,10 @@ export default function UserManager() {
     setShowEditModal(true);
   };
 
-  const handleChangePassword = (user) => {
+  const handleChangePassword = async (user) => {
     // Chỉ cho phép admin đổi mật khẩu chính mình
     if (user._id !== currentUserId) {
-      alert('Bạn chỉ có thể đổi mật khẩu của chính mình');
+      await alert('Bạn chỉ có thể đổi mật khẩu của chính mình', 'warning');
       return;
     }
     setEditUser(user);
@@ -90,7 +94,7 @@ export default function UserManager() {
   };
 
   const handleDelete = async (user) => {
-    if (window.confirm(`Xóa user "${user.username}"?`)) {
+    if (await confirm(`Xóa user "${user.username}"?`)) {
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE}/api/admin/users/${user._id}`, {
@@ -108,7 +112,7 @@ export default function UserManager() {
 
         fetchUsers(currentPage);
       } catch (err) {
-        alert('Lỗi khi xóa user: ' + err.message);
+        await showError('Lỗi khi xóa user: ' + err.message);
       }
     }
   };

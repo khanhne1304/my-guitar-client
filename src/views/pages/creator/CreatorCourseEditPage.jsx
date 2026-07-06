@@ -21,6 +21,7 @@ import {
 import CollapsePanel from '../../components/creator/CollapsePanel';
 import page from '../courses/LearningLayout.module.css';
 import cs from '../courses/Courses.module.css';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 const LEVELS = [
   { id: 'beginner', label: 'Cơ bản' },
@@ -65,6 +66,7 @@ function toggleSetItem(setter, id) {
 export default function CreatorCourseEditPage() {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const { confirm } = useConfirm();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
@@ -498,7 +500,7 @@ export default function CreatorCourseEditPage() {
                       type="button"
                       className={page.btnGhost}
                       onClick={async () => {
-                        if (window.confirm('Xóa module này?')) {
+                        if (await confirm('Xóa module này?')) {
                           await deleteModuleApi(mod.id);
                           setNotice('Đã xóa module');
                           await load();
@@ -826,7 +828,7 @@ export default function CreatorCourseEditPage() {
                   type="button"
                   className={page.btnGhost}
                   onClick={async () => {
-                    if (window.confirm('Xóa toàn bộ khóa học?')) {
+                    if (await confirm('Xóa toàn bộ khóa học?')) {
                       await deleteCourseApi(courseId);
                       navigate('/creator');
                     }

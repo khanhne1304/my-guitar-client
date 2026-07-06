@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./CouponManager.module.css";
+import { useConfirm } from "../../../../context/ConfirmContext";
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 export default function CouponManager() {
+  const { confirm } = useConfirm();
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -124,7 +126,7 @@ export default function CouponManager() {
   };
 
   const handleDeleteCoupon = async (couponId) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?')) {
+    if (!(await confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?'))) {
       return;
     }
 
