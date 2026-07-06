@@ -83,7 +83,7 @@ export default function UserManager() {
     setShowEditModal(true);
   };
 
-  const handleChangePassword = (user) => {
+  const handleChangePassword = async (user) => {
     // Chỉ cho phép admin đổi mật khẩu chính mình
     if (user._id !== currentUserId) {
       await alert('Bạn chỉ có thể đổi mật khẩu của chính mình', 'warning');
