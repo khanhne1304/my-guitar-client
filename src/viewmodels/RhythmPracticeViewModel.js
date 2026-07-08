@@ -20,7 +20,7 @@ export default function useRhythmPracticeVM() {
   const [progressionPreset, setProgressionPreset] = useState("I-V-vi-IV");
   const [patternText, setPatternText] = useState("X - X L - L X - L"); // 8th grid template (X: xuống, L: lên)
   const [barsPerLoop, setBarsPerLoop] = useState(4);
-  const [clickEnabled, setClickEnabled] = useState(false);
+  const [clickEnabled, setClickEnabled] = useState(true);
   const [clickVolume, setClickVolume] = useState(0.15);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [countdownMsLeft, setCountdownMsLeft] = useState(0);
@@ -71,6 +71,8 @@ export default function useRhythmPracticeVM() {
   const countdownTimerRef = useRef(null);
   const countdownEndTimeRef = useRef(0);
   const lastCountedBarIndexRef = useRef(0);
+  const clickEnabledRef = useRef(true);
+  const clickVolumeRef = useRef(0.15);
 
   // Progress persistence (per-user)
   const [progressMap, setProgressMap] = useState({}); // { tone: { progression: bestAccuracy } }
@@ -156,6 +158,49 @@ export default function useRhythmPracticeVM() {
     });
   }, [patternText, subdivision]);
 
+  const scheduleClickTrack = useCallback((startAt) => {
+    if (!clickEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+    clickNextTimeRef.current = startAt;
+    clickBeatCountRef.current = 0;
+    const scheduleAhead = 2.0; // seconds
+    const beatDur = beatDurationRef.current;
+
+    const scheduleChunk = () => {
+      if (!audioContextRef.current || !clickEnabledRef.current) return;
+      const now = ctx.currentTime;
+      while (clickNextTimeRef.current < now + scheduleAhead) {
+        const isDownbeat = clickBeatCountRef.current % timeSig === 0;
+        const t = clickNextTimeRef.current;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(isDownbeat ? 1200 : 900, t);
+        const vol = Math.max(0, Math.min(1, clickVolumeRef.current));
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(vol, t + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        try {
+          osc.start(t);
+          osc.stop(t + 0.1);
+        } catch {}
+        clickNextTimeRef.current += beatDur;
+        clickBeatCountRef.current += 1;
+      }
+    };
+
+    scheduleChunk();
+    if (clickScheduleTimerRef.current) {
+      clearInterval(clickScheduleTimerRef.current);
+    }
+    clickScheduleTimerRef.current = setInterval(scheduleChunk, 100);
+  }, [timeSig]);
+
   const scheduleLoop = useCallback((startAt) => {
     const progression = computeProgression();
     const beatDur = 60 / bpm;
@@ -212,10 +257,10 @@ export default function useRhythmPracticeVM() {
     }
 
     // Lên lịch click track đúng theo startAt nếu đang bật
-    if (clickEnabled && audioContextRef.current) {
+    if (clickEnabledRef.current && audioContextRef.current) {
       scheduleClickTrack(startAt);
     }
-  }, [bpm, timeSig, computeProgression]);
+  }, [bpm, timeSig, computeProgression, scheduleClickTrack]);
 
   const updateHudByTime = useCallback((now) => {
     const beatDur = beatDurationRef.current;
@@ -362,45 +407,7 @@ export default function useRhythmPracticeVM() {
     } catch {}
 
     rafIdRef.current = requestAnimationFrame(loopDetect);
-  }, [processOnset, updateHudByTime]);
-
-  const scheduleClickTrack = useCallback((startAt) => {
-    if (!clickEnabled || !audioContextRef.current) return;
-    const ctx = audioContextRef.current;
-    clickNextTimeRef.current = startAt;
-    clickBeatCountRef.current = 0;
-    const scheduleAhead = 2.0; // seconds
-    const beatDur = beatDurationRef.current;
-
-    const scheduleChunk = () => {
-      if (!audioContextRef.current) return;
-      const now = ctx.currentTime;
-      while (clickNextTimeRef.current < now + scheduleAhead) {
-        const isDownbeat = clickBeatCountRef.current % timeSig === 0;
-        const t = clickNextTimeRef.current;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(isDownbeat ? 1200 : 900, t);
-        const vol = Math.max(0, Math.min(1, clickVolume));
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(vol, t + 0.005);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        try {
-          osc.start(t);
-          osc.stop(t + 0.1);
-        } catch {}
-        clickNextTimeRef.current += beatDur;
-        clickBeatCountRef.current += 1;
-      }
-    };
-
-    // schedule immediately and keep scheduling ahead
-    scheduleChunk();
-    clickScheduleTimerRef.current = setInterval(scheduleChunk, 100);
-  }, [clickEnabled, clickVolume, timeSig]);
+  }, [processOnset, updateHudByTime, timeSig]);
 
   const start = useCallback(async () => {
     if (isRunning) return;
@@ -425,6 +432,10 @@ export default function useRhythmPracticeVM() {
       // Ensure audio context is running before scheduling sounds
       if (ctx.state === 'suspended') {
         try { await ctx.resume(); } catch {}
+      }
+
+      if (clickEnabledRef.current) {
+        scheduleClickTrack(ctx.currentTime + 0.05);
       }
 
       // Đếm ngược 1 ô nhịp trước khi bắt đầu để phách đầu luôn chuẩn
@@ -456,7 +467,7 @@ export default function useRhythmPracticeVM() {
       stop();
       throw e;
     }
-  }, [isRunning, scheduleLoop, loopDetect]);
+  }, [isRunning, scheduleLoop, scheduleClickTrack, loopDetect, bpm, timeSig]);
 
   const stop = useCallback(() => {
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
@@ -509,15 +520,22 @@ export default function useRhythmPracticeVM() {
 
   // Re-schedule click track when toggled on during a running session or when tempo/params change
   useEffect(() => {
-    if (!isRunning || !audioContextRef.current) return;
+    clickEnabledRef.current = clickEnabled;
+  }, [clickEnabled]);
+
+  useEffect(() => {
+    clickVolumeRef.current = clickVolume;
+  }, [clickVolume]);
+
+  useEffect(() => {
+    if (!isRunning || !audioContextRef.current || isCountingDown) return;
     if (clickScheduleTimerRef.current) {
       clearInterval(clickScheduleTimerRef.current);
       clickScheduleTimerRef.current = null;
     }
-    // Chỉ schedule qua effect nếu đã có barStartTime (vòng đã được tạo) và chưa có interval
-    if (clickEnabled && barStartTimeRef.current && !clickScheduleTimerRef.current) {
+    if (clickEnabled && barStartTimeRef.current) {
       const ctx = audioContextRef.current;
-      const beatDur = 60 / bpm; // dùng BPM hiện tại để chính xác
+      const beatDur = 60 / bpm;
       const barStart = barStartTimeRef.current;
       const now = ctx.currentTime;
       const beatsSinceStart = Math.max(0, (now - barStart) / beatDur);
@@ -525,7 +543,7 @@ export default function useRhythmPracticeVM() {
       const alignedStart = barStart + nextBeatIndex * beatDur + 0.02;
       scheduleClickTrack(alignedStart);
     }
-  }, [clickEnabled, bpm, timeSig, clickVolume, isRunning, scheduleClickTrack]);
+  }, [clickEnabled, bpm, timeSig, clickVolume, isRunning, isCountingDown, scheduleClickTrack]);
 
   const accuracy = attemptsCount > 0 ? Math.floor((hitsCorrect * 100) / attemptsCount) : 0;
 
