@@ -96,67 +96,95 @@ export default function CourseDetailPage() {
                   <h2 className={layout.h2}>{activeMod.title}</h2>
                   {activeMod.description && <p className={layout.muted}>{activeMod.description}</p>}
 
-                  <h3 className={layout.h2} style={{ fontSize: 16, marginTop: 16 }}>
-                    Bài học
-                  </h3>
+                  <h3 className={cs.sectionTitle}>Bài học</h3>
                   {!activeMod.lessons?.length ? (
                     <p className={layout.muted}>Chưa có bài học.</p>
                   ) : (
-                    <ul className={layout.lessonList}>
+                    <ul className={cs.lessonCards}>
                       {activeMod.lessons.map((les) => (
                         <li key={les.id}>
-                          <Link to={`/courses/${courseId}/lesson/${les.id}`} className={cs.lessonLink}>
-                            <span className={les.completed ? layout.checkDone : layout.muted}>
-                              {les.completed ? '✓ ' : '○ '}
+                          <Link
+                            to={`/courses/${courseId}/lesson/${les.id}`}
+                            className={`${cs.lessonCard} ${les.completed ? cs.lessonCardDone : ''}`}
+                          >
+                            <span
+                              className={`${cs.lessonStatus} ${les.completed ? cs.lessonStatusDone : ''}`}
+                              aria-hidden
+                            >
+                              {les.completed ? '✓' : '○'}
                             </span>
-                            {les.title}
-                            {les.duration ? (
-                              <span className={layout.muted} style={{ marginLeft: 6, fontSize: 12 }}>
-                                · {les.duration} phút
-                              </span>
-                            ) : null}
+                            <span className={cs.lessonCardBody}>
+                              <span className={cs.lessonCardTitle}>{les.title}</span>
+                              {les.duration ? (
+                                <span className={cs.lessonCardMeta}>{les.duration} phút</span>
+                              ) : null}
+                            </span>
                           </Link>
                         </li>
                       ))}
                     </ul>
                   )}
 
-                  <h3 className={layout.h2} style={{ fontSize: 16, marginTop: 20 }}>
-                    Hoàn thành module
-                  </h3>
-                  <p className={layout.checklistItem}>
-                    <span className={activeMod.practiceLogged ? layout.checkDone : layout.muted}>
-                      {activeMod.practiceLogged ? '✓' : '○'}
-                    </span>
-                    <Link to={`/courses/${courseId}/module/${activeMod.id}/practice`}>Luyện tập</Link>
-                  </p>
-                  {activeMod.checkpointQuiz && (
-                    <p className={layout.checklistItem}>
-                      <span className={activeMod.checkpointQuiz.passed ? layout.checkDone : layout.muted}>
-                        {activeMod.checkpointQuiz.passed ? '✓' : '○'}
-                      </span>
-                      <Link to={`/quiz/${activeMod.checkpointQuiz.id}`}>
-                        {activeMod.checkpointQuiz.title}
-                      </Link>
-                    </p>
-                  )}
-                  {activeMod.challengeSong && (
-                    <p className={layout.checklistItem}>
-                      <span>🎵</span>
-                      <Link to={`/courses/${courseId}/module/${activeMod.id}/challenge`}>
-                        {activeMod.challengeSong.title}
-                      </Link>
-                    </p>
-                  )}
-                  {(activeMod.readyToComplete || activeMod.completed) && (
-                    <Link
-                      to={`/courses/${courseId}/module/${activeMod.id}/complete`}
-                      className={layout.btnPrimary}
-                      style={{ marginTop: 12, display: 'inline-flex', textDecoration: 'none' }}
-                    >
-                      {activeMod.completed ? 'Xem lại module hoàn thành' : 'Hoàn thành module →'}
-                    </Link>
-                  )}
+                  <h3 className={cs.sectionTitle}>Hoàn thành module</h3>
+                  <div className={cs.completionPanel}>
+                    <ul className={cs.completionList}>
+                      <li
+                        className={`${cs.completionItem} ${activeMod.practiceLogged ? cs.completionItemDone : ''}`}
+                      >
+                        <span
+                          className={`${cs.completionCheck} ${activeMod.practiceLogged ? cs.completionCheckDone : ''}`}
+                          aria-hidden
+                        >
+                          {activeMod.practiceLogged ? '✓' : '○'}
+                        </span>
+                        <Link
+                          to={`/courses/${courseId}/module/${activeMod.id}/practice`}
+                          className={cs.completionLink}
+                        >
+                          Luyện tập
+                        </Link>
+                      </li>
+                      {activeMod.checkpointQuiz && (
+                        <li
+                          className={`${cs.completionItem} ${activeMod.checkpointQuiz.passed ? cs.completionItemDone : ''}`}
+                        >
+                          <span
+                            className={`${cs.completionCheck} ${activeMod.checkpointQuiz.passed ? cs.completionCheckDone : ''}`}
+                            aria-hidden
+                          >
+                            {activeMod.checkpointQuiz.passed ? '✓' : '○'}
+                          </span>
+                          <Link to={`/quiz/${activeMod.checkpointQuiz.id}`} className={cs.completionLink}>
+                            {activeMod.checkpointQuiz.title}
+                          </Link>
+                        </li>
+                      )}
+                      {activeMod.challengeSong && (
+                        <li className={cs.completionItem}>
+                          <span className={cs.completionCheck} aria-hidden>
+                            🎵
+                          </span>
+                          <Link
+                            to={`/courses/${courseId}/module/${activeMod.id}/challenge`}
+                            className={cs.completionLink}
+                          >
+                            {activeMod.challengeSong.title}
+                          </Link>
+                        </li>
+                      )}
+                    </ul>
+                    {(activeMod.readyToComplete || activeMod.completed) && (
+                      <div className={cs.completionCta}>
+                        <Link
+                          to={`/courses/${courseId}/module/${activeMod.id}/complete`}
+                          className={layout.btnPrimary}
+                          style={{ textDecoration: 'none' }}
+                        >
+                          {activeMod.completed ? 'Xem lại module hoàn thành' : 'Hoàn thành module →'}
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </section>
               ) : (
                 <p className={layout.muted} style={{ marginTop: 16 }}>

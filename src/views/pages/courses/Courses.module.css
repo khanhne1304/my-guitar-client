@@ -76,15 +76,250 @@
 @media (min-width: 900px) {
   .layout {
     grid-template-columns: 280px 1fr;
-    align-items: start;
+    align-items: stretch;
+  }
+
+  .sidebar {
+    align-self: stretch;
   }
 }
 
 .sidebar {
   border: 1px solid #eee6d6;
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
   background: #fffdf8;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebarTop {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebarTopBtn {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sidebarNav {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebarActions {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #eee6d6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebarActionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5dcc8;
+  background: #fff;
+  color: #2c2416;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.sidebarActionBtn:hover {
+  background: #f5efd9;
+  border-color: #c9b88a;
+}
+
+.sidebarActionBtnPrimary {
+  background: #2c2416;
+  color: #fffdf7;
+  border-color: #2c2416;
+}
+
+.sidebarActionBtnPrimary:hover {
+  background: #3d3224;
+  border-color: #3d3224;
+}
+
+.sectionTitle {
+  margin: 20px 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c2416;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2c2416, #8b6914);
+  flex-shrink: 0;
+}
+
+.lessonCards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.lessonCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e5dcc8;
+  border-radius: 12px;
+  background: #fff;
+  text-decoration: none;
+  color: #2c2416;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lessonCard:hover {
+  border-color: #c9b88a;
+  background: #fffbf0;
+  box-shadow: 0 4px 14px rgba(44, 36, 22, 0.06);
+}
+
+.lessonCardDone {
+  border-color: #b8ddb8;
+  background: #f8fdf8;
+}
+
+.lessonStatus {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  background: #f5efd9;
+  color: #7a7165;
+  border: 1px solid #e5dcc8;
+}
+
+.lessonStatusDone {
+  background: #e7f7ea;
+  color: #1e6b2f;
+  border-color: #b8ddb8;
+}
+
+.lessonCardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.lessonCardTitle {
+  display: block;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.lessonCardMeta {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #7a7165;
+}
+
+.completionPanel {
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid #e5dcc8;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffdf7 0%, #fff 100%);
+}
+
+.completionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.completionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #efe4cf;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.completionItem:hover {
+  border-color: #c9b88a;
+  background: #fffbf0;
+}
+
+.completionItemDone {
+  border-color: #b8ddb8;
+  background: #f8fdf8;
+}
+
+.completionCheck {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: #f5efd9;
+  color: #7a7165;
+  border: 1px solid #e5dcc8;
+}
+
+.completionCheckDone {
+  background: #e7f7ea;
+  color: #1e6b2f;
+  border-color: #b8ddb8;
+}
+
+.completionLink {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c2416;
+  text-decoration: none;
+}
+
+.completionLink:hover {
+  color: #8b6914;
+}
+
+.completionCta {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .lessonLink {

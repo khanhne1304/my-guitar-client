@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import layout from '../../pages/courses/LearningLayout.module.css';
 import cs from '../../pages/courses/Courses.module.css';
+
 export default function ModuleSidebar({
   courseId,
   courseTitle,
@@ -8,18 +9,22 @@ export default function ModuleSidebar({
   activeModuleId,
   onSelectModule,
 }) {
+  const activeMod = modules.find((m) => m.id === activeModuleId);
+
   return (
     <aside className={cs.sidebar}>
-      <Link to="/learn" className={layout.linkBtn}>
-        ← Bảng điều khiển
-      </Link>
-      <Link to="/courses" className={layout.linkBtn} style={{ marginTop: 8 }}>
-        Tất cả khóa học
-      </Link>
+      <div className={cs.sidebarTop}>
+        <Link to="/learn" className={`${layout.linkBtn} ${cs.sidebarTopBtn}`}>
+          ← Bảng điều khiển
+        </Link>
+        <Link to="/courses" className={`${layout.linkBtn} ${cs.sidebarTopBtn}`}>
+          Tất cả khóa học
+        </Link>
+      </div>
       <h2 className={layout.h2} style={{ marginTop: 16, fontSize: 16 }}>
         {courseTitle}
       </h2>
-      <nav style={{ marginTop: 12 }}>
+      <nav className={cs.sidebarNav}>
         {modules.map((mod) => (
           <button
             key={mod.id}
@@ -41,28 +46,25 @@ export default function ModuleSidebar({
         ))}
       </nav>
       {activeModuleId && (
-        <div style={{ marginTop: 16 }}>
+        <div className={cs.sidebarActions}>
           <Link
             to={`/courses/${courseId}/module/${activeModuleId}/practice`}
-            className={layout.linkBtn}
-            style={{ width: '100%', marginBottom: 8 }}
+            className={`${cs.sidebarActionBtn} ${cs.sidebarActionBtnPrimary}`}
           >
             Luyện tập
           </Link>
-          {modules.find((m) => m.id === activeModuleId)?.checkpointQuiz && (
+          {activeMod?.checkpointQuiz && (
             <Link
-              to={`/quiz/${modules.find((m) => m.id === activeModuleId).checkpointQuiz.id}`}
-              className={layout.linkBtn}
-              style={{ width: '100%', marginBottom: 8 }}
+              to={`/quiz/${activeMod.checkpointQuiz.id}`}
+              className={cs.sidebarActionBtn}
             >
               Kiểm tra
             </Link>
           )}
-          {modules.find((m) => m.id === activeModuleId)?.challengeSong && (
+          {activeMod?.challengeSong && (
             <Link
               to={`/courses/${courseId}/module/${activeModuleId}/challenge`}
-              className={layout.linkBtn}
-              style={{ width: '100%' }}
+              className={cs.sidebarActionBtn}
             >
               Bài thử thách
             </Link>
