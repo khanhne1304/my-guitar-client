@@ -65,6 +65,13 @@ export function clearSession() {
   removeUser();
   removeAdminViewMode();
   clearChatCache();
+  try {
+    sessionStorage.removeItem('oauth_exchange_code');
+    sessionStorage.removeItem('oauth_exchange_state');
+    sessionStorage.removeItem('oauth_pending_admin_choice');
+  } catch {
+    /* ignore */
+  }
 }
 
 // ---- ADMIN VIEW MODE ----
