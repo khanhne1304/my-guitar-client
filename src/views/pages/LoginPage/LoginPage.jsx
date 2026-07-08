@@ -8,6 +8,7 @@ import GoogleIcon from '../../components/icons/GoogleIcon';
 import { useLoginViewModel } from '../../../viewmodels/AuthViewModel/LoginViewModel';
 import { apiClient } from '../../../services/apiClient';
 import { useAuth } from '../../../context/AuthContext';
+import { getUser } from '../../../utils/storage';
 import Footer from '../../components/homeItem/Footer/Footer';
 import AdminRoleChoice from '../../components/auth/AdminRoleChoice/AdminRoleChoice';
 
@@ -57,9 +58,20 @@ export default function LoginPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (authChecked && isAuthenticated && !showRoleChoice && !hadRoleChoiceRef.current) {
-      navigate('/', { replace: true });
+    if (!authChecked || !isAuthenticated || showRoleChoice || hadRoleChoiceRef.current) {
+      return;
     }
+
+    const user = getUser();
+    if (
+      user?.role === 'admin' &&
+      sessionStorage.getItem('oauth_pending_admin_choice') === '1'
+    ) {
+      navigate('/auth/callback', { replace: true });
+      return;
+    }
+
+    navigate('/', { replace: true });
   }, [authChecked, isAuthenticated, navigate, showRoleChoice]);
   const onLoginWithFacebook = () => {
     const startUrl = apiClient.ensureAbsolute('/api/auth/facebook');

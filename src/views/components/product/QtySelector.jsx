@@ -37,8 +37,21 @@ export default function QtySelector({ qty, setQty, stock = 1 }) {
           +
         </button>
       </div>
-      <span className={styles['product-details__stock-note']}>
-        {stock > 0 ? `${stock} sản phẩm có sẵn` : 'Hết hàng'}
+      <span
+        className={`${styles['product-details__stock-note']} ${
+          stock > 0
+            ? styles['product-details__stock-note--in']
+            : styles['product-details__stock-note--out']
+        }`}
+      >
+        {stock > 0 ? (
+          <>
+            <span className={styles['product-details__stock-badge']}>{stock}</span>
+            sản phẩm có sẵn
+          </>
+        ) : (
+          'Hết hàng'
+        )}
       </span>
     </div>
   );
