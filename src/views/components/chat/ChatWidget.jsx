@@ -92,13 +92,16 @@ export default function ChatWidget() {
 	const isNearBottomRef = useRef(true);
 	const stickToBottomRef = useRef(true);
 
+	const prevOpenRef = useRef(false);
+
 	useEffect(() => {
 		openRef.current = open;
 		if (open) {
 			window.dispatchEvent(new CustomEvent(CHAT_OPENED_EVENT));
-		} else {
+		} else if (prevOpenRef.current) {
 			window.dispatchEvent(new CustomEvent(CHAT_CLOSED_EVENT));
 		}
+		prevOpenRef.current = open;
 	}, [open]);
 
 	useEffect(() => {

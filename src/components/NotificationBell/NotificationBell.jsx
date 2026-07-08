@@ -4,7 +4,7 @@ import styles from './NotificationBell.module.css';
 import { getPresenceSocket } from '../../services/presenceSocket';
 import { apiClient } from '../../services/apiClient';
 import { getToken } from '../../utils/storage';
-import { MESSAGE_REALTIME_EVENT, CHAT_OPENED_EVENT, CHAT_CLOSED_EVENT } from '../../services/messageRealtime';
+import { MESSAGE_REALTIME_EVENT, CHAT_OPENED_EVENT, CHAT_CLOSED_EVENT, startMessageRealtime } from '../../services/messageRealtime';
 import { getUnreadMessagesCountApi, getConversationsApi } from '../../services/messageService';
 
 export default function NotificationBell() {
@@ -226,7 +226,10 @@ export default function NotificationBell() {
   }, [fetchUnreadMessages]);
 
   useEffect(() => {
-    const socket = getPresenceSocket();
+    if (!getToken()) return undefined;
+
+    startMessageRealtime();
+
     const onForumEvent = () => {
       fetchUnreadCount();
       setIsOpen((open) => {
@@ -256,19 +259,39 @@ export default function NotificationBell() {
       fetchUnreadMessages();
     };
 
-    socket.on('new_reply', onForumEvent);
-    socket.on('new_like', onForumEvent);
-    socket.on('reply_to_reply', onForumEvent);
-    socket.on('admin_reminder', onForumEvent);
+    const attachForumListeners = (sock) => {
+      if (!sock) return;
+      sock.off('new_reply', onForumEvent);
+      sock.off('new_like', onForumEvent);
+      sock.off('reply_to_reply', onForumEvent);
+      sock.off('admin_reminder', onForumEvent);
+      sock.on('new_reply', onForumEvent);
+      sock.on('new_like', onForumEvent);
+      sock.on('reply_to_reply', onForumEvent);
+      sock.on('admin_reminder', onForumEvent);
+    };
+
+    const detachForumListeners = (sock) => {
+      if (!sock) return;
+      sock.off('new_reply', onForumEvent);
+      sock.off('new_like', onForumEvent);
+      sock.off('reply_to_reply', onForumEvent);
+      sock.off('admin_reminder', onForumEvent);
+    };
+
+    const onSocketConnect = () => attachForumListeners(getPresenceSocket());
+
+    attachForumListeners(getPresenceSocket());
+    const socket = getPresenceSocket();
+    socket?.on('connect', onSocketConnect);
     window.addEventListener(MESSAGE_REALTIME_EVENT, onNewMessage);
     window.addEventListener(CHAT_OPENED_EVENT, onChatOpened);
     window.addEventListener(CHAT_CLOSED_EVENT, onChatClosed);
 
     return () => {
-      socket.off('new_reply', onForumEvent);
-      socket.off('new_like', onForumEvent);
-      socket.off('reply_to_reply', onForumEvent);
-      socket.off('admin_reminder', onForumEvent);
+      const sock = getPresenceSocket();
+      detachForumListeners(sock);
+      sock?.off('connect', onSocketConnect);
       window.removeEventListener(MESSAGE_REALTIME_EVENT, onNewMessage);
       window.removeEventListener(CHAT_OPENED_EVENT, onChatOpened);
       window.removeEventListener(CHAT_CLOSED_EVENT, onChatClosed);

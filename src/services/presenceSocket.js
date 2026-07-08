@@ -24,6 +24,10 @@ function createSocket(token) {
   });
 }
 
+/**
+ * Trả về socket dùng chung (presence, forum, tin nhắn).
+ * Không hủy socket đang connecting — tránh race làm mất listener realtime.
+ */
 export function getPresenceSocket() {
   const token = getToken();
   if (!token) {
@@ -36,27 +40,26 @@ export function getPresenceSocket() {
     lastToken = null;
   }
 
-  if (socket && socket.connected) {
-    return socket;
+  if (!socket) {
+    lastToken = token;
+    socket = createSocket(token);
   }
 
-  if (socket) {
-    try { socket.disconnect(); } catch {}
-    socket = null;
-  }
-
-  lastToken = token;
-  socket = createSocket(token);
   return socket;
 }
 
+/** Buộc tạo kết nối mới (đổi token / recover sau lỗi). */
 export function reconnectPresenceSocket() {
+  const token = getToken();
   if (socket) {
     try { socket.disconnect(); } catch {}
     socket = null;
-    lastToken = null;
   }
-  return getPresenceSocket();
+  lastToken = null;
+  if (!token) return null;
+  lastToken = token;
+  socket = createSocket(token);
+  return socket;
 }
 
 export function disconnectPresenceSocket() {
