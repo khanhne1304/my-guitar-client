@@ -104,8 +104,8 @@
   }
   .chat2col {
     display: flex;
-    min-height: 360px;
     height: min(580px, calc(100vh - 200px));
+    min-height: 0;
     flex: 1 1 auto;
     overflow: hidden;
   }
@@ -122,6 +122,8 @@
     display: flex;
     flex-direction: column;
     background: #fff;
+    min-height: 0;
+    overflow: hidden;
   }
   .searchRow {
     padding: 10px 12px;
@@ -250,13 +252,55 @@
   .threadHeaderName {
     font-weight: 800;
   }
+  .messagesWrap {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
   .messagesArea {
     padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    overflow: auto;
-    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-anchor: none;
+  }
+  .messagesEnd {
+    flex-shrink: 0;
+    height: 1px;
+    width: 100%;
+    overflow-anchor: auto;
+  }
+  .scrollToBottomBtn {
+    position: absolute;
+    bottom: 14px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #111827;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .scrollToBottomBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  }
+  .scrollToBottomBtn:active {
+    transform: translateY(0);
   }
   .emptyState {
     display: flex;

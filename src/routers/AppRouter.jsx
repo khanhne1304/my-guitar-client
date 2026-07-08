@@ -18,6 +18,7 @@ import SearchPage from "../views/pages/SearchPage/SearchPage";
 import ProtectedNotificationCenter from "../views/pages/NotificationCenter/ProtectedNotificationCenter";
 import MessengerPage from "../views/pages/MessengerPage/MessengerPage";
 import NotFoundPage from "../views/pages/NotFoundPage/NotFoundPage";
+import AuthenticatedMessaging from "../components/AuthenticatedMessaging/AuthenticatedMessaging";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -47,6 +48,7 @@ export default function AppRouter() {
               <FavoritesProvider>
                 <AddressProvider>
                   <PracticeProvider>
+                    <AuthenticatedMessaging />
                     <ScrollToTop />
                     <Routes>
                       <Route element={<SocialLayout />}>

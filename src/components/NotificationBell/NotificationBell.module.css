@@ -90,6 +90,11 @@
   overflow-y: auto;
 }
 
+.notificationBody {
+  flex: 1;
+  min-width: 0;
+}
+
 .notificationContent {
   flex: 1;
   min-width: 0;
@@ -120,6 +125,10 @@
   background-color: #f0f8ff;
 }
 
+.messageNotifItem {
+  border-left: 3px solid #111827;
+}
+
 .notificationItem:last-child {
   border-bottom: none;
 }
@@ -129,11 +138,6 @@
   font-size: 16px;
   display: flex;
   gap: 2px;
-}
-
-.content {
-  flex: 1;
-  min-width: 0;
 }
 
 .title {

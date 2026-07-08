@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
 import Composer from "../../components/forum/Composer/Composer";
-import ChatWidget from "../../components/chat/ChatWidget";
 import styles from "./ProfilePage.module.css";
 import { getUserProfileApi } from "../../../services/userService";
 import { useNavigate } from "react-router-dom";
@@ -210,7 +209,6 @@ export default function ProfilePage({ embedded = false }) {
         </div>
       </main>
       {embedded ? null : <Footer />}
-      {embedded ? null : <ChatWidget />}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import Footer from "../../components/homeItem/Footer/Footer";
 import styles from "./ForumPage.module.css";
 import LeftSidebar from "../../components/forum/LeftSidebar/LeftSidebar";
 import Composer from "../../components/forum/Composer/Composer";
-import ChatWidget from "../../components/chat/ChatWidget";
 import ThreadCard from "../../components/forum/ThreadCard/ThreadCard";
 import { forumApi } from "../../../services/forumApi";
 
@@ -163,7 +162,6 @@ export default function ForumPage() {
         </div>
       </main>
       <Footer />
-      <ChatWidget />
     </div>
   );
 }
