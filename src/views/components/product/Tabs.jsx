@@ -47,12 +47,24 @@ export default function Tabs({ prod }) {
           <h3>Thông số kỹ thuật</h3>
           <table className={styles['product-details__spec']}>
             <tbody>
-              {Object.entries(prod.attributes || {}).map(([k, v]) => (
-                <tr key={k}>
-                  <td className={styles['product-details__spec-key']}>{k}</td>
-                  <td>{String(v)}</td>
-                </tr>
-              ))}
+              {Object.entries(prod.attributes || {}).map(([k, v]) => {
+                const text = String(v);
+                const isUrl = k === 'Url giới thiệu' || /^https?:\/\//i.test(text);
+                return (
+                  <tr key={k}>
+                    <td className={styles['product-details__spec-key']}>{k}</td>
+                    <td>
+                      {isUrl ? (
+                        <a href={text} target="_blank" rel="noopener noreferrer">
+                          {text}
+                        </a>
+                      ) : (
+                        text
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </section>
