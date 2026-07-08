@@ -1,4 +1,5 @@
 // src/viewmodels/ProductDetailsViewModel.js
+import { useLayoutEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../src/context/CartContext';
 import { useProductBySlug } from '../hooks/useProductBySlug';
@@ -24,6 +25,12 @@ export function useProductDetailsViewModel() {
 
   // ✅ Gọi API thật để lấy sản phẩm liên quan
   const { related, loading } = useRelatedProducts(prod?.category?.slug, prod?.slug);
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [slug]);
 
   // Chuẩn hóa hình ảnh gallery
   const galleryImages = (images?.length ? images : prod?.images || []).map((i) => ({

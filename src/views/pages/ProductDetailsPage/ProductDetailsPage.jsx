@@ -68,20 +68,6 @@ export default function ProductDetailsPage() {
       <main className={styles['product-details__main']}>
         <div className={styles['product-details__wrap']}>
 
-          {/* breadcrumb */}
-          <div className={styles['product-details__breadcrumb']}>
-            <span onClick={() => navigate('/')} role="button" tabIndex={0}>Trang chủ</span>
-            <span>›</span>
-            <span
-              onClick={() => navigate(`/category/${prod?.category?.slug}`)}
-              role="button" tabIndex={0}
-            >
-              {prod?.category?.name}
-            </span>
-            <span>›</span>
-            <strong>{prod.name}</strong>
-          </div>
-
           <div className={styles['product-details__head']}>
             <Gallery images={galleryImages} discount={discount} />
 
@@ -89,11 +75,20 @@ export default function ProductDetailsPage() {
               {/* Tiêu đề */}
               <h1 className={styles['product-details__title']}>{prod.name}</h1>
 
-              {/* Thương hiệu + SKU */}
+              {/* Thương hiệu + Model */}
               <div className={styles['product-details__sub']}>
-                <span><b>Thương hiệu:</b> {prod?.brand?.name}</span>
-                <span className={styles['product-details__sep']}>•</span>
-                <span><b>Model/SKU:</b> {prod.sku}</span>
+                {prod?.brand?.name && (
+                  <span className={styles['product-details__chip']}>
+                    <span className={styles['product-details__chip-label']}>Thương hiệu</span>
+                    <span className={styles['product-details__chip-value']}>{prod.brand.name}</span>
+                  </span>
+                )}
+                {prod?.sku && (
+                  <span className={`${styles['product-details__chip']} ${styles['product-details__chip--model']}`}>
+                    <span className={styles['product-details__chip-label']}>Model</span>
+                    <span className={styles['product-details__chip-value']}>{prod.sku}</span>
+                  </span>
+                )}
               </div>
 
               <PriceBlock priceNow={priceNow} oldPrice={oldPrice} discount={discount} />
@@ -140,7 +135,10 @@ export default function ProductDetailsPage() {
             classNameWrap={styles['product-details__related']}
             classNameTitle={styles['product-details__related-title']}
             classNameGrid={styles['product-details__related-grid']}
-            onGo={(href) => navigate(href)}
+            onGo={(href) => {
+              window.scrollTo(0, 0);
+              navigate(href);
+            }}
             items={related}
           />
 
