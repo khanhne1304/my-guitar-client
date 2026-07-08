@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ChatWidget.module.css";
 import { apiClient } from "../../../services/apiClient";
+import { getToken } from "../../../utils/storage";
+import { getPresenceSocket } from "../../../services/presenceSocket";
 import {
 	getConversationsApi,
 	getThreadMessagesApi,
 	getUnreadMessagesCountApi,
 	sendDirectMessageApi,
+	markThreadReadApi,
 } from "../../../services/messageService";
-import { getToken } from "../../../utils/storage";
 
 const LEGACY_CHAT_KEY = "gm.chat.conversations";
 
@@ -83,6 +85,11 @@ export default function ChatWidget() {
 	const listRef = useRef(null);
 	const pendingPeerRef = useRef(null);
 	const selectedUserIdRef = useRef(null);
+	const openRef = useRef(false);
+
+	useEffect(() => {
+		openRef.current = open;
+	}, [open]);
 
 	useEffect(() => {
 		selectedUserIdRef.current = selectedUserId;
@@ -192,6 +199,90 @@ export default function ChatWidget() {
 			refreshUnreadCount();
 		}
 	}, [refreshUnreadCount]);
+
+	const handleIncomingMessage = useCallback(
+		(payload) => {
+			const peer = payload?.peer;
+			const msg = payload?.message;
+			if (!peer?.id || !msg?.id) return;
+
+			const peerId = normalizeId(peer.id);
+			const incoming = mapMessage(msg);
+			const isActive =
+				openRef.current && normalizeId(selectedUserIdRef.current) === peerId;
+
+			setConversations((prev) => {
+				const idx = prev.findIndex((c) => normalizeId(c.user.id) === peerId);
+				if (idx >= 0) {
+					const c = prev[idx];
+					if ((c.messages || []).some((m) => m.id === incoming.id)) {
+						return prev;
+					}
+					let msgs = c.messages || [];
+					if (incoming.from === "me") {
+						const optIdx = msgs.findIndex(
+							(m) => String(m.id).startsWith("tmp-") && m.text === incoming.text,
+						);
+						if (optIdx >= 0) {
+							msgs = msgs.map((m, i) => (i === optIdx ? incoming : m));
+						} else {
+							msgs = [...msgs, incoming];
+						}
+					} else {
+						msgs = [...msgs, incoming];
+					}
+					const updated = {
+						...c,
+						messages: msgs,
+						lastAt: incoming.at,
+						lastPreview: incoming.text,
+						lastFromMe: incoming.from === "me",
+						unread:
+							isActive || incoming.from === "me"
+								? 0
+								: (c.unread || 0) + 1,
+					};
+					const rest = prev.filter((_, i) => i !== idx);
+					return [updated, ...rest].sort((a, b) => b.lastAt - a.lastAt);
+				}
+
+				const created = {
+					...draftConversation({
+						id: peerId,
+						name: peer.name,
+						avatar: apiClient.ensureAbsolute(peer.avatarUrl) || "",
+					}),
+					messages: [incoming],
+					lastAt: incoming.at,
+					lastPreview: incoming.text,
+					lastFromMe: incoming.from === "me",
+					unread: isActive || incoming.from === "me" ? 0 : 1,
+				};
+				return [created, ...prev].sort((a, b) => b.lastAt - a.lastAt);
+			});
+
+			if (isActive) {
+				markThreadReadApi(peerId).catch(() => {});
+				setTimeout(() => {
+					if (listRef.current) {
+						listRef.current.scrollTop = listRef.current.scrollHeight;
+					}
+				}, 0);
+			}
+
+			refreshUnreadCount();
+		},
+		[refreshUnreadCount],
+	);
+
+	useEffect(() => {
+		if (!getToken()) return undefined;
+		const socket = getPresenceSocket();
+		socket.on("message:new", handleIncomingMessage);
+		return () => {
+			socket.off("message:new", handleIncomingMessage);
+		};
+	}, [handleIncomingMessage]);
 
 	useEffect(() => {
 		if (!open) return;
