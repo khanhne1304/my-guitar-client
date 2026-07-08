@@ -58,6 +58,7 @@
   grid-template-columns: repeat(auto-fit, minmax(360px, 420px));
   gap: 24px;
   justify-content: center;
+  align-items: stretch;
 }
 
 .favoritesPage__item {

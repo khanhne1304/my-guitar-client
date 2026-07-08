@@ -48,8 +48,62 @@
   font-size: 14px;
 }
 
+.imageFieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addImageBtn {
+  padding: 4px 10px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.addImageBtn:hover {
+  background: #e5e7eb;
+}
+
+.imageRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.imageRow input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.removeImageBtn {
+  padding: 6px 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.removeImageBtn:hover {
+  background: #fecaca;
+}
+
+.imageHint {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
 .preview {
-  margin-top: 6px;
+  width: 100%;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
 }

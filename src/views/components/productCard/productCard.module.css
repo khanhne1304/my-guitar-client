@@ -1,14 +1,14 @@
 
-/* Ảnh */
+/* Ảnh — khung cố định, ảnh lấp đầy không dư viền */
 .productCard__media {
   position: relative;
-  aspect-ratio: 3 / 2;
-  background: #f3f3f3;
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  background: #fff;
   overflow: hidden;
   border-radius: 16px 16px 0 0;
 }
 
-/* Link bọc ảnh phải lấp đầy khung để ảnh không bị hụt chiều cao */
 .productCard__media a {
   display: block;
   width: 100%;
@@ -21,7 +21,6 @@
   object-fit: cover;
   object-position: center;
   display: block;
-  /* Bỏ hiệu ứng phóng to khi hover */
   transition: none;
 }
 
@@ -50,15 +49,15 @@
   box-sizing: border-box;
   font-family: var(--font-sans);
 
-  /* Thêm vào */
+  /* Thẻ đồng đều trong lưới */
+  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 320px;  /* chiều cao tối thiểu */
 }
 
-/* Để phần footer luôn đẩy xuống cuối */
+/* Footer giãn đều, nút CTA luôn sát đáy thẻ */
 .productCard__footer {
-  margin-top: auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -68,7 +67,10 @@
 }
 
 
-.productCard__info { min-width: 0; }
+.productCard__info {
+  flex: 1;
+  min-width: 0;
+}
 
 .productCard__title {
   font-weight: 800;
@@ -145,9 +147,9 @@
   white-space: nowrap;
   display: block;
   box-sizing: border-box;     /* gồm padding trong chiều rộng -> không tràn mép */
-  width: 100%;                /* nút trải hết chiều ngang, căn đều 2 mép */
+  width: 100%;
   text-align: center;
-  margin-top: 2px;
+  margin-top: auto;
   transition: transform .08s ease, filter .12s ease;
 }
 
