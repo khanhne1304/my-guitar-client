@@ -22,3 +22,7 @@ export async function getThreadMessagesApi(userId, { before, limit } = {}) {
 export async function sendDirectMessageApi(userId, text) {
   return apiClient.post(`/messages/with/${encodeURIComponent(userId)}`, { text });
 }
+
+export async function markThreadReadApi(userId) {
+  return apiClient.put(`/messages/with/${encodeURIComponent(userId)}/read`, {});
+}
