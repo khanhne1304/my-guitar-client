@@ -27,8 +27,14 @@ export default function ChangePasswordModal({ user, onClose, onSuccess }) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to change password');
+        let message = 'Không thể đổi mật khẩu';
+        try {
+          const errorData = await response.json();
+          message = errorData.message || message;
+        } catch {
+          message = `${message} (${response.status})`;
+        }
+        throw new Error(message);
       }
 
       onSuccess();

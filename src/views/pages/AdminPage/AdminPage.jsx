@@ -12,6 +12,7 @@ import CouponManager from "../../components/admin/CouponManager/CouponManager";
 import NotificationManager from "../../components/admin/NotificationManager/NotificationManager";
 import StatisticsReport from "../../components/admin/StatisticsReport/StatisticsReport";
 import ForumReportManager from "../../components/admin/ForumReportManager/ForumReportManager";
+import CourseManager from "../../components/admin/CourseManager/CourseManager";
 
 export default function AdminPage() {
   return (
@@ -22,6 +23,7 @@ export default function AdminPage() {
         <Route path="statistics" element={<StatisticsReport />} />
         <Route path="users" element={<UserManager />} />
         <Route path="products" element={<ProductManager />} />
+        <Route path="courses" element={<CourseManager />} />
         <Route path="brands" element={<BrandManager />} />
         <Route path="banners" element={<BannerManager />} />
         <Route path="reference-songs" element={<ReferenceSongManager />} />
