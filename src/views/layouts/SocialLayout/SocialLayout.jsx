@@ -1,6 +1,5 @@
 import Header from "../../components/homeItem/Header/Header";
 import Footer from "../../components/homeItem/Footer/Footer";
-import ChatWidget from "../../components/chat/ChatWidget";
 import LeftSidebar from "../../components/forum/LeftSidebar/LeftSidebar";
 import styles from "./SocialLayout.module.css";
 import { Outlet } from "react-router-dom";
@@ -22,7 +21,6 @@ export default function SocialLayout() {
         </div>
       </main>
       <Footer />
-      <ChatWidget />
     </div>
   );
 }

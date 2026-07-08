@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import styles from "./ChatWidget.module.css";
 import { apiClient } from "../../../services/apiClient";
 import { getToken } from "../../../utils/storage";
-import { getPresenceSocket } from "../../../services/presenceSocket";
+import { MESSAGE_REALTIME_EVENT, CHAT_OPENED_EVENT, CHAT_CLOSED_EVENT } from "../../../services/messageRealtime";
 import {
 	getConversationsApi,
 	getThreadMessagesApi,
@@ -12,6 +12,7 @@ import {
 } from "../../../services/messageService";
 
 const LEGACY_CHAT_KEY = "gm.chat.conversations";
+const SCROLL_NEAR_BOTTOM_PX = 80;
 
 function normalizeId(id) {
 	if (id == null) return "";
@@ -80,19 +81,73 @@ export default function ChatWidget() {
 	/** Người đang mở chat (giữ khi API chưa có cuộc trò chuyện) */
 	const [activePeer, setActivePeer] = useState(null);
 	const [unreadTotal, setUnreadTotal] = useState(0);
+	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
 	const inputRef = useRef(null);
 	const listRef = useRef(null);
+	const messagesEndRef = useRef(null);
 	const pendingPeerRef = useRef(null);
 	const selectedUserIdRef = useRef(null);
 	const openRef = useRef(false);
+	const isNearBottomRef = useRef(true);
+	const stickToBottomRef = useRef(true);
 
 	useEffect(() => {
 		openRef.current = open;
+		if (open) {
+			window.dispatchEvent(new CustomEvent(CHAT_OPENED_EVENT));
+		} else {
+			window.dispatchEvent(new CustomEvent(CHAT_CLOSED_EVENT));
+		}
 	}, [open]);
 
 	useEffect(() => {
 		selectedUserIdRef.current = selectedUserId;
+	}, [selectedUserId]);
+
+	const checkNearBottom = useCallback(() => {
+		const el = listRef.current;
+		if (!el) return true;
+		if (el.scrollHeight <= el.clientHeight + 1) return true;
+		const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+		return distance <= SCROLL_NEAR_BOTTOM_PX;
+	}, []);
+
+	const scrollToBottom = useCallback((behavior = "auto") => {
+		const el = listRef.current;
+		const end = messagesEndRef.current;
+		stickToBottomRef.current = true;
+		isNearBottomRef.current = true;
+		setShowScrollToBottom(false);
+
+		const run = () => {
+			if (end) {
+				end.scrollIntoView({ block: "end", behavior });
+			}
+			if (el) {
+				el.scrollTop = el.scrollHeight;
+			}
+		};
+
+		if (behavior === "smooth") {
+			requestAnimationFrame(run);
+		} else {
+			run();
+			requestAnimationFrame(run);
+		}
+	}, []);
+
+	const updateScrollState = useCallback(() => {
+		const near = checkNearBottom();
+		isNearBottomRef.current = near;
+		stickToBottomRef.current = near;
+		setShowScrollToBottom(!near);
+	}, [checkNearBottom]);
+
+	useEffect(() => {
+		isNearBottomRef.current = true;
+		stickToBottomRef.current = true;
+		setShowScrollToBottom(false);
 	}, [selectedUserId]);
 
 	useEffect(() => {
@@ -183,9 +238,7 @@ export default function ChatWidget() {
 					normalizeId(c.user.id) === uid ? { ...c, messages: msgs, unread: 0 } : c
 				)
 			);
-			setTimeout(() => {
-				if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
-			}, 0);
+			stickToBottomRef.current = true;
 		} catch (e) {
 			if (e.status === 403) {
 				setThreadError("Chỉ có thể nhắn tin với bạn bè.");
@@ -210,6 +263,7 @@ export default function ChatWidget() {
 			const incoming = mapMessage(msg);
 			const isActive =
 				openRef.current && normalizeId(selectedUserIdRef.current) === peerId;
+			const wasNearBottom = isActive && (stickToBottomRef.current || checkNearBottom());
 
 			setConversations((prev) => {
 				const idx = prev.findIndex((c) => normalizeId(c.user.id) === peerId);
@@ -263,24 +317,25 @@ export default function ChatWidget() {
 
 			if (isActive) {
 				markThreadReadApi(peerId).catch(() => {});
-				setTimeout(() => {
-					if (listRef.current) {
-						listRef.current.scrollTop = listRef.current.scrollHeight;
-					}
-				}, 0);
+				if (wasNearBottom) {
+					stickToBottomRef.current = true;
+				} else {
+					stickToBottomRef.current = false;
+					setShowScrollToBottom(true);
+				}
 			}
 
 			refreshUnreadCount();
 		},
-		[refreshUnreadCount],
+		[refreshUnreadCount, checkNearBottom],
 	);
 
 	useEffect(() => {
 		if (!getToken()) return undefined;
-		const socket = getPresenceSocket();
-		socket.on("message:new", handleIncomingMessage);
+		const onRealtimeMessage = (e) => handleIncomingMessage(e.detail);
+		window.addEventListener(MESSAGE_REALTIME_EVENT, onRealtimeMessage);
 		return () => {
-			socket.off("message:new", handleIncomingMessage);
+			window.removeEventListener(MESSAGE_REALTIME_EVENT, onRealtimeMessage);
 		};
 	}, [handleIncomingMessage]);
 
@@ -358,6 +413,14 @@ export default function ChatWidget() {
 		return null;
 	}, [conversations, selectedUserId, activePeer]);
 
+	const activeLastMessageId = selectedConversation?.messages?.at(-1)?.id ?? null;
+
+	useLayoutEffect(() => {
+		if (!open || !selectedUserId || !activeLastMessageId) return;
+		if (!stickToBottomRef.current) return;
+		scrollToBottom("auto");
+	}, [open, selectedUserId, activeLastMessageId, scrollToBottom]);
+
 	const filteredConversations = useMemo(() => {
 		const q = search.trim().toLowerCase();
 		const sorted = conversations.slice().sort((a, b) => b.lastAt - a.lastAt);
@@ -380,11 +443,11 @@ export default function ChatWidget() {
 		setConversations((prev) =>
 			prev.map((c) => (normalizeId(c.user.id) === uid ? { ...c, unread: 0 } : c))
 		);
-		if (conv?.messages == null || (conv?.unread > 0)) loadThread(uid);
-		else {
-			setTimeout(() => {
-				if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
-			}, 0);
+		if (conv?.messages == null || (conv?.unread > 0)) {
+			stickToBottomRef.current = true;
+			loadThread(uid);
+		} else {
+			stickToBottomRef.current = true;
 		}
 	}
 
@@ -406,6 +469,7 @@ export default function ChatWidget() {
 			at: when,
 		};
 		const peerIdNorm = normalizeId(peerId);
+		stickToBottomRef.current = true;
 		setConversations((prev) =>
 			prev.map((c) => {
 				if (normalizeId(c.user.id) !== peerIdNorm) return c;
@@ -420,9 +484,6 @@ export default function ChatWidget() {
 			})
 		);
 		setDraft("");
-		setTimeout(() => {
-			listRef.current?.scrollTo?.({ top: listRef.current.scrollHeight, behavior: "smooth" });
-		}, 0);
 		try {
 			const res = await sendDirectMessageApi(peerId, text);
 			const saved = mapMessage(res?.message || res);
@@ -587,30 +648,62 @@ export default function ChatWidget() {
 											</div>
 										</div>
 										{threadError && <div className={styles.chatError}>{threadError}</div>}
-										<div className={styles.messagesArea} ref={listRef}>
-											{loadingThread && !(selectedConversation.messages || []).length ? (
-												<div className={styles.chatHint}>Đang tải tin nhắn...</div>
-											) : (
-												(selectedConversation.messages || []).map((m) => {
-													const mine = m.from === "me";
-													return (
-														<div key={m.id} className={mine ? styles.msgRowMe : styles.msgRowThem}>
-															{!mine &&
-																(selectedConversation.user.avatar ? (
-																	<img className={styles.msgAvatar} src={selectedConversation.user.avatar} alt="" />
-																) : (
-																	<div className={styles.msgAvatarFallback} aria-hidden="true">
-																		{initialsFromName(selectedConversation.user.name)}
-																	</div>
-																))}
-															<div className={styles.msgBubble}>
-																<div className={styles.msgText}>{m.text}</div>
-																<div className={styles.msgTime}>{formatTime(m.at)}</div>
+										<div className={styles.messagesWrap}>
+											<div
+												className={styles.messagesArea}
+												ref={listRef}
+												onScroll={updateScrollState}
+											>
+												{loadingThread && !(selectedConversation.messages || []).length ? (
+													<div className={styles.chatHint}>Đang tải tin nhắn...</div>
+												) : (
+													(selectedConversation.messages || []).map((m) => {
+														const mine = m.from === "me";
+														return (
+															<div key={m.id} className={mine ? styles.msgRowMe : styles.msgRowThem}>
+																{!mine &&
+																	(selectedConversation.user.avatar ? (
+																		<img className={styles.msgAvatar} src={selectedConversation.user.avatar} alt="" />
+																	) : (
+																		<div className={styles.msgAvatarFallback} aria-hidden="true">
+																			{initialsFromName(selectedConversation.user.name)}
+																		</div>
+																	))}
+																<div className={styles.msgBubble}>
+																	<div className={styles.msgText}>{m.text}</div>
+																	<div className={styles.msgTime}>{formatTime(m.at)}</div>
+																</div>
 															</div>
-														</div>
-													);
-												})
-											)}
+														);
+													})
+												)}
+												<div ref={messagesEndRef} className={styles.messagesEnd} aria-hidden="true" />
+											</div>
+											{showScrollToBottom ? (
+												<button
+													type="button"
+													className={styles.scrollToBottomBtn}
+													onClick={() => scrollToBottom("smooth")}
+													aria-label="Cuộn xuống tin nhắn mới nhất"
+													title="Tin nhắn mới"
+												>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														width="18"
+														height="18"
+														viewBox="0 0 24 24"
+														fill="none"
+														stroke="currentColor"
+														strokeWidth="2.5"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														aria-hidden="true"
+													>
+														<path d="M12 5v14" />
+														<path d="m19 12-7 7-7-7" />
+													</svg>
+												</button>
+											) : null}
 										</div>
 										<div className={styles.inputRow}>
 											<input
