@@ -1,4 +1,4 @@
-import { getPresenceSocket, reconnectPresenceSocket } from './presenceSocket';
+import { getPresenceSocket } from './presenceSocket';
 import { getToken } from '../utils/storage';
 
 export const MESSAGE_REALTIME_EVENT = 'gm:message:new';
@@ -6,53 +6,52 @@ export const CHAT_OPENED_EVENT = 'gm:chat:opened';
 export const CHAT_CLOSED_EVENT = 'gm:chat:closed';
 
 let started = false;
-let socketHandler = null;
-let connectHandler = null;
+let attachedSocket = null;
 
 function dispatchMessage(payload) {
 	window.dispatchEvent(new CustomEvent(MESSAGE_REALTIME_EVENT, { detail: payload }));
 }
 
-function attachSocketListeners(socket) {
-	if (!socket) return;
-	if (socketHandler) {
-		socket.off('message:new', socketHandler);
-	}
-	socketHandler = (payload) => dispatchMessage(payload);
-	socket.on('message:new', socketHandler);
+function onMessageNew(payload) {
+	dispatchMessage(payload);
+}
 
-	if (connectHandler) {
-		socket.off('connect', connectHandler);
+function onSocketConnect() {
+	if (!started) return;
+	attachSocketListeners();
+}
+
+function detachFromSocket(sock) {
+	if (!sock) return;
+	sock.off('message:new', onMessageNew);
+	sock.off('connect', onSocketConnect);
+}
+
+function attachSocketListeners() {
+	const socket = getPresenceSocket();
+	if (!socket) return;
+
+	if (attachedSocket && attachedSocket !== socket) {
+		detachFromSocket(attachedSocket);
 	}
-	connectHandler = () => {
-		if (socketHandler) {
-			socket.off('message:new', socketHandler);
-			socket.on('message:new', socketHandler);
-		}
-	};
-	socket.on('connect', connectHandler);
+
+	attachedSocket = socket;
+	socket.off('message:new', onMessageNew);
+	socket.on('message:new', onMessageNew);
+	socket.off('connect', onSocketConnect);
+	socket.on('connect', onSocketConnect);
 }
 
 export function startMessageRealtime() {
 	if (!getToken()) return;
-	if (started) {
-		attachSocketListeners(getPresenceSocket());
-		return;
-	}
 	started = true;
-	const socket = reconnectPresenceSocket();
-	attachSocketListeners(socket);
+	attachSocketListeners();
 }
 
 export function stopMessageRealtime() {
 	started = false;
-	const socket = getPresenceSocket();
-	if (socket && socketHandler) {
-		socket.off('message:new', socketHandler);
+	if (attachedSocket) {
+		detachFromSocket(attachedSocket);
+		attachedSocket = null;
 	}
-	if (socket && connectHandler) {
-		socket.off('connect', connectHandler);
-	}
-	socketHandler = null;
-	connectHandler = null;
 }
