@@ -11,6 +11,9 @@ export const chatService = {
 			sessionId,
 		});
 	},
+	async clearSession(sessionId) {
+		return apiClient.post('/chat/clear', { sessionId });
+	},
 	async reindex() {
 		// admin-protected endpoint
 		return apiClient.post('/chat/reindex', {});
