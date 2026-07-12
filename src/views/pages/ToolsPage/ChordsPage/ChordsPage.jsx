@@ -3,7 +3,7 @@ import Header from "../../../components/homeItem/Header/Header";
 import Footer from "../../../components/homeItem/Footer/Footer";
 import { Link } from "react-router-dom";
 
-import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
+import GuitarChordSVG from "../../../../components/chords/GuitarChordSVG";
 import SpeakerIcon from "../../../../components/SpeakerIcon";
 import chordAudioPlayer from "../../../../utils/chordAudio";
 

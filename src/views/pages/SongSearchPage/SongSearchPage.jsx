@@ -6,7 +6,7 @@ import Footer from '../../components/homeItem/Footer/Footer';
 import { searchHopamSongs, fetchHopamSong } from '../../../services/hopamApi';
 import { addPracticeSong, loadPracticeSongs } from '../../../utils/aiPracticeSongsStorage';
 import { transposeSongData } from '../../../utils/transposeChord';
-import ChordTooltip from '../../components/song/songDetails/ChordTooltip';
+import ChordTooltip from '../../components/songSearch/ChordTooltip';
 import SongAudioComparePanel from '../../components/songSearch/SongAudioComparePanel';
 import styles from './SongSearchPage.module.css';
 

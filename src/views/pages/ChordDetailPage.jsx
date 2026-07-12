@@ -6,7 +6,7 @@ import { toneChords } from '../../data/toneChords';
 import { createFingerMapping } from '../../utils/fingerMapping';
 import VirtualGuitarNeck from '../../components/VirtualGuitarNeck';
 import VirtualHand from '../../components/VirtualHand';
-import GuitarChordSVG from '../../assets/SVG/guiarChord/GuitarChordSVG';
+import GuitarChordSVG from '../../components/chords/GuitarChordSVG';
 import Header from '../components/homeItem/Header/Header';
 import Footer from '../components/homeItem/Footer/Footer';
 import styles from './ChordDetailPage.module.css';

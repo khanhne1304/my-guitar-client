@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import styles from "../../../pages/songDetails/SongDetails.module.css";
-import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
+import styles from "./ChordTooltip.module.css";
+import GuitarChordSVG from "../../../components/chords/GuitarChordSVG";
 
 export default function ChordTooltip({
   chordText,
   children,
   forceVisible = false,
-  trigger = 'hover',
+  trigger = "hover",
 }) {
   const [hoverVisible, setHoverVisible] = useState(false);
   const [clickVisible, setClickVisible] = useState(false);
@@ -26,15 +26,12 @@ export default function ChordTooltip({
     const tooltipWidth = 180;
     const tooltipHeight = 190;
     const gap = 10;
-
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-
     const spaceAbove = rect.top;
     const spaceBelow = vh - rect.bottom;
     const placeAbove = spaceAbove > spaceBelow;
     const top = placeAbove ? rect.top - tooltipHeight - gap : rect.bottom + gap;
-
     let left = rect.left + rect.width / 2;
     let align = "center";
     if (left - tooltipWidth / 2 < 8) {
@@ -44,18 +41,15 @@ export default function ChordTooltip({
       left = rect.right - 4;
       align = "right";
     }
-
     setCoords({ top, left, placeAbove, align });
   }
 
-  const isClickMode = trigger === 'click';
-  const popupVisible =
-    forceVisible || (isClickMode ? clickVisible : hoverVisible);
+  const isClickMode = trigger === "click";
+  const popupVisible = forceVisible || (isClickMode ? clickVisible : hoverVisible);
 
   function handleEnter(e) {
     if (isClickMode) return;
-    const el = ref.current || e.currentTarget;
-    computeAndSetCoords(el);
+    computeAndSetCoords(ref.current || e.currentTarget);
     setHoverVisible(true);
   }
 
@@ -67,20 +61,17 @@ export default function ChordTooltip({
   function handleClick(e) {
     if (!isClickMode || forceVisible) return;
     e.stopPropagation();
-    const el = ref.current || e.currentTarget;
-    computeAndSetCoords(el);
+    computeAndSetCoords(ref.current || e.currentTarget);
     setClickVisible((v) => !v);
   }
 
   useEffect(() => {
     if (!isClickMode || !clickVisible || forceVisible) return undefined;
     const onDocClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        setClickVisible(false);
-      }
+      if (ref.current && !ref.current.contains(e.target)) setClickVisible(false);
     };
-    document.addEventListener('click', onDocClick);
-    return () => document.removeEventListener('click', onDocClick);
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
   }, [isClickMode, clickVisible, forceVisible]);
 
   useEffect(() => {
@@ -88,15 +79,15 @@ export default function ChordTooltip({
     const onResize = () => {
       if (popupVisible) computeAndSetCoords(ref.current);
     };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, [forceVisible, popupVisible]);
 
   return (
     <>
       <span
         ref={ref}
-        role={isClickMode ? 'button' : undefined}
+        role={isClickMode ? "button" : undefined}
         tabIndex={isClickMode ? 0 : undefined}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
@@ -104,31 +95,29 @@ export default function ChordTooltip({
         onKeyDown={
           isClickMode
             ? (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
                   handleClick(e);
                 }
               }
             : undefined
         }
-        className={`${styles['song-details__chord']} ${
-          isClickMode ? styles['song-details__chord--clickable'] : ''
-        }`}
+        className={`${styles.chord} ${isClickMode ? styles.chordClickable : ""}`}
       >
         {children}
       </span>
-      {popupVisible && (
-        forceVisible ? (
-          <div className={`${styles.chordTooltip} ${styles.chordTooltipDocked}`}
-            style={{ position: "fixed", right: 20, bottom: 20, width: 180, zIndex: 9999 }}>
+      {popupVisible &&
+        (forceVisible ? (
+          <div
+            className={`${styles.chordTooltip} ${styles.chordTooltipDocked}`}
+            style={{ position: "fixed", right: 20, bottom: 20, width: 180, zIndex: 9999 }}
+          >
             <div className={styles.chordTooltipTitle}>{chord}</div>
             <GuitarChordSVG chord={chord} width={160} showTitle={false} />
           </div>
         ) : (
           <div
-            className={`${styles.chordTooltip} ${
-              coords.placeAbove ? styles.above : styles.below
-            }`}
+            className={`${styles.chordTooltip} ${coords.placeAbove ? styles.above : styles.below}`}
             style={{
               position: "fixed",
               top: coords.top,
@@ -146,8 +135,7 @@ export default function ChordTooltip({
             <div className={styles.chordTooltipTitle}>{chord}</div>
             <GuitarChordSVG chord={chord} width={160} showTitle={false} />
           </div>
-        )
-      )}
+        ))}
     </>
   );
 }
