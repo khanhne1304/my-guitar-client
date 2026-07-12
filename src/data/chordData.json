@@ -286,5 +286,135 @@
     "details": "x46454/x13121\nx53535/x21314\n9.11.9.9.9.9/131111\nx46457/x13124\n9.11.9.9.12.9/131141\n9.11.9.9.12.12/131144\n9.11.11.9.12.9/123141\n9.11.11.9.12.12/123144\nx4245x/x2134x\n9.11.9.9.9.12/131114\nx.x.x.6.5.7/xxx213\n9799xx/2134xx\n9796xx/3241xx\nx.x.11.13.12.12/xx1423\nx.16.18.16.17.16/x13121\nx.16.14.16.14.16/x21314\nx.16.18.16.17.19/x13124\nx.16.14.16.17.x/x2134x\n21.19.21.21.x.x/2134xx\n21.19.21.18.x.x/3241xx\nx.x.x.18.17.19/xxx213",
     "note": "C#.E.G#.B",
     "tone": "1.b3.5.b7"
+  },
+  "Eb": {
+    "alias": "Eb",
+    "details": "xx1343/xx1344",
+    "source": "legacy"
+  },
+  "Fmaj7": {
+    "alias": "Fmaj7",
+    "details": "033210/034210",
+    "source": "legacy"
+  },
+  "Gb": {
+    "alias": "Gb",
+    "details": "244322/244434",
+    "source": "legacy"
+  },
+  "Bb": {
+    "alias": "Bb",
+    "details": "x13331/x13442",
+    "source": "legacy"
+  },
+  "Db": {
+    "alias": "Db",
+    "details": "x46664/x44444",
+    "source": "legacy"
+  },
+  "Ebm": {
+    "alias": "Ebm",
+    "details": "x68876/x44444",
+    "source": "legacy"
+  },
+  "Adim": {
+    "alias": "Adim",
+    "details": "x0121x/x0132x",
+    "source": "legacy"
+  },
+  "Ddim": {
+    "alias": "Ddim",
+    "details": "xx0101/xx0102",
+    "source": "legacy"
+  },
+  "Ab": {
+    "alias": "Ab",
+    "details": "466544/444444",
+    "source": "legacy"
+  },
+  "Bbm": {
+    "alias": "Bbm",
+    "details": "x13321/x14432",
+    "source": "legacy"
+  },
+  "Gdim": {
+    "alias": "Gdim",
+    "details": "xx0101/xx0102",
+    "source": "legacy"
+  },
+  "Cdim": {
+    "alias": "Cdim",
+    "details": "x34242/x44243",
+    "source": "legacy"
+  },
+  "Abm": {
+    "alias": "Abm",
+    "details": "466444/444444",
+    "source": "legacy"
+  },
+  "Cb": {
+    "alias": "Cb",
+    "details": "x24442/x24443",
+    "source": "legacy"
+  },
+  "Fdim": {
+    "alias": "Fdim",
+    "details": "xx3434/xx3444",
+    "source": "legacy"
+  },
+  "Dbm": {
+    "alias": "Dbm",
+    "details": "x46654/x44444",
+    "source": "legacy"
+  },
+  "Bbdim": {
+    "alias": "Bbdim",
+    "details": "xx0101/xx0102",
+    "source": "legacy"
+  },
+  "Fb": {
+    "alias": "Fb",
+    "details": "022100/023100",
+    "source": "legacy"
+  },
+  "Edim": {
+    "alias": "Edim",
+    "details": "xx2323/xx2434",
+    "source": "legacy"
+  },
+  "A#dim": {
+    "alias": "A#dim",
+    "details": "x12320/x12430",
+    "source": "legacy"
+  },
+  "Bdim": {
+    "alias": "Bdim",
+    "details": "x20401/x20401",
+    "source": "legacy"
+  },
+  "C#dim": {
+    "alias": "C#dim",
+    "details": "x42020/x42030",
+    "source": "legacy"
+  },
+  "D#dim": {
+    "alias": "D#dim",
+    "details": "x67870/x44440",
+    "source": "legacy"
+  },
+  "E#dim": {
+    "alias": "E#dim",
+    "details": "xx1021/xx1032",
+    "source": "legacy"
+  },
+  "F#dim": {
+    "alias": "F#dim",
+    "details": "xx4212/xx4213",
+    "source": "legacy"
+  },
+  "G#dim": {
+    "alias": "G#dim",
+    "details": "xx6434/xx4434",
+    "source": "legacy"
   }
 }

@@ -1,5 +1,7 @@
-import hopamChordsData from '../data/hopamChordsData.json';
+import chordLibrary from '../data/chordData.json';
 import { transposeChord } from './transposeChord';
+
+export { chordLibrary };
 
 const NUM_STRINGS = 6;
 const DISPLAY_FRETS = 4;
@@ -84,7 +86,7 @@ export function getHopamChordEntry(chordName, chordsDataMap, transpose = 0) {
   const lookupKeys = buildLookupKeys(chordName, transpose);
   if (!lookupKeys.length) return null;
 
-  const sources = [chordsDataMap, hopamChordsData].filter(Boolean);
+  const sources = [chordsDataMap, chordLibrary].filter(Boolean);
   for (const source of sources) {
     for (const key of lookupKeys) {
       if (source[key]) return { name: key, ...source[key] };
@@ -156,3 +158,39 @@ export function hopamVoicingToShape(voicing) {
 
   return { frets, barre, fingers: voicing.fingers };
 }
+
+export function getChordShape(chordName, chordsDataMap, transpose = 0) {
+  const voicings = getHopamVoicings(chordName, chordsDataMap, transpose);
+  return hopamVoicingToShape(voicings[0]);
+}
+
+function extendSeventhAndSlash(dict) {
+  const bases = Object.keys(dict);
+  const result = { ...dict };
+  const sevens = ['7', 'maj7', 'm7', 'dim7', 'mMaj7'];
+
+  bases.forEach((b) => {
+    bases.forEach((bass) => {
+      const slash = `${b}/${bass}`;
+      if (!result[slash]) result[slash] = dict[b];
+    });
+    sevens.forEach((suf) => {
+      const name = `${b}${suf}`;
+      if (!result[name]) result[name] = dict[b];
+    });
+  });
+  return result;
+}
+
+function buildGuitarChordsFromLibrary() {
+  const base = {};
+  Object.keys(chordLibrary).forEach((name) => {
+    const shape = getChordShape(name);
+    if (shape) {
+      base[name] = { frets: shape.frets, barre: shape.barre };
+    }
+  });
+  return base;
+}
+
+export const extendedGuitarChords = extendSeventhAndSlash(buildGuitarChordsFromLibrary());

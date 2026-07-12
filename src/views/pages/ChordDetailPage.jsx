@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { toneChords } from '../../data/toneChords';
 import { getHopamVoicings, hopamVoicingToShape } from '../../utils/hopamChordParser';
-import hopamChordsData from '../../data/hopamChordsData.json';
+import { chordLibrary } from '../../data/chordData';
 import VirtualGuitarNeck from '../../components/VirtualGuitarNeck';
 import VirtualHand from '../../components/VirtualHand';
 import GuitarChordSVG from '../../components/chords/GuitarChordSVG';
@@ -55,7 +55,7 @@ const ChordDetailPage = () => {
     if (!foundTone) {
       const currentToneChar = chordName.charAt(0);
       foundTone = `Tone ${currentToneChar}`;
-      sameToneChords = Object.keys(hopamChordsData).filter(
+      sameToneChords = Object.keys(chordLibrary).filter(
         (name) => name.charAt(0) === currentToneChar,
       );
     }
