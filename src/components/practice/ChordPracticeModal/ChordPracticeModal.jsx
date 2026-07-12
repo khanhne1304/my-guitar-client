@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./ChordPracticeModal.module.css";
-import { extendedGuitarChords } from "../../../data/allChord";
+import { extendedGuitarChords } from "../../../data/chordData";
 import { createFingerMapping } from "../../../utils/fingerMapping";
 
 export default function ChordPracticeModal({ 
@@ -17,7 +17,7 @@ export default function ChordPracticeModal({
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [fretOffset, setFretOffset] = useState(0); // Offset để chuyển ngăn
 
-  // Lấy dữ liệu hợp âm từ allChord.js
+  // Lấy dữ liệu hợp âm từ chordData
   const chordShape = extendedGuitarChords[chordName];
   
   // Tạo mapping ngón tay từ fingerMapping.js

@@ -3,7 +3,7 @@ import Header from "../../../components/homeItem/Header/Header";
 import Footer from "../../../components/homeItem/Footer/Footer";
 import { Link } from "react-router-dom";
 
-import GuitarChordSVG from "../../../../assets/SVG/guiarChord/GuitarChordSVG";
+import GuitarChordSVG from "../../../../components/chords/GuitarChordSVG";
 import SpeakerIcon from "../../../../components/SpeakerIcon";
 import chordAudioPlayer from "../../../../utils/chordAudio";
 
@@ -83,7 +83,7 @@ export default function ChordsPage() {
                   className={styles.chords__link}
                 >
                   <div className={styles.chords__item}>
-                    <GuitarChordSVG chord={chord} />
+                    <GuitarChordSVG chord={chord} showVoicingNav />
                     <div className={styles.chords__name}>{chord}</div>
                     <div className={styles.chords__detailHint}>
                       👆 Xem chi tiết ngón tay
