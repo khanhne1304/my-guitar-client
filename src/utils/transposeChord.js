@@ -25,11 +25,19 @@ export function transposeSongData(song, semitones) {
 
   const mapChord = (ch) => transposeChord(ch, semitones);
 
+  const chordsData = {};
+  if (song.chordsData) {
+    for (const [name, entry] of Object.entries(song.chordsData)) {
+      chordsData[mapChord(name)] = entry;
+    }
+  }
+
   return {
     ...song,
     key: song.key ? mapChord(song.key) : song.key,
     chords: (song.chords || []).map(mapChord),
     progression: (song.progression || []).map(mapChord),
+    chordsData,
     lines: (song.lines || []).map((line) => {
       if (line.kind !== 'line') return line;
       const segments = (line.segments || []).map((seg) =>

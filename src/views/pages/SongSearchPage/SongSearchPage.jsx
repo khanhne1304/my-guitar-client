@@ -6,7 +6,7 @@ import Footer from '../../components/homeItem/Footer/Footer';
 import { searchHopamSongs, fetchHopamSong } from '../../../services/hopamApi';
 import { addPracticeSong, loadPracticeSongs } from '../../../utils/aiPracticeSongsStorage';
 import { transposeSongData } from '../../../utils/transposeChord';
-import ChordTooltip from '../../components/song/songDetails/ChordTooltip';
+import ChordTooltip from '../../components/songSearch/ChordTooltip';
 import SongAudioComparePanel from '../../components/songSearch/SongAudioComparePanel';
 import styles from './SongSearchPage.module.css';
 
@@ -31,9 +31,9 @@ function SearchSkeleton() {
   );
 }
 
-function ChordChip({ chord }) {
+function ChordChip({ chord, chordsDataMap }) {
   return (
-    <ChordTooltip chordText={`[${chord}]`} trigger="click">
+    <ChordTooltip chordText={`[${chord}]`} trigger="click" chordsDataMap={chordsDataMap}>
       <span className={styles.chordInline}>[{chord}]</span>
     </ChordTooltip>
   );
@@ -58,7 +58,7 @@ function ChordLyricViewer({ song }) {
             <div className={styles.lyricLine}>
               {(line.segments || []).map((seg, i) =>
                 seg.type === 'chord' ? (
-                  <ChordChip key={i} chord={seg.text} />
+                  <ChordChip key={i} chord={seg.text} chordsDataMap={song.chordsData} />
                 ) : (
                   <span key={i}>{seg.text}</span>
                 ),

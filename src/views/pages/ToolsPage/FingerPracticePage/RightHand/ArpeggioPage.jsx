@@ -6,7 +6,7 @@ import styles from "../../ChordPracticePage/ChordPracticeDetailPage.module.css";
 import VirtualGuitarNeck from "../../../../../components/VirtualGuitarNeck";
 import VirtualHand from "../../../../../components/VirtualHand";
 import { toneChords } from "../../../../../data/toneChords";
-import { extendedGuitarChords } from "../../../../../data/allChord";
+import { extendedGuitarChords } from "../../../../../data/chordData";
 
 export default function ArpeggioPage() {
   const navigate = useNavigate();

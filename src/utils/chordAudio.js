@@ -131,7 +131,7 @@ class ChordAudioPlayer {
   async playChordByName(chordName) {
     try {
       // Import chord data
-      const { extendedGuitarChords } = await import('../data/allChord');
+      const { extendedGuitarChords } = await import('../data/chordData');
       
       if (!extendedGuitarChords[chordName]) {
         throw new Error(`Không tìm thấy hợp âm: ${chordName}`);

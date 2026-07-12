@@ -1,0 +1,50 @@
+.chord {
+  color: #0066cc;
+  font-weight: 700;
+  margin: 0 2px;
+  background-color: #fffbe8;
+  position: relative;
+  cursor: pointer;
+}
+
+.chordClickable {
+  cursor: pointer;
+}
+
+.chordClickable:focus-visible {
+  outline: 2px solid #e85d04;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.chordTooltip {
+  position: absolute;
+  z-index: 1000;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 10px 12px 12px;
+  width: 180px;
+  min-height: 190px;
+  height: auto;
+}
+
+.chordTooltipDocked {
+  height: auto;
+}
+
+.chordTooltipTitle {
+  font-weight: 800;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.above {
+  bottom: calc(100% + var(--gap, 8px));
+}
+
+.below {
+  top: calc(100% + var(--gap, 8px));
+}
