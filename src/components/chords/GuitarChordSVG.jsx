@@ -1,142 +1,192 @@
-import { extendedGuitarChords } from "../../data/allChord";
-import { createFingerMapping } from "../../utils/fingerMapping";
+import { useMemo, useState } from 'react';
+import {
+  getHopamVoicings,
+  getHopamBaseFret,
+} from '../../utils/hopamChordParser';
+import styles from './GuitarChordSVG.module.css';
+
+const NUM_STRINGS = 6;
+const NUM_FRETS = 4;
+const PAD_L = 18;
+const PAD_R = 34;
+const PAD_T = 22;
+const STRING_GAP = 22;
+const FRET_GAP = 26;
+
+function xForString(stringNumber) {
+  return PAD_L + (NUM_STRINGS - stringNumber) * STRING_GAP;
+}
 
 export default function GuitarChordSVG({
   chord,
   width = 140,
-  accentColor = "#111",
+  accentColor = '#111',
   showTitle = false,
+  chordsDataMap = null,
+  transpose = 0,
+  showVoicingNav = false,
+  voicingIndex: controlledIndex,
+  onVoicingChange,
 }) {
-  const baseChord = (chord || "").split("/")[0];
-  const shape = extendedGuitarChords[baseChord] || extendedGuitarChords[chord];
-  if (!shape) {
-    return <div style={{ width, textAlign: "center" }}>Chưa hỗ trợ {chord}</div>;
+  const voicings = useMemo(
+    () => getHopamVoicings(chord, chordsDataMap, transpose),
+    [chord, chordsDataMap, transpose],
+  );
+
+  const [internalIndex, setInternalIndex] = useState(0);
+  const voicingIndex = controlledIndex ?? internalIndex;
+  const voicing = voicings[voicingIndex] || null;
+
+  const contentWidth = (NUM_STRINGS - 1) * STRING_GAP;
+  const svgWidth = Math.max(width, PAD_L + contentWidth + PAD_R);
+  const svgHeight = PAD_T + FRET_GAP * (NUM_FRETS + 1) + (showTitle ? 20 : 0);
+
+  function setVoicingIndex(next) {
+    if (!voicings.length) return;
+    const wrapped = ((next % voicings.length) + voicings.length) % voicings.length;
+    if (onVoicingChange) onVoicingChange(wrapped);
+    else setInternalIndex(wrapped);
   }
 
-  const padL = 30, padR = 20, padT = 30, stringGap = 22, fretGap = 26;
-  const numStrings = 6, numFrets = 5;
-  const contentWidth = (numStrings - 1) * stringGap;
-  const svgWidth = Math.max(width, padL + contentWidth + padR);
-  const svgHeight = padT + fretGap * (numFrets + 1) + (showTitle ? 20 : 0);
+  if (!voicing) {
+    return (
+      <div style={{ width, textAlign: 'center', fontSize: 12, color: '#666' }}>
+        Chưa hỗ trợ {chord}
+      </div>
+    );
+  }
 
-  const xForString = (s) => padL + (numStrings - s) * stringGap;
-  const fingerMapping = createFingerMapping(shape, chord);
-
-  const maxFret = Math.max(
-    ...(shape.frets.filter((f) => typeof f === "number" && f > 0)),
-    shape.barre?.fret || 0
-  );
-  const baseFret = maxFret > numFrets ? Math.min(...shape.frets.filter(f => typeof f === "number" && f > 0)) : 1;
+  const baseFret = getHopamBaseFret(voicing.scheme);
 
   return (
-    <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-      {showTitle && (
-        <text x={svgWidth / 2} y={14} textAnchor="middle" fontSize="13" fontWeight="700">
-          {chord}
-        </text>
-      )}
+    <div className={styles.wrap}>
+      <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+        {showTitle && (
+          <text x={svgWidth / 2} y={14} textAnchor="middle" fontSize="13" fontWeight="700">
+            {chord}
+          </text>
+        )}
 
-      {Array.from({ length: numStrings }, (_, i) => (
-        <line
-          key={`s${i}`}
-          x1={padL + i * stringGap}
-          y1={padT}
-          x2={padL + i * stringGap}
-          y2={padT + numFrets * fretGap}
-          stroke="#000"
-        />
-      ))}
-
-      {Array.from({ length: numFrets }, (_, i) => (
-        <line
-          key={`f${i}`}
-          x1={padL}
-          y1={padT + (i + 1) * fretGap}
-          x2={padL + (numStrings - 1) * stringGap}
-          y2={padT + (i + 1) * fretGap}
-          stroke="#000"
-        />
-      ))}
-
-      {baseFret === 1 && (
-        <line
-          x1={padL}
-          y1={padT}
-          x2={padL + (numStrings - 1) * stringGap}
-          y2={padT}
-          stroke="#000"
-          strokeWidth="3"
-        />
-      )}
-
-      {Array.from({ length: numFrets }, (_, i) => (
-        <text
-          key={`num${i}`}
-          x={padL - 10}
-          y={padT + (i + 1) * fretGap - 6}
-          fontSize="10"
-          textAnchor="end"
-          fill="#444"
-        >
-          {baseFret + i}
-        </text>
-      ))}
-
-      {shape.barre && (() => {
-        const { fromString, toString, fret } = shape.barre;
-        const xA = xForString(fromString);
-        const xB = xForString(toString);
-        const xLeft = Math.min(xA, xB) - stringGap / 2;
-        const xRight = Math.max(xA, xB) + stringGap / 2;
-        const w = xRight - xLeft;
-
-        return (
-          <rect
-            x={xLeft}
-            y={padT + (fret - baseFret + 0.5) * fretGap - 6}
-            width={w}
-            height={12}
-            rx={6}
-            fill={accentColor}
-            opacity="0.9"
+        {Array.from({ length: NUM_STRINGS }, (_, i) => (
+          <line
+            key={`s${i}`}
+            x1={PAD_L + i * STRING_GAP}
+            y1={PAD_T}
+            x2={PAD_L + i * STRING_GAP}
+            y2={PAD_T + NUM_FRETS * FRET_GAP}
+            stroke="#000"
+            strokeWidth="1"
           />
-        );
-      })()}
+        ))}
 
-      {shape.frets.map((fret, idx) => {
-        const stringNumber = numStrings - idx;
-        const x = xForString(stringNumber);
+        {Array.from({ length: NUM_FRETS }, (_, i) => (
+          <line
+            key={`f${i}`}
+            x1={PAD_L}
+            y1={PAD_T + (i + 1) * FRET_GAP}
+            x2={PAD_L + (NUM_STRINGS - 1) * STRING_GAP}
+            y2={PAD_T + (i + 1) * FRET_GAP}
+            stroke="#000"
+            strokeWidth="1"
+          />
+        ))}
 
-        if (fret === "x") {
-          return <text key={`x${idx}`} x={x} y={padT - 8} fontSize="12" textAnchor="middle">X</text>;
-        }
-        if (fret === 0) {
-          return <text key={`o${idx}`} x={x} y={padT - 8} fontSize="12" textAnchor="middle">O</text>;
-        }
-        if (typeof fret === "number") {
-          const fingerNumber = fingerMapping[idx];
-          const y = padT + (fret - baseFret + 0.5) * fretGap;
-          const inBarre =
-            shape.barre &&
-            fret === shape.barre.fret &&
-            (
-              (stringNumber <= shape.barre.fromString && stringNumber >= shape.barre.toString) ||
-              (stringNumber >= shape.barre.fromString && stringNumber <= shape.barre.toString)
-            );
+        {baseFret === 1 && (
+          <line
+            x1={PAD_L}
+            y1={PAD_T}
+            x2={PAD_L + (NUM_STRINGS - 1) * STRING_GAP}
+            y2={PAD_T}
+            stroke="#000"
+            strokeWidth="3"
+          />
+        )}
 
-          if (inBarre) return null;
+        {Array.from({ length: NUM_FRETS }, (_, i) => (
+          <text
+            key={`fr${i}`}
+            x={PAD_L + contentWidth + 8}
+            y={PAD_T + (i + 1) * FRET_GAP - 6}
+            fontSize="10"
+            fill="#333"
+          >
+            {baseFret + i}fr
+          </text>
+        ))}
 
-          return (
-            <g key={`n${idx}`}>
-              <circle cx={x} cy={y} r={8} fill="white" stroke={accentColor} strokeWidth="2" />
-              <text x={x} y={y + 3} fontSize="10" fontWeight="bold" textAnchor="middle" fill={accentColor}>
-                {fingerNumber}
+        {voicing.scheme.map((fret, idx) => {
+          const stringNumber = NUM_STRINGS - idx;
+          const x = xForString(stringNumber);
+
+          if (fret === 'x') {
+            return (
+              <text key={`x${idx}`} x={x} y={PAD_T - 6} fontSize="12" textAnchor="middle" fill="#000">
+                X
               </text>
-            </g>
-          );
-        }
-        return null;
-      })}
-    </svg>
+            );
+          }
+
+          if (fret === 0) {
+            return (
+              <text key={`o${idx}`} x={x} y={PAD_T - 6} fontSize="12" textAnchor="middle" fill="#000">
+                o
+              </text>
+            );
+          }
+
+          if (typeof fret === 'number') {
+            const displayFret = fret - baseFret + 1;
+            if (displayFret < 1 || displayFret > NUM_FRETS) return null;
+
+            const y = PAD_T + (displayFret - 0.5) * FRET_GAP;
+            const finger = voicing.fingers[idx];
+
+            return (
+              <g key={`n${idx}`}>
+                <circle cx={x} cy={y} r={9} fill={accentColor} stroke={accentColor} strokeWidth="1" />
+                {finger && finger !== 'x' && finger !== '0' && (
+                  <text
+                    x={x}
+                    y={y + 4}
+                    fontSize="11"
+                    fontWeight="700"
+                    textAnchor="middle"
+                    fill="#fff"
+                  >
+                    {finger}
+                  </text>
+                )}
+              </g>
+            );
+          }
+
+          return null;
+        })}
+      </svg>
+
+      {showVoicingNav && voicings.length > 1 && (
+        <div className={styles.voicingNav}>
+          <button
+            type="button"
+            className={styles.voicingBtn}
+            onClick={() => setVoicingIndex(voicingIndex - 1)}
+            aria-label="Thế tay trước"
+          >
+            ‹
+          </button>
+          <span className={styles.voicingLabel}>
+            Thế tay {voicingIndex + 1}/{voicings.length}
+          </span>
+          <button
+            type="button"
+            className={styles.voicingBtn}
+            onClick={() => setVoicingIndex(voicingIndex + 1)}
+            aria-label="Thế tay sau"
+          >
+            ›
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

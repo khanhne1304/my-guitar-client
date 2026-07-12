@@ -7,6 +7,7 @@ export default function ChordTooltip({
   children,
   forceVisible = false,
   trigger = "hover",
+  chordsDataMap = null,
 }) {
   const [hoverVisible, setHoverVisible] = useState(false);
   const [clickVisible, setClickVisible] = useState(false);
@@ -113,7 +114,13 @@ export default function ChordTooltip({
             style={{ position: "fixed", right: 20, bottom: 20, width: 180, zIndex: 9999 }}
           >
             <div className={styles.chordTooltipTitle}>{chord}</div>
-            <GuitarChordSVG chord={chord} width={160} showTitle={false} />
+            <GuitarChordSVG
+              chord={chord}
+              width={160}
+              showTitle={false}
+              chordsDataMap={chordsDataMap}
+              showVoicingNav
+            />
           </div>
         ) : (
           <div
@@ -133,7 +140,13 @@ export default function ChordTooltip({
             }}
           >
             <div className={styles.chordTooltipTitle}>{chord}</div>
-            <GuitarChordSVG chord={chord} width={160} showTitle={false} />
+            <GuitarChordSVG
+              chord={chord}
+              width={160}
+              showTitle={false}
+              chordsDataMap={chordsDataMap}
+              showVoicingNav
+            />
           </div>
         ))}
     </>

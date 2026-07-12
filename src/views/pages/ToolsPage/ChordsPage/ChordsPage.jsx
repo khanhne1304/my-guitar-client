@@ -83,7 +83,7 @@ export default function ChordsPage() {
                   className={styles.chords__link}
                 >
                   <div className={styles.chords__item}>
-                    <GuitarChordSVG chord={chord} />
+                    <GuitarChordSVG chord={chord} showVoicingNav />
                     <div className={styles.chords__name}>{chord}</div>
                     <div className={styles.chords__detailHint}>
                       👆 Xem chi tiết ngón tay

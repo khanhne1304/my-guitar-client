@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { extendedGuitarChords } from '../../data/allChord';
 import { toneChords } from '../../data/toneChords';
-import { createFingerMapping } from '../../utils/fingerMapping';
+import { getHopamVoicings, hopamVoicingToShape } from '../../utils/hopamChordParser';
+import hopamChordsData from '../../data/hopamChordsData.json';
 import VirtualGuitarNeck from '../../components/VirtualGuitarNeck';
 import VirtualHand from '../../components/VirtualHand';
 import GuitarChordSVG from '../../components/chords/GuitarChordSVG';
@@ -22,54 +22,56 @@ const ChordDetailPage = () => {
   const [currentTone, setCurrentTone] = useState('');
 
   useEffect(() => {
-    if (chordName && extendedGuitarChords[chordName]) {
-      const chord = extendedGuitarChords[chordName];
-      const mapping = createFingerMapping(chord, chordName);
-      
-      // Tìm tone chứa hợp âm hiện tại
-      let foundTone = null;
-      let sameToneChords = [];
-      
-      for (const [tone, chords] of Object.entries(toneChords)) {
-        if (chords.includes(chordName)) {
-          foundTone = tone;
-          sameToneChords = chords;
-          break;
-        }
-      }
-      
-      // Nếu không tìm thấy trong toneChords, fallback về cách cũ
-      if (!foundTone) {
-        const currentToneChar = chordName.charAt(0);
-        foundTone = `Tone ${currentToneChar}`;
-        sameToneChords = Object.keys(extendedGuitarChords).filter(chord => 
-          extendedGuitarChords[chord] && 
-          typeof extendedGuitarChords[chord] === 'object' && 
-          extendedGuitarChords[chord].frets &&
-          chord.charAt(0) === currentToneChar
-        );
-      }
-      
-      setCurrentTone(foundTone);
-      
-      setAllChords(sameToneChords);
-      setChordData(chord);
-      setFingerMapping(mapping);
-      
-      const index = sameToneChords.indexOf(chordName);
-      setCurrentIndex(index >= 0 ? index : 0);
+    if (!chordName) {
       setLoading(false);
-      
-      // Cuộn lên đầu trang khi component mount
-      setTimeout(() => {
-        // Thử nhiều cách cuộn
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      }, 100);
-    } else {
-      setLoading(false);
+      return;
     }
+
+    const voicings = getHopamVoicings(chordName);
+    const shape = hopamVoicingToShape(voicings[0]);
+    if (!shape) {
+      setLoading(false);
+      return;
+    }
+
+    const mapping = shape.fingers.map((finger, idx) => {
+      const f = finger;
+      if (!f || f === 'x' || f === '0') return null;
+      const num = Number(f);
+      return Number.isFinite(num) ? num : null;
+    });
+
+    let foundTone = null;
+    let sameToneChords = [];
+
+    for (const [tone, chords] of Object.entries(toneChords)) {
+      if (chords.includes(chordName)) {
+        foundTone = tone;
+        sameToneChords = chords;
+        break;
+      }
+    }
+
+    if (!foundTone) {
+      const currentToneChar = chordName.charAt(0);
+      foundTone = `Tone ${currentToneChar}`;
+      sameToneChords = Object.keys(hopamChordsData).filter(
+        (name) => name.charAt(0) === currentToneChar,
+      );
+    }
+
+    setCurrentTone(foundTone);
+    setAllChords(sameToneChords.length ? sameToneChords : [chordName]);
+    setChordData(shape);
+    setFingerMapping(mapping);
+    setCurrentIndex(Math.max(0, (sameToneChords.length ? sameToneChords : [chordName]).indexOf(chordName)));
+    setLoading(false);
+
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 100);
   }, [chordName]);
 
   if (loading) {
@@ -261,7 +263,7 @@ const ChordDetailPage = () => {
                       }, 100);
                     }}
                   >
-                    <GuitarChordSVG chord={chord} width={150} />
+                    <GuitarChordSVG chord={chord} width={150} showVoicingNav />
                     <div className={styles.chordName}>{chord}</div>
                   </Link>
                 ))}

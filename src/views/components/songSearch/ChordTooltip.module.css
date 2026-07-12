@@ -26,7 +26,8 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   padding: 10px 12px 12px;
   width: 180px;
-  height: 190px;
+  min-height: 190px;
+  height: auto;
 }
 
 .chordTooltipDocked {
