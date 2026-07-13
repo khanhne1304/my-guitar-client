@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/homeItem/Header/Header';
 import Footer from '../../components/homeItem/Footer/Footer';
 import CreatorOnly from './CreatorOnly';
+import { useAuth } from '../../../context/AuthContext';
 import {
   getCourseApi,
   updateCourseApi,
@@ -66,6 +67,10 @@ function toggleSetItem(setter, id) {
 export default function CreatorCourseEditPage() {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
+  const backPath = isAdmin ? '/admin' : '/creator';
+  const backLabel = isAdmin ? '← Bảng điều khiển admin' : '← Khóa của tôi';
   const { confirm } = useConfirm();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -360,14 +365,14 @@ export default function CreatorCourseEditPage() {
   return (
     <CreatorOnly>
       <div className={page.page}>
-        <Header />
+        {!isAdmin && <Header />}
         <main className={page.main}>
           {loading ? (
             <p className={page.muted}>Đang tải…</p>
           ) : (
             <div className={page.card}>
-              <Link to="/creator" className={page.linkBtn}>
-                ← Khóa của tôi
+              <Link to={backPath} className={page.linkBtn}>
+                {backLabel}
               </Link>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginTop: 12 }}>
                 <h1 className={page.title} style={{ margin: 0 }}>
@@ -830,7 +835,7 @@ export default function CreatorCourseEditPage() {
                   onClick={async () => {
                     if (await confirm('Xóa toàn bộ khóa học?')) {
                       await deleteCourseApi(courseId);
-                      navigate('/creator');
+                      navigate(backPath);
                     }
                   }}
                 >
